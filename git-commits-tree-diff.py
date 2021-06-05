@@ -2,6 +2,7 @@ import os
 import os.path
 import sys
 import logging
+from functools import reduce
 
 import argparse
 
@@ -18,81 +19,85 @@ def go():
     args = parser.parse_args()
     
     logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__name__) 
+    logger = logging.getLogger("LOC.go()") 
 
+    # Ensure folder has a chance to be a git repo
     repo_dir = args.dir
     git_dir = os.path.join(repo_dir, ".git")
     if not os.path.exists(git_dir):
-        logging.error("Cannot find %s" % git_dir)
+        logger.error("Not a Git repo: %s" % git_dir)
         return
     
+    # Perform analysis in-place on this folder
     pwd = os.getcwd()
     os.chdir(repo_dir)
-    set_branch = 'git checkout %s' % args.branch
-    os.system(set_branch)
+    git_checkout(args.branch)
+
+    # Get list of commits from "first commit"
     command = 'git log --reverse --pretty=format:"%H"'
     total_loc = 0
     with os.popen(command) as git_log_pipe:
+        # --root here allows you to use this instead of has for "beginning"
         commits = ["--root"] + git_log_pipe.read().split()
-        logger.info(commits)
-        for i in range(0, len(commits)-1):
-            logging.info(commits[i] + ":")
-            total_loc += git_diff_tree(commits[i], commits[i+1])
+        commit_info_iter = process_commits(commits)
+        delta_loc_iter = map(lambda info: info['delta_loc'], commit_info_iter)
+        loc_sum = reduce(lambda x, y : x + y, delta_loc_iter, 0)
+
+    kloc_sum = loc_sum / 1000.0
+    logger.info("LOC = %d; KLOC = %.3f" % (loc_sum, kloc_sum))
     os.chdir(pwd)
-    logger.info("Total LOC = %d", total_loc)
 
 
-# TODO: May no longer need this.
+def process_commits(commits):
+    logger = logging.getLogger("LOC:process_commits()") 
+    loc_sum = 0
+    for i in range(0, len(commits)-1):
+        g = git_diff_tree(commits[i], commits[i+1])
+        loc_iter = map(lambda info: info['loc'], g)
+        delta_sum = reduce(lambda x, y : x + y, loc_iter, 0)
+        loc_sum += delta_sum
+        result = { 'hash' : commits[i], 'delta_loc' : delta_sum, 'loc_sum' : loc_sum }
+        logger.info("Hash: %(hash)s delta LOC=%(delta_loc)s cumulative LOC=%(loc_sum)s" % result)
+        yield result
+
 def git_checkout(hash):
   checkout = 'git checkout %(hash)s' % vars()
   os.system(checkout)
 
 # TODO: Make this into a generator
 def git_diff_tree(hashX, hashY):
-  logger = logging.getLogger(__name__) 
+  logger = logging.getLogger("LOC.git_diff_tree()") 
   command = 'git diff-tree -r %(hashX)s %(hashY)s' % vars()
-  logging.info("Running: " + command)
   delta_loc = 0
   with os.popen(command) as inf:
       for line in inf:
           info = parse_diff_tree_output(line)
-          if len(info) == 0:
-              continue
-          logging.info("dictionary of info %s" % info)
-          if info['operation'] == 'A':
+          operation = info.get('operation', None)
+          if operation == 'A':
               process_add(info)
-          elif info['operation'] == 'D':
+          elif operation == 'D':
               process_delete(info)
-          elif info['operation'] == 'M':
+          elif operation  == 'M':
               process_merge(info)
           else:
-              logger.error("Unknown operation '%(operation)s'" % info)
+              logger.error("Unknown operation '%s'" % operation)
               continue
           delta_loc += info['loc']
-  logging.info('> Delta KLOC = diff(%(hashX)s,%(hashY)s) = %(delta_loc)s' % vars())
-  return delta_loc
+          yield info
 
 
 def process_add(info):
-    #git_checkout(info['h2'])
     info['loc'] = wc_lines(info['h2'])
-    logging.info("%(path)s delta LOC = %(loc)s" % info)
 
 def process_delete(info):
-    #git_checkout(info['h1'])
     info['loc'] = -wc_lines(info['h1'])
-    logging.info("%(path)s delta LOC = %(loc)s" % info)
 
 def process_merge(info):
-    #git_checkout(info['h1'])
     loc_before = wc_lines(info['h1'])
-    #git_checkout(info['h2'])
     loc_after = wc_lines(info['h2'])
     info['loc'] = loc_after - loc_before
-    logging.info("%(path)s delta LOC = %(loc)s" % info)
 
 def parse_diff_tree_output(line):
-    logging.info(line)
     tokens = line.split()
     try:
        (dummy1, mode, h1, h2, operation, path) = tokens[:6]
@@ -100,8 +105,7 @@ def parse_diff_tree_output(line):
     except:
        return {}
 
-# Fake LOC for now...
-
+# TODO: Could replace this with cloc; make parametric
 def wc_lines(blob_hash):
     command = 'git show %(blob_hash)s | wc -l' % vars()
     with os.popen(command) as inf:
