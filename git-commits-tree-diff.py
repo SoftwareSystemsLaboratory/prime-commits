@@ -33,7 +33,8 @@ def go():
     command = 'git log --reverse --pretty=format:"%H"'
     total_loc = 0
     with os.popen(command) as git_log_pipe:
-        commits = git_log_pipe.read().split()
+        commits = ["--root"] + git_log_pipe.read().split()
+        logger.info(commits)
         for i in range(0, len(commits)-1):
             logging.info(commits[i] + ":")
             total_loc += git_diff_tree(commits[i], commits[i+1])
@@ -50,11 +51,13 @@ def git_checkout(hash):
 def git_diff_tree(hashX, hashY):
   logger = logging.getLogger(__name__) 
   command = 'git diff-tree -r %(hashX)s %(hashY)s' % vars()
-  logging.debug("Running: " + command)
+  logging.info("Running: " + command)
   delta_loc = 0
   with os.popen(command) as inf:
       for line in inf:
           info = parse_diff_tree_output(line)
+          if len(info) == 0:
+              continue
           logging.info("dictionary of info %s" % info)
           if info['operation'] == 'A':
               process_add(info)
@@ -89,10 +92,13 @@ def process_merge(info):
     logging.info("%(path)s delta LOC = %(loc)s" % info)
 
 def parse_diff_tree_output(line):
+    logging.info(line)
     tokens = line.split()
-    (dummy1, mode, h1, h2, operation, path) = tokens[:6]
-
-    return { 'mode' : mode, 'h1' : h1, 'h2' : h2, 'path' : path, 'operation' : operation }
+    try:
+       (dummy1, mode, h1, h2, operation, path) = tokens[:6]
+       return { 'mode' : mode, 'h1' : h1, 'h2' : h2, 'path' : path, 'operation' : operation }
+    except:
+       return {}
 
 # Fake LOC for now...
 
