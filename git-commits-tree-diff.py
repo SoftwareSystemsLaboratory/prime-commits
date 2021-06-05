@@ -72,7 +72,7 @@ def process_commits(git_commits):
         loc_sum += delta_sum
         commit_day = (dateY - day0).days
         result = { 'hash' : hashY, 'delta_loc' : delta_sum, 'loc_sum' : loc_sum, 'day' : commit_day }
-        logger.info("Hash: %(hash)s Day: %(day)s;  delta LOC=%(delta_loc)s cumulative LOC=%(loc_sum)s" % result)
+        logger.info(str(result))
         yield result
 
 def git_checkout(hash):
