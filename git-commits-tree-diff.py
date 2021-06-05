@@ -51,7 +51,7 @@ def git_diff_tree(hashX, hashY):
   logger = logging.getLogger(__name__) 
   command = 'git diff-tree -r %(hashX)s %(hashY)s' % vars()
   logging.debug("Running: " + command)
-  cumulative_loc = 0
+  delta_loc = 0
   with os.popen(command) as inf:
       for line in inf:
           info = parse_diff_tree_output(line)
@@ -65,9 +65,9 @@ def git_diff_tree(hashX, hashY):
           else:
               logger.error("Unknown operation '%(operation)s'" % info)
               continue
-          cumulative_loc += info['loc']
-  logging.info('> Delta KLOC = diff(%(hashX)s,%(hashY)s) = %(cumulative_loc)s' % vars())
-  return cumulative_loc
+          delta_loc += info['loc']
+  logging.info('> Delta KLOC = diff(%(hashX)s,%(hashY)s) = %(delta_loc)s' % vars())
+  return delta_loc
 
 
 def process_add(info):
