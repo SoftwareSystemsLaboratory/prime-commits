@@ -4,6 +4,7 @@ import sys
 import logging
 import dateutil.parser
 import datetime
+import json
 
 from functools import reduce
 
@@ -15,6 +16,7 @@ def get_argparse():
 
     parser.add_argument('--dir', help="dir containing repo", default=".")
     parser.add_argument('--branch', help="default branch", default="main")
+    parser.add_argument("--save-json", help="save JSON file", default=None)
     return parser
 
 def go():
@@ -44,12 +46,20 @@ def go():
         commits = [ parse_commit_line(commit) for commit in git_log_pipe ]
         #commits = git_log_pipe.read().split()
         commit_info_iter = process_commits(commits)
-        delta_loc_iter = map(lambda info: info['delta_loc'], commit_info_iter)
+        commit_info = list(commit_info_iter)
+        delta_loc_iter = map(lambda info: info['delta_loc'], commit_info)
         loc_sum = reduce(lambda x, y : x + y, delta_loc_iter, 0)
+
+    if args.save_json:
+        write_json_file(args.save_json, commit_info)
 
     kloc_sum = loc_sum / 1000.0
     logger.info("LOC = %d; KLOC = %.3f" % (loc_sum, kloc_sum))
     os.chdir(pwd)
+
+def write_json_file(json_file, commit_info):
+    with open(json_file,"w") as jsonf:
+        json.dump(commit_info, jsonf, indent=3)
 
 def parse_commit_line(commit_line):
     (commit_hash, commit_raw_date) = commit_line.split(";")[:2]
