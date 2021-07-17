@@ -1,10 +1,8 @@
 import argparse
-import datetime
 import json
 import logging
 import os
 import os.path
-import sys
 from functools import reduce
 
 import dateutil.parser
