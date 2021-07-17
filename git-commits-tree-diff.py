@@ -54,30 +54,36 @@ def parseCommitLineFromLog(line: str) -> dict:
     return {"hash": hash, "date": dateParse(date)}
 
 
-def process_commits(commits: list, date0: datetime):
-    totalLOC: int = 0  # TODO: Rename this variable
+# Conducts the LOC and delta LOC analysis of a repository branch
+def analyzeCommits(commits: list, date0: datetime):
+    loc_sum: int = 0  # TODO: Rename this variable
 
     for index in range(len(commits) - 1):
         hashX: str = commits[index]["hash"]
         hashY: str = commits[index + 1]["hash"]
         dateY: datetime = commits[index + 1]["date"]
 
-        g = git_diff_tree(hashX, hashY)
+        gdf: dict = gitDiffTree(hashX, hashY)
 
-        loc_iter = map(lambda info: info["loc"], g)
-        delta_sum = reduce(lambda x, y: x + y, loc_iter, 0)
-        totalLOC += delta_sum
+        # Get the LOC from Git diff tree line
+        loc = map(lambda info: info["loc"], gdf)
+
+        # TODO: Understand this line of code
+        delta_sum = reduce(lambda x, y: x + y, loc, 0)
+
+        loc_sum += delta_sum
         commit_day = (dateY - date0).days
         result = {
             "hash": hashY,
             "delta_loc": delta_sum,
-            "loc_sum": totalLOC,
+            "loc_sum": loc_sum,
             "day": commit_day,
         }
         yield result
 
 
-def git_diff_tree(hashX: str, hashY: str) -> dict:
+# Generate individual lines of a Git diff tree between two commits
+def gitDiffTree(hashX: str, hashY: str) -> dict:
     # Git diff help page: https://www.git-scm.com/docs/git-diff
     with os.popen(f"git diff-tree -r {hashX} {hashY}") as diffTreePipe:
         for line in diffTreePipe:
@@ -86,11 +92,11 @@ def git_diff_tree(hashX: str, hashY: str) -> dict:
 
             lineStatus: str = lineInfo.get("status")
             if lineStatus == "A":
-                addLines()(lineInfo)
+                addLines(lineInfo)
             elif lineStatus == "D":
-                deleteLines()(lineInfo)
+                deleteLines(lineInfo)
             elif lineStatus == "M":
-                deltaLines()(lineInfo)
+                deltaLines(lineInfo)
             else:
                 continue  # Does not yield lineInfo
             yield lineInfo
@@ -113,19 +119,17 @@ def parseDiffTreeLine(line: str) -> dict:
 
 
 # Used for add status
-def addLines(line: dict) -> dict:
+def addLines(line: dict) -> None:
     line["loc"] = countFileLines(line["sha1Dst"])
-    return line
 
 
 # Used for delete status
-def deleteLines(line: dict) -> dict:
+def deleteLines(line: dict) -> None:
     line["loc"] = -countFileLines(line["sha1Src"])
-    return line
 
 
 # Used for modification status
-def deltaLines(line: dict) -> dict:
+def deltaLines(line: dict) -> None:
     loc_before = countFileLines(line["sha1Src"])
     loc_after = countFileLines(line["sha1Dst"])
     line["loc"] = loc_after - loc_before
@@ -140,9 +144,9 @@ def countFileLines(blobHash: str):
     return -1
 
 
-def write_json_file(json_file, commit_info):
-    with open(json_file, "w") as jsonf:
-        json.dump(commit_info, jsonf, indent=3)
+def exportJSON(filename, commitInfo):
+    with open(filename, "w") as jsonf:
+        json.dump(commitInfo, jsonf, indent=4)
 
 
 # Script to execute program
@@ -167,15 +171,15 @@ def go() -> bool:
         commit0Date: datetime = commits[0]["date"]
         commits = [{"hash": "--root", "date": commit0Date}] + commits
 
-        commit_info_iter = process_commits(commits=commits, date0=commits[0]["date"])
+        commit_info_iter = analyzeCommits(commits=commits, date0=commits[0]["date"])
         commit_info = list(commit_info_iter)
         delta_loc_iter = map(lambda info: info["delta_loc"], commit_info)
         loc_sum = reduce(lambda x, y: x + y, delta_loc_iter, 0)
 
     if args.save_json:
-        write_json_file(args.save_json, commit_info)
+        exportJSON(args.save_json, commit_info)
 
-    kloc_sum = loc_sum / 1000.0
+    print(f"KLOC sum: {loc_sum / 1000.0}")
     os.chdir(pwd)
     return True
 
