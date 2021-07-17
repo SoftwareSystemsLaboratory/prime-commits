@@ -11,11 +11,33 @@ import dateutil.parser
 
 
 def get_argparse():
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument("--dir", help="dir containing repo", default=".")
-    parser.add_argument("--branch", help="default branch", default="main")
-    parser.add_argument("--save-json", help="save JSON file", default=None)
+    parser = argparse.ArgumentParser(
+        prog="Git All Python (CLI Only)",
+        usage="This program outputs the lines of code (LOC) per commit and the delta LOC of a Git repository in JSON format.",
+    )
+    parser.add_argument(
+        "-d",
+        "--dir",
+        help="Directory containing repository root folder (.git)",
+        default=".",
+        type=str,
+        required=False,
+    )
+    parser.add_argument(
+        "-b" "--branch",
+        help="default branch",
+        default="main",
+        type=str,
+        required=False,
+    )
+    parser.add_argument(
+        "-s",
+        "--save-json",
+        help="save JSON file",
+        default=True,
+        type=bool,
+        required=False,
+    )
     return parser
 
 
