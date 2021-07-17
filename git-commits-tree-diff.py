@@ -6,8 +6,9 @@ from functools import reduce
 from argparse import ArgumentParser
 
 from dateutil.parser import parse as dateParse
+from datetime import datetime
 
-
+# Command line arguement parsing
 def get_argparse() -> ArgumentParser:
     parser: ArgumentParser = ArgumentParser(
         prog="Git All Python (CLI Only)",
@@ -40,38 +41,42 @@ def get_argparse() -> ArgumentParser:
     return parser
 
 
+# Checks if a Git repo exists at a given directory
 def repoExists(directory: str = ".") -> bool:
     if exists(join(directory, ".git")) is False:
         return False
     return True
 
 
+# Returns dict{str, datetime}
 def parseCommitLineFromLog(line: str) -> dict:
     (hash, date) = line.split(";")[:2]
     return {"hash": hash, "date": dateParse(date)}
 
 
+# Script to execute program
 def go() -> bool:
     # Setup variables
     pwd = os.getcwd()
     args = get_argparse().parse_args()
-    repoDirectory = args.directory
 
     # Test if directory is a Git repo
-    # If True, change directory to Git repo
-    if repoExists(directory=repoDirectory) is False:
+    # If True, change directory to Git repo and checkout specified branch
+    if repoExists(directory=args.directory) is False:
         return False
-    os.chdir(repoDirectory)
-
-    # Checkout specified branch in a subshell
+    os.chdir(args.directory)
     os.system(f"git checkout {args.branch}")
 
     # Get list of commits from starting from the first commit of the repository
     # Git log help page: https://www.git-scm.com/docs/git-log
     with os.popen(r'git log --reverse --pretty=format:"%H;%ci"') as gitLogPipe:
-        commits = [parseCommitLineFromLog(line=commit) for commit in gitLogPipe]
+        commits: list = [parseCommitLineFromLog(line=commit) for commit in gitLogPipe]
 
-        commit_info_iter = process_commits(commits)
+        # Hack to get the first commit into the commits list
+        commit0Date: datetime = commits[0]["date"]
+        commits = [{"hash": "--root", "date": commit0Date}] + commits
+
+        commit_info_iter = process_commits(commits=commits, date0=commits[0]["date"])
         commit_info = list(commit_info_iter)
         delta_loc_iter = map(lambda info: info["delta_loc"], commit_info)
         loc_sum = reduce(lambda x, y: x + y, delta_loc_iter, 0)
@@ -84,51 +89,65 @@ def go() -> bool:
     return True
 
 
-def write_json_file(json_file, commit_info):
-    with open(json_file, "w") as jsonf:
-        json.dump(commit_info, jsonf, indent=3)
+def process_commits(commits: list, date0: datetime):
+    totalLOC: int = 0  # TODO: Rename this variable
 
+    for index in range(len(commits) - 1):
+        hashX: str = commits[index]["hash"]
+        hashY: str = commits[index + 1]["hash"]
+        dateY: datetime = commits[index + 1]["date"]
 
-def process_commits(git_commits):
-    # I know this is ugly but "root" does not have a hash and is a special case in git diff-tree
-    day0 = git_commits[0]["date"]
-    commits = [{"hash": "--root", "date": day0}] + git_commits
-    loc_sum = 0
-    for i in range(0, len(commits) - 1):
-        hashX = commits[i]["hash"]
-        hashY = commits[i + 1]["hash"]
-        dateY = commits[i + 1]["date"]
         g = git_diff_tree(hashX, hashY)
         loc_iter = map(lambda info: info["loc"], g)
         delta_sum = reduce(lambda x, y: x + y, loc_iter, 0)
-        loc_sum += delta_sum
-        commit_day = (dateY - day0).days
+        totalLOC += delta_sum
+        commit_day = (dateY - date0).days
         result = {
             "hash": hashY,
             "delta_loc": delta_sum,
-            "loc_sum": loc_sum,
+            "loc_sum": totalLOC,
             "day": commit_day,
         }
         yield result
 
 
-def git_diff_tree(hashX, hashY):
-    command = "git diff-tree -r %(hashX)s %(hashY)s" % vars()
-    delta_loc = 0
-    with os.popen(command) as inf:
-        for line in inf:
-            info = parse_diff_tree_output(line)
-            operation = info.get("operation", None)
-            if operation == "A":
-                process_add(info)
-            elif operation == "D":
-                process_delete(info)
-            elif operation == "M":
-                process_merge(info)
+def git_diff_tree(hashX: str, hashY: str) -> dict:
+    # Git diff help page: https://www.git-scm.com/docs/git-diff
+    with os.popen(f"git diff-tree -r {hashX} {hashY}") as diffTreePipe:
+        for line in diffTreePipe:
+
+            lineInfo: dict = parseDiffTreeLine(line)
+            lineStatus: str = lineInfo.get("status")
+            if lineStatus == "A":
+                process_add(lineInfo)
+            elif lineStatus == "D":
+                process_delete(lineInfo)
+            elif lineStatus == "M":
+                process_merge(lineInfo)
             else:
-                continue
-            delta_loc += info["loc"]
-            yield info
+                continue  # Does not yield lineInfo
+            yield lineInfo
+
+
+# Parse pipe line into a dictionary of values
+def parseDiffTreeLine(line: str) -> dict:
+    tokens: list = line.split()
+    try:
+        (dstMode, sha1Src, sha1Dst, status, srcPath) = tokens[1:6]
+    except ValueError:
+        return {}
+    return {
+        "dstMode": dstMode,
+        "sha1Src": sha1Src,
+        "sha1Dst": sha1Dst,
+        "status": status,
+        "srcPath": srcPath,
+    }
+
+
+def write_json_file(json_file, commit_info):
+    with open(json_file, "w") as jsonf:
+        json.dump(commit_info, jsonf, indent=3)
 
 
 def process_add(info):
@@ -145,18 +164,7 @@ def process_merge(info):
     info["loc"] = loc_after - loc_before
 
 
-def parse_diff_tree_output(line):
-    tokens = line.split()
-    try:
-        (dummy1, mode, h1, h2, operation, path) = tokens[:6]
-        return {"mode": mode, "h1": h1, "h2": h2, "path": path, "operation": operation}
-    except:
-        return {}
-
-
 # TODO: Could replace this with cloc; make parametric
-
-
 def wc_lines(blob_hash):
     command = "git show %(blob_hash)s | wc -l" % vars()
     with os.popen(command) as inf:
