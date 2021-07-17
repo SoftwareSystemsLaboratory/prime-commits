@@ -54,6 +54,97 @@ def parseCommitLineFromLog(line: str) -> dict:
     return {"hash": hash, "date": dateParse(date)}
 
 
+def process_commits(commits: list, date0: datetime):
+    totalLOC: int = 0  # TODO: Rename this variable
+
+    for index in range(len(commits) - 1):
+        hashX: str = commits[index]["hash"]
+        hashY: str = commits[index + 1]["hash"]
+        dateY: datetime = commits[index + 1]["date"]
+
+        g = git_diff_tree(hashX, hashY)
+
+        loc_iter = map(lambda info: info["loc"], g)
+        delta_sum = reduce(lambda x, y: x + y, loc_iter, 0)
+        totalLOC += delta_sum
+        commit_day = (dateY - date0).days
+        result = {
+            "hash": hashY,
+            "delta_loc": delta_sum,
+            "loc_sum": totalLOC,
+            "day": commit_day,
+        }
+        yield result
+
+
+def git_diff_tree(hashX: str, hashY: str) -> dict:
+    # Git diff help page: https://www.git-scm.com/docs/git-diff
+    with os.popen(f"git diff-tree -r {hashX} {hashY}") as diffTreePipe:
+        for line in diffTreePipe:
+
+            lineInfo: dict = parseDiffTreeLine(line)
+
+            lineStatus: str = lineInfo.get("status")
+            if lineStatus == "A":
+                addLines()(lineInfo)
+            elif lineStatus == "D":
+                deleteLines()(lineInfo)
+            elif lineStatus == "M":
+                deltaLines()(lineInfo)
+            else:
+                continue  # Does not yield lineInfo
+            yield lineInfo
+
+
+# Parse pipe line into a dictionary of values
+def parseDiffTreeLine(line: str) -> dict:
+    tokens: list = line.split()
+    try:
+        (dstMode, sha1Src, sha1Dst, status, srcPath) = tokens[1:6]
+    except ValueError:
+        return {}
+    return {
+        "dstMode": dstMode,
+        "sha1Src": sha1Src,
+        "sha1Dst": sha1Dst,
+        "status": status,
+        "srcPath": srcPath,
+    }
+
+
+# Used for add status
+def addLines(line: dict) -> dict:
+    line["loc"] = countFileLines(line["sha1Dst"])
+    return line
+
+
+# Used for delete status
+def deleteLines(line: dict) -> dict:
+    line["loc"] = -countFileLines(line["sha1Src"])
+    return line
+
+
+# Used for modification status
+def deltaLines(line: dict) -> dict:
+    loc_before = countFileLines(line["sha1Src"])
+    loc_after = countFileLines(line["sha1Dst"])
+    line["loc"] = loc_after - loc_before
+
+
+# TODO: Could replace this with cloc; make parametric
+def countFileLines(blobHash: str):
+    # Git show help page: https://www.git-scm.com/docs/git-show
+    # wc help page: https://linux.die.net/man/1/wc
+    with os.popen(f"git show {blobHash} | wc -l") as data:
+        return int(data.read().split()[0])
+    return -1
+
+
+def write_json_file(json_file, commit_info):
+    with open(json_file, "w") as jsonf:
+        json.dump(commit_info, jsonf, indent=3)
+
+
 # Script to execute program
 def go() -> bool:
     # Setup variables
@@ -87,90 +178,6 @@ def go() -> bool:
     kloc_sum = loc_sum / 1000.0
     os.chdir(pwd)
     return True
-
-
-def process_commits(commits: list, date0: datetime):
-    totalLOC: int = 0  # TODO: Rename this variable
-
-    for index in range(len(commits) - 1):
-        hashX: str = commits[index]["hash"]
-        hashY: str = commits[index + 1]["hash"]
-        dateY: datetime = commits[index + 1]["date"]
-
-        g = git_diff_tree(hashX, hashY)
-        loc_iter = map(lambda info: info["loc"], g)
-        delta_sum = reduce(lambda x, y: x + y, loc_iter, 0)
-        totalLOC += delta_sum
-        commit_day = (dateY - date0).days
-        result = {
-            "hash": hashY,
-            "delta_loc": delta_sum,
-            "loc_sum": totalLOC,
-            "day": commit_day,
-        }
-        yield result
-
-
-def git_diff_tree(hashX: str, hashY: str) -> dict:
-    # Git diff help page: https://www.git-scm.com/docs/git-diff
-    with os.popen(f"git diff-tree -r {hashX} {hashY}") as diffTreePipe:
-        for line in diffTreePipe:
-
-            lineInfo: dict = parseDiffTreeLine(line)
-            lineStatus: str = lineInfo.get("status")
-            if lineStatus == "A":
-                process_add(lineInfo)
-            elif lineStatus == "D":
-                process_delete(lineInfo)
-            elif lineStatus == "M":
-                process_merge(lineInfo)
-            else:
-                continue  # Does not yield lineInfo
-            yield lineInfo
-
-
-# Parse pipe line into a dictionary of values
-def parseDiffTreeLine(line: str) -> dict:
-    tokens: list = line.split()
-    try:
-        (dstMode, sha1Src, sha1Dst, status, srcPath) = tokens[1:6]
-    except ValueError:
-        return {}
-    return {
-        "dstMode": dstMode,
-        "sha1Src": sha1Src,
-        "sha1Dst": sha1Dst,
-        "status": status,
-        "srcPath": srcPath,
-    }
-
-
-def write_json_file(json_file, commit_info):
-    with open(json_file, "w") as jsonf:
-        json.dump(commit_info, jsonf, indent=3)
-
-
-def process_add(info):
-    info["loc"] = wc_lines(info["h2"])
-
-
-def process_delete(info):
-    info["loc"] = -wc_lines(info["h1"])
-
-
-def process_merge(info):
-    loc_before = wc_lines(info["h1"])
-    loc_after = wc_lines(info["h2"])
-    info["loc"] = loc_after - loc_before
-
-
-# TODO: Could replace this with cloc; make parametric
-def wc_lines(blob_hash):
-    command = "git show %(blob_hash)s | wc -l" % vars()
-    with os.popen(command) as inf:
-        command_output = inf.read()
-        return int(command_output.split()[0])
-    return -1
 
 
 if __name__ == "__main__":
