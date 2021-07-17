@@ -1,29 +1,31 @@
-import argparse
 import json
 import logging
 import os
-import os.path
+
+from os.path import join, exists
 from functools import reduce
+from argparse import ArgumentError, ArgumentParser
 
 import dateutil.parser
 
 
-def get_argparse():
-    parser = argparse.ArgumentParser(
+def get_argparse() -> ArgumentParser:
+    parser: ArgumentParser = ArgumentParser(
         prog="Git All Python (CLI Only)",
         usage="This program outputs the lines of code (LOC) per commit and the delta LOC of a Git repository in JSON format.",
     )
     parser.add_argument(
         "-d",
-        "--dir",
+        "--directory",
         help="Directory containing repository root folder (.git)",
         default=".",
         type=str,
         required=False,
     )
     parser.add_argument(
-        "-b" "--branch",
-        help="default branch",
+        "-b",
+        "--branch",
+        help="Default branch for analysis to be ran on",
         default="main",
         type=str,
         required=False,
@@ -31,31 +33,38 @@ def get_argparse():
     parser.add_argument(
         "-s",
         "--save-json",
-        help="save JSON file",
+        help="Save analysis to JSON file (EX: --save-json=output.json)",
         default=True,
-        type=bool,
+        type=str,
         required=False,
     )
     return parser
 
 
-def go():
-    parser = get_argparse()
-    args = parser.parse_args()
+def repoExists(directory: str = ".") -> bool:
+    if exists(join(directory, ".git")) is False:
+        return False
+    return True
 
+
+def go() -> bool:
+    # Setup variables
+    pwd = os.getcwd()
+    args = get_argparse().parse_args()
+    repoDirectory = args.directory
+
+    # Start logging
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger("LOC.go()")
 
-    # Ensure folder has a chance to be a git repo
-    repo_dir = args.dir
-    git_dir = os.path.join(repo_dir, ".git")
-    if not os.path.exists(git_dir):
-        logger.error("Not a Git repo: %s" % git_dir)
-        return
+    # Test if directory is a Git repo
+    # If True, change directory to Git repo
+    if repoExists(directory=repoDirectory) is False:
+        logger.error(f"Not a Git repo: {repoDirectory}")
+        return False
+    os.chdir(repoDirectory)
 
-    # Perform analysis in-place on this folder
-    pwd = os.getcwd()
-    os.chdir(repo_dir)
+    # Checkout specified branch
     git_checkout(args.branch)
 
     # Get list of commits from "first commit"
