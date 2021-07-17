@@ -65,7 +65,7 @@ def go() -> bool:
     os.chdir(repoDirectory)
 
     # Checkout specified branch
-    git_checkout(args.branch)
+    os.system(f"git checkout {args.branch}")
 
     # Get list of commits from "first commit"
     command = 'git log --reverse --pretty=format:"%H;%ci"'
@@ -121,11 +121,6 @@ def process_commits(git_commits):
         }
         logger.info(str(result))
         yield result
-
-
-def git_checkout(hash):
-    checkout = "git checkout %(hash)s" % vars()
-    os.system(checkout)
 
 
 # TODO: Make this into a generator
