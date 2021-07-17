@@ -1,12 +1,12 @@
 import json
 import os
-
-from os.path import join, exists
-from functools import reduce
 from argparse import ArgumentParser
+from datetime import datetime
+from functools import reduce
+from os.path import exists, join
 
 from dateutil.parser import parse as dateParse
-from datetime import datetime
+
 
 # Command line arguement parsing
 def get_argparse() -> ArgumentParser:
