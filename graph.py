@@ -1,4 +1,21 @@
+from argparse import ArgumentParser, Namespace
+
 import matplotlib.pyplot as plt
+
+
+def get_argparse() -> ArgumentParser:
+    parser: ArgumentParser = ArgumentParser(
+        prog="Convert Output",
+        usage="This program converts a JSON file into various different formats.",
+    )
+    parser.add_argument(
+        "-i",
+        "--input",
+        help="The input data file that will be read to create the graphs",
+        type=str,
+        required=True,
+    )
+    return parser
 
 
 def helloworld():
