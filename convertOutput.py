@@ -1,6 +1,6 @@
-from typing import Tuple
-import pandas
 from argparse import ArgumentParser
+
+import pandas
 
 
 def get_argparse() -> ArgumentParser:
