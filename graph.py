@@ -38,6 +38,7 @@ def plot(df: DataFrame) -> None:
     plt.ylabel("delta_loc")
     plt.xlabel("Commit Number")
     plt.title("delta_loc Over Commits")
+    plt.scatter([x for x in range(len(df["delta_loc"]))], df["delta_loc"])
     plt.plot([x for x in range(len(df["delta_loc"]))], df["delta_loc"])
     figure.savefig("test.png")
 
