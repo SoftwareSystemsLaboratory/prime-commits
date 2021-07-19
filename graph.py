@@ -33,7 +33,9 @@ def createDataFrame(filename: str, filetype: str = "json") -> DataFrame:
 
 
 def plot(df: DataFrame) -> None:
-    pass
+    figure: Figure = plt.figure()
+    plt.plot([x for x in range(len(df["delta_loc"]))], df["delta_loc"])
+    figure.savefig("test.png")
 
 
 def helloworld():
@@ -49,4 +51,4 @@ if __name__ == "__main__":
 
     print(df)
 
-    # plot(df)
+    plot(df)
