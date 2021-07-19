@@ -20,8 +20,15 @@ def get_argparse() -> ArgumentParser:
     return parser
 
 
-def createDataFrame(filename: str, type: str = "json") -> DataFrame:
-    return pandas.read_json(filename)
+def createDataFrame(filename: str, filetype: str = "json") -> DataFrame:
+    if filetype == "json":
+        return pandas.read_json(filename)
+    elif filetype == "csv":
+        return pandas.read_csv(filename)
+    elif filetype == "tsv":
+        return pandas.read_csv(filename, sep="\t")
+    else:
+        return False
 
 
 def helloworld():
