@@ -176,10 +176,11 @@ def go() -> bool:
         delta_loc_iter = map(lambda info: info["delta_loc"], commit_info)
         loc_sum = reduce(lambda x, y: x + y, delta_loc_iter, 0)
 
+        # print("KLOC sum: {}".format(loc_sum / 1000.0))
+
     if args.save_json:
         exportJSON(args.save_json, commit_info)
 
-    print(f"KLOC sum: {loc_sum / 1000.0}")
     os.chdir(pwd)
     return True
 
