@@ -32,6 +32,7 @@ def createDataFrame(filename: str, filetype: str = "json") -> DataFrame:
         return False
 
 
+# delta_loc over time where time is spaced by commit
 def plot(df: DataFrame) -> None:
     figure: Figure = plt.figure()
     plt.plot([x for x in range(len(df["delta_loc"]))], df["delta_loc"])
@@ -48,7 +49,5 @@ if __name__ == "__main__":
     args: Namespace = get_argparse().parse_args()
 
     df = createDataFrame(filename="test1.json")
-
-    print(df)
 
     plot(df)
