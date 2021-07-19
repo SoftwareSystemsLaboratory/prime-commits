@@ -1,6 +1,8 @@
 from argparse import ArgumentParser, Namespace
 
 import matplotlib.pyplot as plt
+import pandas
+from pandas import DataFrame
 
 
 def get_argparse() -> ArgumentParser:
@@ -18,10 +20,15 @@ def get_argparse() -> ArgumentParser:
     return parser
 
 
+def createDataFrame(filename: str, type: str = "json") -> DataFrame:
+    return pandas.read_json(filename)
+
+
 def helloworld():
     fig = plt.figure()
     plt.plot([1, 2, 3, 4], [1, 4, 2, 3])
     fig.savefig("test.png")
+
 
 if __name__ == "__main__":
     args: Namespace = get_argparse().parse_args()
