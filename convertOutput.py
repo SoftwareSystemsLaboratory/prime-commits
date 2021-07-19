@@ -31,7 +31,7 @@ def get_argparse() -> ArgumentParser:
     return parser
 
 
-def createDataframe(filename: str) -> DataFrame:
+def createDataFrame(filename: str) -> DataFrame:
     return pandas.read_json(filename)
 
 
@@ -51,7 +51,7 @@ if __name__ == "__main__":
         quit(1)
 
     filename: str = args.input
-    df: DataFrame = createDataframe(filename=filename)
+    df: DataFrame = createDataFrame(filename=filename)
 
     filenamePrefix: str = filename.split(".json")[0]
 
