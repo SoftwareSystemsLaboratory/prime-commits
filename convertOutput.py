@@ -40,5 +40,10 @@ def createDataframe(filename: str) -> DataFrame:
     return pandas.read_json(filename)
 
 
+def convertToCSV(df: DataFrame, filename: str) -> None:
+    df.to_csv(filename)
+
+
 if __name__ == "__main__":
+    args = get_argparse()
     createDataframe("output.json")
