@@ -46,4 +46,5 @@ def convertToCSV(df: DataFrame, filename: str) -> None:
 
 if __name__ == "__main__":
     args = get_argparse()
-    createDataframe("output.json")
+    df: DataFrame = createDataframe("output.json")
+    convertToCSV(df,"output.csv")

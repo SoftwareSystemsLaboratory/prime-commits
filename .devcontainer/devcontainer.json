@@ -1,7 +1,8 @@
 {
     "name": "Git All Python (CLI Only)",
     "extensions": [
-        "ms-python.python"
+        "ms-python.python",
+        "mechatroner.rainbow-csv"
     ],
     "image": "python:3.9.6-buster"
 }
