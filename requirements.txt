@@ -1,5 +1,3 @@
 black
-bokeh
 isort
-matplotlib
-python - dateutil
+python-dateutil
