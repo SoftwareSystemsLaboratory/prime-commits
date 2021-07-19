@@ -1,6 +1,8 @@
+import csv
+import json
 from argparse import ArgumentParser
 
-import pandas
+from pandas.io.json import json_normalize
 
 
 def get_argparse() -> ArgumentParser:
