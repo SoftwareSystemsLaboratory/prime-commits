@@ -4,8 +4,8 @@ from argparse import ArgumentParser
 
 def get_argparse() -> ArgumentParser:
     parser: ArgumentParser = ArgumentParser(
-        prog="Git All Python (CLI Only)",
-        usage="This program outputs the lines of code (LOC) per commit and the delta LOC of a Git repository in JSON format.",
+        prog="Convert Output",
+        usage="This program converts a JSON file into various different formats.",
     )
     parser.add_argument(
         "-d",
