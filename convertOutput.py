@@ -23,11 +23,10 @@ def get_argparse() -> ArgumentParser:
         required=False,
     )
     parser.add_argument(
-        "-s",
-        "--save-json",
-        help="Save analysis to JSON file (EX: --save-json=output.json)",
-        default=True,
-        type=str,
+        "--tsv",
+        help="Flag to set the output of the conversion to a .tsv file",
+        default=None,
+        type=bool,
         required=False,
     )
     return parser
