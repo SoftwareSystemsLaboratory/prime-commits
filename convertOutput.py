@@ -38,3 +38,7 @@ def get_argparse() -> ArgumentParser:
 
 def createDataframe(filename: str) -> DataFrame:
     return pandas.read_json(filename)
+
+
+if __name__ == "__main__":
+    createDataframe("output.json")
