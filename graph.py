@@ -35,6 +35,9 @@ def createDataFrame(filename: str, filetype: str = "json") -> DataFrame:
 # delta_loc over time where time is spaced by commit
 def plot(df: DataFrame) -> None:
     figure: Figure = plt.figure()
+    plt.ylabel("delta_loc")
+    plt.xlabel("Commit Number")
+    plt.title("delta_loc Over Commits")
     plt.plot([x for x in range(len(df["delta_loc"]))], df["delta_loc"])
     figure.savefig("test.png")
 
