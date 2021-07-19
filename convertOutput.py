@@ -1,3 +1,4 @@
+from typing import Tuple
 import pandas
 from argparse import ArgumentParser
 
@@ -8,12 +9,11 @@ def get_argparse() -> ArgumentParser:
         usage="This program converts a JSON file into various different formats.",
     )
     parser.add_argument(
-        "-d",
-        "--directory",
-        help="Directory containing repository root folder (.git)",
-        default=".",
+        "-i",
+        "--input",
+        help="The input JSON file that is to be converted",
         type=str,
-        required=False,
+        required=True,
     )
     parser.add_argument(
         "-b",
