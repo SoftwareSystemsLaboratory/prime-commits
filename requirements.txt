@@ -1,4 +1,5 @@
 black
 isort
+numpy
 pandas
 python-dateutil
