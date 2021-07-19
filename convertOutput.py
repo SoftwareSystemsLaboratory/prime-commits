@@ -16,11 +16,10 @@ def get_argparse() -> ArgumentParser:
         required=True,
     )
     parser.add_argument(
-        "-b",
-        "--branch",
-        help="Default branch for analysis to be ran on",
-        default="main",
-        type=str,
+        "--csv",
+        help="Flag to set the output of the conversion to a .csv file",
+        default=None,
+        type=bool,
         required=False,
     )
     parser.add_argument(
