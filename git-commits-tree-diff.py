@@ -35,7 +35,7 @@ def get_argparse() -> ArgumentParser:
         "--save-json",
         help="Save analysis to JSON file (EX: --save-json=output.json)",
         type=str,
-        required=False,
+        required=True,
     )
     return parser
 

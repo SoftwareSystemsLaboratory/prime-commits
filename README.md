@@ -3,11 +3,12 @@
 This is a proof-of-concept to show how to script git's CLI (command-lne interface) in Python.
 We're interested in classical metrics, which often require us to look more longtudinally at project history.
 
-In this example, we're looking at LOC (lines of code) changes between commits, starting from the "root" of the project history. 
+In this example, we're looking at LOC (lines of code) changes between commits, starting from the "root" of the project history.
+
 Note that this does not support arcane projects with multiple histories. Don't expect that to work reliably.
 
 The present implementation assumes a freshly checked out Git project.
-Although we have taken every step to be "read only", please make sure you are not running this on anything of importance. 
+Although we have taken every step to be "read only", please make sure you are not running this on anything of importance.
 
 The LOC calculation is done, naively, using the `wc` command. Support for running any external tool, incudng `cloc` (one of the most popular and
 quite good) is coming next.
@@ -33,6 +34,4 @@ The output will show you a timeline:
 # Next Steps
 
 - Add support for matplotlib to show a simple plot
-- Support TSV/CSV output so we can export to a spreadsheet for simple charts
 - Support some of the derived metrics from our Metrics Pipeline project at https://ssl.cs.luc.edu.
-
