@@ -29,7 +29,8 @@ def createDataFrame(filename: str, filetype: str = "json") -> DataFrame:
     elif filetype == "tsv":
         return pandas.read_csv(filename, sep="\t")
     else:
-        return False
+        print("Invalid file type. File needs to be a .json, .csv, or .tsv file.")
+        quit(1)
 
 
 # delta_loc over time where time is spaced by commit
@@ -52,6 +53,9 @@ def helloworld():
 if __name__ == "__main__":
     args: Namespace = get_argparse().parse_args()
 
-    df = createDataFrame(filename="test1.json")
+    filename: str = args.input
+    filenameSuffix: str = filename.split(".")[1]
+
+    df = createDataFrame(filename=filename, filetype=filenameSuffix)
 
     plot(df)
