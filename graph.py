@@ -1,4 +1,5 @@
 from argparse import ArgumentParser, Namespace
+from matplotlib.figure import Figure
 
 import matplotlib.pyplot as plt
 import pandas
@@ -31,6 +32,12 @@ def createDataFrame(filename: str, filetype: str = "json") -> DataFrame:
         return False
 
 
+def plot(df: DataFrame) -> None:
+    figure: Figure = plt.figure()
+    df.plot(kind="bar", x="day", y="loc_sum")
+    figure.savefig("test.png")
+
+
 def helloworld():
     fig = plt.figure()
     plt.plot([1, 2, 3, 4], [1, 4, 2, 3])
@@ -39,3 +46,9 @@ def helloworld():
 
 if __name__ == "__main__":
     args: Namespace = get_argparse().parse_args()
+
+    df = createDataFrame(filename="output.json")
+
+    print(df)
+
+    plot(df)
