@@ -6,6 +6,7 @@ from functools import reduce
 from os.path import exists, join
 
 from dateutil.parser import parse as dateParse
+from progress.bar import PixelBar
 
 
 # Command line arguement parsing
@@ -56,31 +57,32 @@ def parseCommitLineFromLog(line: str) -> dict:
 # Conducts the LOC and delta LOC analysis of a repository branch
 def analyzeCommits(commits: list, date0: datetime):
     loc_sum: int = 0  # TODO: Rename this variable
+    with PixelBar("test") as pb:
+        for index in range(len(commits) - 1):
+            hashX: str = commits[index]["hash"]
+            hashY: str = commits[index + 1]["hash"]
+            dateY: datetime = commits[index + 1]["date"]
 
-    for index in range(len(commits) - 1):
-        hashX: str = commits[index]["hash"]
-        hashY: str = commits[index + 1]["hash"]
-        dateY: datetime = commits[index + 1]["date"]
+            gdf: dict = gitDiffTree(hashX, hashY)
 
-        gdf: dict = gitDiffTree(hashX, hashY)
+            # Get the LOC from Git diff tree line
+            loc = map(lambda info: info["loc"], gdf)
 
-        # Get the LOC from Git diff tree line
-        loc = map(lambda info: info["loc"], gdf)
+            # TODO: Understand this line of code
+            delta_sum = reduce(lambda x, y: x + y, loc, 0)
 
-        # TODO: Understand this line of code
-        delta_sum = reduce(lambda x, y: x + y, loc, 0)
+            loc_sum += delta_sum
+            commit_day = (dateY - date0).days
+            result = {
+                "hash": hashY,
+                "delta_loc": delta_sum,
+                "loc_sum": loc_sum,
+                "day": commit_day,
+            }
 
-        loc_sum += delta_sum
-        commit_day = (dateY - date0).days
-        result = {
-            "hash": hashY,
-            "delta_loc": delta_sum,
-            "loc_sum": loc_sum,
-            "day": commit_day,
-        }
-
-        print(result)
-        yield result
+            # print(result)
+            pb.next()
+            yield result
 
 
 # Generate individual lines of a Git diff tree between two commits
