@@ -78,6 +78,8 @@ def analyzeCommits(commits: list, date0: datetime):
             "loc_sum": loc_sum,
             "day": commit_day,
         }
+
+        print(result)
         yield result
 
 
