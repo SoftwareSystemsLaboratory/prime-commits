@@ -6,7 +6,7 @@ from functools import reduce
 from os.path import exists, join
 
 from dateutil.parser import parse as dateParse
-from progress.bar import PixelBar
+from progress.bar import IncrementalBar
 
 
 # Command line arguement parsing
@@ -57,7 +57,7 @@ def parseCommitLineFromLog(line: str) -> dict:
 # Conducts the LOC and delta LOC analysis of a repository branch
 def analyzeCommits(commits: list, date0: datetime):
     loc_sum: int = 0  # TODO: Rename this variable
-    with PixelBar("test") as pb:
+    with IncrementalBar("Processing commits... ", max=len(commits) - 1) as ib:
         for index in range(len(commits) - 1):
             hashX: str = commits[index]["hash"]
             hashY: str = commits[index + 1]["hash"]
@@ -81,7 +81,7 @@ def analyzeCommits(commits: list, date0: datetime):
             }
 
             # print(result)
-            pb.next()
+            ib.next()
             yield result
 
 
