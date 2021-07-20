@@ -3,4 +3,5 @@ isort
 matplotlib
 numpy
 pandas
+progress
 python-dateutil
