@@ -16,44 +16,57 @@ The LOC calculation is done, naively, using the `wc` command. Support for runnin
 
 ### Notes
 
-* This project does not support arcane projects with multiple histories. Don't expect that to work reliably.
+* This project does not support arcane projects with multiple histories. Don't expect that to work reliably (yet).
 
-* Although we have taken every step to be "read only", please make sure you are not running this on anything of importance.
+* Although we have taken every step to be "read only" in our git usage to analyze the commits, please make sure you are not running this on anything of importance.
 
-## How to Execute the Program
+## Install 
 
-> It is reccomended to use `Python 3.9+` to execute this program
+```
+pip install git ssl-metrics-git-commits-loc
+```
 
-1. Install the requirements via `pip install -r requirements.txt`
-2. Execute `python git-commits-tree-diff.py --directory <checkout dir> --branch <branch to analyze> --save-json <filename.json>`
+## Run
 
-**Availible arguements**
+```
+$ ssl-metrics-git-commits-loc --directory <checkout dir> --branch <branch to analyze> --save-json <filename.json>
+```
+
+**Availible arguments**
 * `-d, --directory`: Directory where a `.git` folder is located. Default is `"."`.
 * `-b, --branch`: A branch that exists within the Git repository. Default is `main`.
 * `-s, --save-json`: The filename that will hold the output of the analysis.
 
-3. *(Optional Step)* To convert the data non-destructively to a `CSV` or `TSV`, run `python convertOutput --input <filename.json> --csv --tsv`
+## Convert Output (optional)
 
-**Availible arguements**
+```
+$ ssl-metrics-git-commits-convert --input <filename.json> --csv --tsv`
+```
+
+**Availible arguments**
 * `-i, --input`: The input `json` file to be converted
 * `--csv`: Flag to output a `CSV` file with the filename. EX: `filename.csv`
 * * `--tsv`: Flag to output a `TSV` file with the filename. EX: `filename.tsv`
 
-4. To get some basic graphs, run `python graph.py --input <filename.json>`
+## Visualize (optional)
 
-**Availible arguements**
+```
+$ ssl-metrics-git-commits-graph.py --input <filename.json>
+```
+
+**Availible arguments**
 * `-i, --input`: The input `json, csv, tsv` file to be graphed
 
 ## What You'll See
 
-### Exported JSON file from `git-commits-tree-diff.py`
+### Exported JSON file from `ssl-metrics-git-commits-loc`
 
 * Hash of the commit
 * `delta_loc`: Change in LOC since last commit
 * `loc_sum`: The total LOC of the commit
 * `day`: The "day" of the commit in reference of the timeline. 0 is the first day, and all dates in the commit histroy are converted to actual days of duration
 
-### Graph.py
+### Explanation of chart
 
 * A chart with a scatter plot overlayed on a line plot of the `delta_loc` on the y-axis, and the `day` on the x-axis.
 
