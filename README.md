@@ -23,7 +23,7 @@ The LOC calculation is done, naively, using the `wc` command. Support for runnin
 ## Install 
 
 ```
-pip install git ssl-metrics-git-commits-loc
+pip install ssl-metrics-git-commits-loc
 ```
 
 ## Run
@@ -51,7 +51,7 @@ $ ssl-metrics-git-commits-convert --input <filename.json> --csv --tsv`
 ## Visualize (optional)
 
 ```
-$ ssl-metrics-git-commits-graph.py --input <filename.json>
+$ ssl-metrics-git-commits-graph --input <filename.json>
 ```
 
 **Availible arguments**
