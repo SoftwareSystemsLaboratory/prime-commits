@@ -4,7 +4,7 @@ from setuptools import setup
 from ssl_metrics import version
 
 setup(
-    name='ssl-metrics',
+    name='ssl-metrics-git-commits-loc',
     packages=['ssl_metrics'],
     version=version.version(),
     description='SSL Metrics - Git History (LOC/KLOC) Analysis',
