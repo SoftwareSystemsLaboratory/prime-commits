@@ -153,7 +153,7 @@ def exportJSON(filename, commitInfo):
 
 
 # Script to execute program
-def go() -> bool:
+def main() -> bool:
     # Setup variables
     pwd = os.getcwd()
     args = get_argparse().parse_args()
@@ -189,4 +189,4 @@ def go() -> bool:
 
 
 if __name__ == "__main__":
-    go()
+    main()

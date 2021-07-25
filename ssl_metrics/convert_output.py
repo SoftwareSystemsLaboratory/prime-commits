@@ -42,8 +42,7 @@ def convertToCSV(df: DataFrame, filename: str) -> None:
 def convertToTSV(df: DataFrame, filename: str) -> None:
     df.to_csv(filename, sep="\t", index=False)
 
-
-if __name__ == "__main__":
+def main():
     args: Namespace = get_argparse().parse_args()
 
     if args.csv is None and args.tsv is None:
@@ -60,3 +59,7 @@ if __name__ == "__main__":
 
     if args.tsv:
         convertToTSV(df, filename=filenamePrefix + ".tsv")
+
+if __name__ == "__main__":
+    main()
+
