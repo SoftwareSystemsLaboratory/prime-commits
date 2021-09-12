@@ -22,7 +22,6 @@ setup(
     entry_points={
         "console_scripts": [
             "ssl-metrics-git-commits-loc = ssl_metrics.git_commits_loc:main",
-            "ssl-metrics-git-commits-convert = ssl_metrics.convert_output:main",
             "ssl-metrics-git-commits-graph = ssl_metrics.create_graph:main",
         ]
     },
