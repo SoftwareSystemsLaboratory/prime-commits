@@ -68,7 +68,6 @@ def analyzeCommits(commits: list, date0: datetime):
             # Get the LOC from Git diff tree line
             loc = map(lambda info: info["loc"], gdf)
 
-            # TODO: Understand this line of code
             delta_sum = reduce(lambda x, y: x + y, loc, 0)
 
             loc_sum += delta_sum
@@ -80,7 +79,6 @@ def analyzeCommits(commits: list, date0: datetime):
                 "day": commit_day,
             }
 
-            # print(result)
             ib.next()
             yield result
 
@@ -178,8 +176,6 @@ def main() -> bool:
         commit_info = list(commit_info_iter)
         delta_loc_iter = map(lambda info: info["delta_loc"], commit_info)
         loc_sum = reduce(lambda x, y: x + y, delta_loc_iter, 0)
-
-        # print("KLOC sum: {}".format(loc_sum / 1000.0))
 
     if args.save_json:
         exportJSON(args.save_json, commit_info)
