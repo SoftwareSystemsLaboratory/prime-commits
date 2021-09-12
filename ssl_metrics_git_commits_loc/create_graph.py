@@ -1,8 +1,8 @@
 from argparse import ArgumentParser, Namespace
-from matplotlib.figure import Figure
 
 import matplotlib.pyplot as plt
 import pandas
+from matplotlib.figure import Figure
 from pandas import DataFrame
 
 
@@ -43,10 +43,12 @@ def plot(df: DataFrame) -> None:
     plt.plot([x for x in range(len(df["delta_loc"]))], df["delta_loc"])
     figure.savefig("test.png")
 
+
 def helloworld():
     fig = plt.figure()
     plt.plot([1, 2, 3, 4], [1, 4, 2, 3])
     fig.savefig("test.png")
+
 
 def main():
     args: Namespace = get_argparse().parse_args()
@@ -57,6 +59,7 @@ def main():
     df = createDataFrame(filename=filename, filetype=filenameSuffix)
 
     plot(df)
+
 
 if __name__ == "__main__":
     main()
