@@ -1,75 +1,59 @@
-# SSL Metrics Git Commits LOC Timeline
+# SSL Metrics Git LOC Timeline
 
-> (Proof of Concept) Using git diff trees to analyze the git commit timeline
+> Using Git, provide insight into a branches commit LOC changes over time
 
-## Reasoning Behind the Project
+[![Publish to PyPi](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/pypi.yml/badge.svg)](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/pypi.yml)
 
-We're interested in classical metrics, which often require us to look more longtudinally at project history.
+## Table of Contents
 
-In this example, we're looking at LOC (lines of code) changes between commits, starting from the "root" of the project history.
+- [SSL Metrics Git LOC Timeline](#ssl-metrics-git-loc-timeline)
+  - [Table of Contents](#table-of-contents)
+  - [About](#about)
+  - [How to Run](#how-to-run)
+    - [Note on Command Line Arguments](#note-on-command-line-arguments)
+    - [From pip](#from-pip)
+    - [Command Line Arguments](#command-line-arguments)
+      - [ssl-metrics-git-commits-loc](#ssl-metrics-git-commits-loc)
+      - [ssl-metrics-git-commits-graph](#ssl-metrics-git-commits-graph)
+        - [Note on Graph Export Options](#note-on-graph-export-options)
 
-The present implementation assumes a freshly checked out Git project.
+## About
 
-### Technical Note
+This project is a proof of concept demonstration that **it is possible** to generate useful insights into a Git project via the `git` command line interface.
 
-The LOC calculation is done, naively, using the `wc` command. Support for running any external tool, incudng `cloc` (which is popular and quite good) is coming next.
+Currently, this project generates a graph of:
 
-### Notes
+- Number of lines of code against days
 
-* This project does not support arcane projects with multiple histories. Don't expect that to work reliably (yet).
+## How to Run
 
-* Although we have taken every step to be "read only" in our git usage to analyze the commits, please make sure you are not running this on anything of importance.
+### Note on Command Line Arguments
 
-## Install 
+See [Command Line Arguments](#command-line-arguments) for program configuration from the command line
 
-```
-pip install ssl-metrics-git-commits-loc
-```
+### From pip
 
-## Run
+1. Install `Python 3.9.6 +`
+2. (Recommended) Create a *virtual environment* with `python3.9 -m venv env` and *activate* it
+3. Run `pip install ssl-metrics-git-commits-loc`
+4. Generate a JSON data set with `ssl-metrics-git-commits-loc -d DIRECTORY -b BRANCH -s FILENAME.json`
+5. Generate graphs with `ssl-metrics-git-commits-graph -i FILENAME.json -o GRAPH_FILENAME.*`
 
-```
-$ ssl-metrics-git-commits-loc --directory <checkout dir> --branch <branch to analyze> --save-json <filename.json>
-```
+### Command Line Arguments
 
-**Availible arguments**
-* `-d, --directory`: Directory where a `.git` folder is located. Default is `"."`.
-* `-b, --branch`: A branch that exists within the Git repository. Default is `main`.
-* `-s, --save-json`: The filename that will hold the output of the analysis.
+#### ssl-metrics-git-commits-loc
 
-## Convert Output (optional)
+- `-h`, `--help`: Shows the help menu and exits
+- `-d`, `--directory`: Directory where the `.git` folder is located
+- `-b`, `--branch`: Git branch to analyze
+- `-s`, `--save-json`: Save analysis to JSON file
 
-```
-$ ssl-metrics-git-commits-convert --input <filename.json> --csv --tsv`
-```
+#### ssl-metrics-git-commits-graph
 
-**Availible arguments**
-* `-i, --input`: The input `json` file to be converted
-* `--csv`: Flag to output a `CSV` file with the filename. EX: `filename.csv`
-* * `--tsv`: Flag to output a `TSV` file with the filename. EX: `filename.tsv`
+##### Note on Graph Export Options
 
-## Visualize (optional)
+Arguement `-o` can be of any of the formats that `matplotlibs.pyplot.savefig` function exports to.
 
-```
-$ ssl-metrics-git-commits-graph --input <filename.json>
-```
-
-**Availible arguments**
-* `-i, --input`: The input `json, csv, tsv` file to be graphed
-
-## What You'll See
-
-### Exported JSON file from `ssl-metrics-git-commits-loc`
-
-* Hash of the commit
-* `delta_loc`: Change in LOC since last commit
-* `loc_sum`: The total LOC of the commit
-* `day`: The "day" of the commit in reference of the timeline. 0 is the first day, and all dates in the commit histroy are converted to actual days of duration
-
-### Explanation of chart
-
-* A chart with a scatter plot overlayed on a line plot of the `delta_loc` on the y-axis, and the `day` on the x-axis.
-
-## TODOs
-
-* Support some of the derived metrics from our Metrics Pipeline project at https://ssl.cs.luc.edu.
+- `-h`, `--help`: Shows the help menu and exits
+- `-i`, `--input`: The input JSON file that is to be used for graphing
+- `-o`, `--output`: The filename of the output graph
