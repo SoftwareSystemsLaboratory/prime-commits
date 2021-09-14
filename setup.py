@@ -30,8 +30,8 @@ setup(
     install_requires=["matplotlib", "numpy", "pandas", "progress", "python-dateutil"],
     entry_points={
         "console_scripts": [
-            "ssl-metrics-git-commits-loc = ssl_metrics.git_commits_loc:main",
-            "ssl-metrics-git-commits-graph = ssl_metrics.create_graph:main",
+            "ssl-metrics-git-commits-loc = ssl_metrics_git_commits_loc.git_commits_loc:main",
+            "ssl-metrics-git-commits-graph = ssl_metrics_git_commits_loc.create_graph:main",
         ]
     },
 )
