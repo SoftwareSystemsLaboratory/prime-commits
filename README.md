@@ -36,16 +36,16 @@ See [Command Line Arguments](#command-line-arguments) for program configuration 
 1. Install `Python 3.9.6 +`
 2. (Recommended) Create a *virtual environment* with `python3.9 -m venv env` and *activate* it
 3. Run `pip install ssl-metrics-git-commits-loc`
-4. Generate a JSON data set with `ssl-metrics-git-commits-loc -r REPOSITORY -t GH_TOKEN -s FILENAME.json`
-5. Generate graphs with `ssl-metrics-git-commits-graph -o OPEN_ISSUES_GRAPH_FILENAME.* -c CLOSED_ISSUES_GRAPH_FILENAME.* -x JOINT_ISSUES_GRAPH_FILENAME`
+4. Generate a JSON data set with `ssl-metrics-git-commits-loc -d DIRECTORY -b BRANCH -s FILENAME.json`
+5. Generate graphs with `ssl-metrics-git-commits-graph -i FILENAME.json -o OPEN_ISSUES_GRAPH_FILENAME.* -c CLOSED_ISSUES_GRAPH_FILENAME.* -x JOINT_ISSUES_GRAPH_FILENAME`
 
 ### Command Line Arguments
 
 #### ssl-metrics-git-commits-loc
 
 - `-h`, `--help`: Shows the help menu and exits
-- `-r`, `--repository`: GitHub repository to be used. Format needs to be "OWNER/REPO". Default is numpy/numpy
-- `-t`, `--token`: [GitHub personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+- `-d`, `--directory`: Directory where the `.git` folder is located
+- `-b`, `--branch`: Git branch to analyze
 - `-s`, `--save-json`: Save analysis to JSON file
 
 #### ssl-metrics-git-commits-graph

@@ -1,4 +1,5 @@
 from argparse import ArgumentParser, Namespace
+from os import path
 
 import matplotlib.pyplot as plt
 import pandas
@@ -6,7 +7,7 @@ from matplotlib.figure import Figure
 from pandas import DataFrame
 
 
-def get_argparse() -> ArgumentParser:
+def get_argparse() -> Namespace:
     parser: ArgumentParser = ArgumentParser(
         prog="Convert Output",
         usage="This program converts a JSON file into various different formats.",
@@ -18,41 +19,36 @@ def get_argparse() -> ArgumentParser:
         type=str,
         required=True,
     )
-    return parser
-
-
-def createDataFrame(filename: str, filetype: str = "json") -> DataFrame:
-    if filetype == "json":
-        return pandas.read_json(filename)
-    elif filetype == "csv":
-        return pandas.read_csv(filename)
-    elif filetype == "tsv":
-        return pandas.read_csv(filename, sep="\t")
-    else:
-        print("Invalid file type. File needs to be a .json, .csv, or .tsv file.")
-        quit(1)
+    parser.add_argument(
+        "-o",
+        "--output",
+        help="The filename to output the graph to",
+        type=str,
+        required=True,
+    )
+    return parser.parse_args()
 
 
 # delta_loc over time where time is spaced by commit
-def plot(df: DataFrame) -> None:
+def plot(df: DataFrame, filename: str) -> None:
     figure: Figure = plt.figure()
     plt.ylabel("delta_loc")
     plt.xlabel("Commit Number")
     plt.title("delta_loc Over Commits")
-    plt.scatter([x for x in range(len(df["delta_loc"]))], df["delta_loc"])
     plt.plot([x for x in range(len(df["delta_loc"]))], df["delta_loc"])
-    figure.savefig("test.png")
+    figure.savefig(filename)
 
 
 def main():
-    args: Namespace = get_argparse().parse_args()
+    args: Namespace = get_argparse()
 
-    filename: str = args.input
-    filenameSuffix: str = filename.split(".")[1]
+    if args.input[-5::] != ".json":
+        print("Invalid input file type. Input file must be JSON")
+        quit(1)
 
-    df = createDataFrame(filename=filename, filetype=filenameSuffix)
+    df: DataFrame = pandas.read_json(args.input)
 
-    plot(df)
+    plot(df, filename=args.output)
 
 
 if __name__ == "__main__":
