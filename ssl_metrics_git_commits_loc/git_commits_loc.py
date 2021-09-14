@@ -12,7 +12,7 @@ from progress.bar import IncrementalBar
 # Command line arguement parsing
 def get_argparse() -> ArgumentParser:
     parser: ArgumentParser = ArgumentParser(
-        prog="Git All Python (CLI Only)",
+        prog="ssl-metrics-git-commits-loc",
         usage="This program outputs the lines of code (LOC) per commit and the delta LOC of a Git repository in JSON format.",
     )
     parser.add_argument(
