@@ -21,7 +21,7 @@ def get_argparse() -> ArgumentParser:
         help="Directory containing repository root folder (.git)",
         default=".",
         type=str,
-        required=False,
+        required=True,
     )
     parser.add_argument(
         "-b",
@@ -29,7 +29,7 @@ def get_argparse() -> ArgumentParser:
         help="Default branch for analysis to be ran on",
         default="main",
         type=str,
-        required=False,
+        required=True,
     )
     parser.add_argument(
         "-s",
@@ -50,8 +50,17 @@ def repoExists(directory: str = ".") -> bool:
 
 # Returns dict{str, datetime}
 def parseCommitLineFromLog(line: str) -> dict:
-    (hash, date) = line.split(";")[:2]
-    return {"hash": hash, "date": dateParse(date)}
+    splitLine: list = line.split(";")
+    name: str = splitLine[0]
+    email: str = splitLine[1]
+    hash: str = splitLine[2]
+    date = splitLine[-1]
+    return {
+        "author_name": name,
+        "author_email": email,
+        "hash": hash,
+        "date": dateParse(date),
+    }
 
 
 # Conducts the LOC and delta LOC analysis of a repository branch
@@ -59,8 +68,11 @@ def analyzeCommits(commits: list, date0: datetime):
     loc_sum: int = 0  # TODO: Rename this variable
     with IncrementalBar("Processing commits... ", max=len(commits) - 1) as ib:
         for index in range(len(commits) - 1):
+            authorName: str = commits[index]["author_name"]
+            authorEmail: str = commits[index]["author_email"]
             hashX: str = commits[index]["hash"]
             hashY: str = commits[index + 1]["hash"]
+            commitDate: str = commits[index]["date"].strftime("%m/%d/%Y")
             dateY: datetime = commits[index + 1]["date"]
 
             gdf: dict = gitDiffTree(hashX, hashY)
@@ -73,10 +85,13 @@ def analyzeCommits(commits: list, date0: datetime):
             loc_sum += delta_sum
             commit_day = (dateY - date0).days
             result = {
+                "author_name": authorName,
+                "author_email": authorEmail,
                 "hash": hashY,
                 "delta_loc": delta_sum,
                 "loc_sum": loc_sum,
-                "day": commit_day,
+                "commit_date": commitDate,
+                "day_since_0": commit_day,
             }
 
             ib.next()
@@ -165,12 +180,21 @@ def main() -> bool:
 
     # Get list of commits from starting from the first commit of the repository
     # Git log help page: https://www.git-scm.com/docs/git-log
-    with os.popen(r'git log --reverse --pretty=format:"%H;%ci"') as gitLogPipe:
+    with os.popen(r'git log --reverse --pretty=format:"%an;%ae;%H;%ci"') as gitLogPipe:
         commits: list = [parseCommitLineFromLog(line=commit) for commit in gitLogPipe]
 
         # Hack to get the first commit into the commits list
+        commit0AuthorName: str = commits[0]["author_name"]
+        commit0AuthorEmail: str = commits[0]["author_email"]
         commit0Date: datetime = commits[0]["date"]
-        commits = [{"hash": "--root", "date": commit0Date}] + commits
+        commits = [
+            {
+                "author_name": commit0AuthorName,
+                "author_email": commit0AuthorEmail,
+                "hash": "--root",
+                "date": commit0Date,
+            }
+        ] + commits
 
         commit_info_iter = analyzeCommits(commits=commits, date0=commits[0]["date"])
         commit_info = list(commit_info_iter)
