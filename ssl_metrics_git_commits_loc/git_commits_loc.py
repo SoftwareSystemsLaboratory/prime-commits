@@ -90,6 +90,7 @@ def analyzeCommits(commits: list, date0: datetime):
                 "hash": hashY,
                 "delta_loc": delta_sum,
                 "loc_sum": loc_sum,
+                "kloc": float(loc_sum / 1000),
                 "commit_date": commitDate,
                 "day_since_0": commit_day,
             }
