@@ -47,7 +47,13 @@ setup(
         "Operating System :: MacOS",
     ],
     python_requires=">=3.9",
-    install_requires=["matplotlib", "numpy", "pandas", "progress", "python-dateutil"],
+    install_requires=[
+        "matplotlib>=3.4.3",
+        "numpy>=1.21.2",
+        "pandas>=1.3.3",
+        "progress>=1.6",
+        "python-dateutil>=2.8.2",
+    ],
     entry_points={
         "console_scripts": [
             "ssl-metrics-git-commits-loc = ssl_metrics_git_commits_loc.git_commits_loc:main",
