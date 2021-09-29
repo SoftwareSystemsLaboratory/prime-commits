@@ -1,9 +1,0 @@
-{
-    "name": "Git All Python (CLI Only)",
-    "extensions": [
-        "ms-python.python",
-        "mechatroner.rainbow-csv",
-        "yzhang.markdown-all-in-one"
-    ],
-    "image": "python:3.9.6-buster"
-}
