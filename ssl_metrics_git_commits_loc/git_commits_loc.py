@@ -66,6 +66,7 @@ def parseCommitLineFromLog(line: str) -> dict:
 # Conducts the LOC and delta LOC analysis of a repository branch
 def analyzeCommits(commits: list, date0: datetime):
     loc_sum: int = 0  # TODO: Rename this variable
+    commitCounter: int = 0
     with IncrementalBar("Processing commits... ", max=len(commits) - 1) as ib:
         for index in range(len(commits) - 1):
             authorName: str = commits[index]["author_name"]
@@ -85,6 +86,7 @@ def analyzeCommits(commits: list, date0: datetime):
             loc_sum += delta_sum
             commit_day = (dateY - date0).days
             result = {
+                "commit_number": commitCounter,
                 "author_name": authorName,
                 "author_email": authorEmail,
                 "hash": hashY,
@@ -95,6 +97,7 @@ def analyzeCommits(commits: list, date0: datetime):
                 "day_since_0": commit_day,
             }
 
+            commitCounter += 1
             ib.next()
             yield result
 
