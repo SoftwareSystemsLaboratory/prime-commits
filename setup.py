@@ -27,7 +27,13 @@ setup(
         "License :: OSI Approved :: Apache Software License",
     ],
     python_requires=">=3.9",
-    install_requires=["matplotlib", "numpy", "pandas", "progress", "python-dateutil"],
+    install_requires=[
+        "matplotlib",
+        "numpy",
+        "pandas",
+        "progress",
+        "python-dateutil",
+    ],
     entry_points={
         "console_scripts": [
             "ssl-metrics-git-commits-loc = ssl_metrics_git_commits_loc.git_commits_loc:main",
