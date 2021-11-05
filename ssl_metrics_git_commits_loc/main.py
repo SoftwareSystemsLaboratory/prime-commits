@@ -206,7 +206,7 @@ def main() -> bool:
         loc_sum = reduce(lambda x, y: x + y, delta_loc_iter, 0)
 
     if args.save_json:
-        exportJSON(args.save_json, commit_info)
+        exportJSON(join(pwd, args.save_json), commit_info)
 
     os.chdir(pwd)
     return True

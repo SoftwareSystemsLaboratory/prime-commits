@@ -65,9 +65,9 @@ def plot_DeltaLOC(df: DataFrame, filename: str) -> None:
 
 def plot_KLOC(df: DataFrame, filename: str) -> None:
     figure: Figure = plt.figure()
-    plt.ylabel("K LOC")
+    plt.ylabel("KLOC")
     plt.xlabel("Commit Number")
-    plt.title("Thousands of Lines of Code (K LOC) Over Commits")
+    plt.title("Thousands of Lines of Code (KLOC) Over Commits")
     plt.plot([x for x in range(len(df["kloc"]))], df["kloc"])
     figure.savefig(filename)
 
