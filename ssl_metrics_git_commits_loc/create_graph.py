@@ -145,10 +145,10 @@ def plotBestFitLine(
     yLabel: str,
     title: str,
     filename: str,
-) -> None:
+) -> np.poly1d:
     data: tuple = findBestFitLine(x=x, y=y, maximumDegrees=maximumDegree)
 
-    model = data[-1]
+    model: np.poly1d = data[1]
     line: np.ndarray = np.linspace(0, max(x), 100)
 
     figure: Figure = plt.figure()
@@ -162,6 +162,31 @@ def plotBestFitLine(
     figure.savefig(filename)
     figure.clf()
 
+    return model
+
+def plotDerivative (
+    model: np.poly1d,
+    order: int,
+    maximumXValue: int,
+    xLabel: str,
+    yLabel: str,
+    title: str,
+    filename: str,
+) -> np.poly1d:
+    model = np.polyder(p=model, m=order)
+    line: np.ndarray = np.linspace(0, maximumXValue, 100)
+
+    figure: Figure = plt.figure()
+
+    plt.ylabel(ylabel=yLabel)
+    plt.xlabel(xlabel=xLabel)
+    plt.title(title)
+
+    plt.plot(line, model(line))
+    figure.savefig(filename)
+    figure.clf()
+
+    return model
 
 def main() -> None:
     locXLabel: str = "Commit"
@@ -206,7 +231,7 @@ def main() -> None:
         filename=args.graph_k_loc,
     )
 
-    plotBestFitLine(
+    bfLOC: np.poly1d = plotBestFitLine(
         x=loc[0],
         y=loc[1],
         maximumDegree=15,
@@ -216,6 +241,9 @@ def main() -> None:
         filename=args.graph_best_fit_loc,
     )
 
+    vLOC: np.poly1d = plotDerivative(model=bfLOC, order=1, maximumXValue=max(loc[0]), xLabel=locXLabel, yLabel="Velocity", title="Velocity of LOC / Commits", filename="velocityLOC.png")
+
+    aLOC: np.poly1d = plotDerivative(model=vLOC, order=1, maximumXValue=max(loc[0]), xLabel=locXLabel, yLabel="Acceleration", title="Acceleration of LOC / Commits", filename="accelerationLOC.png")
 
 if __name__ == "__main__":
     main()
