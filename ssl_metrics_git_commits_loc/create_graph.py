@@ -5,7 +5,9 @@ import matplotlib.pyplot as plt
 import pandas
 from matplotlib.figure import Figure
 from numpy.polynomial import Polynomial as poly
+from scipy.optimize import curve_fit
 from pandas import DataFrame
+
 
 def get_argparse() -> Namespace:
     parser: ArgumentParser = ArgumentParser(
@@ -82,41 +84,42 @@ def plot_KLOC(df: DataFrame, filename: str) -> None:
     figure.savefig(filename)
 
 
-def plot_BestFit_LOC(df: DataFrame, filename: str) -> None:
-    figure: Figure = plt.figure()
-    plt.ylabel("?")
-    plt.xlabel("Commit Number")
-    plt.title("Line of Best Fit for LOC Graph")
+# def plot_BestFit_LOC(df: DataFrame, filename: str) -> None:
+#     figure: Figure = plt.figure()
+#     plt.ylabel("?")
+#     plt.xlabel("Commit Number")
+#     plt.title("Line of Best Fit for LOC Graph")
 
-    x: list = [x for x in range(len(df["loc_sum"]))]
-    yActual = df["loc_sum"]
+#     x: list = [x for x in range(len(df["loc_sum"]))]
+#     yActual = df["loc_sum"]
 
-    p = poly.fit(x, yActual, 3).convert().coef
-    pLength: int = len(p) 
-    yBestFit: list = []
+#     p = poly.fit(x, yActual, 3).convert().coef
+#     pLength: int = len(p)
+#     yBestFit: list = []
 
-    xValue: int
-    for xValue in x:
-        sum: float = 0
+#     xValue: int
+#     for xValue in x:
+#         sum: float = 0
 
-        pointer: int
-        for pointer in range(pLength):
-            sum += (xValue ** (pLength - (pointer + 1))) * p[pointer]
-        
-        sum += p[-1]
-        yBestFit.append(sum)
+#         pointer: int
+#         for pointer in range(pLength):
+#             sum += (xValue ** (pLength - (pointer + 1))) * p[pointer]
 
-    equation:str = ""
-    for pointer in range(pLength):
-        equation += f"{p[pointer]}x^{pLength - (pointer + 1)} + "
-   
-    plt.plot(x, yBestFit)
-    # plt.plot(x, yActual, color="black")
+#         sum += p[-1]
+#         yBestFit.append(sum)
 
-    plt.tight_layout()
-    figure.savefig(filename)
-    figure.clf()
-    print(equation)
+#     equation: str = ""
+#     for pointer in range(pLength):
+#         equation += f"{p[pointer]}x^{pLength - (pointer + 1)} + "
+
+#     plt.plot(x, yBestFit)
+#     # plt.plot(x, yActual, color="black")
+
+#     plt.tight_layout()
+#     figure.savefig(filename)
+#     figure.clf()
+#     print(equation)
+
 
 def main() -> None:
     args: Namespace = get_argparse()
