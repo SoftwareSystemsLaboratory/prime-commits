@@ -52,7 +52,7 @@ def getArgparse() -> Namespace:
     return parser.parse_args()
 
 
-def findBestFitLine(x, y, maximumDegrees: int)   ->  dict:
+def findBestFitLine(x: list, y: list, maximumDegrees: int)   ->  dict:
         # https://www.w3schools.com/Python/python_ml_polynomial_regression.asp
         data: dict = {}
 
@@ -67,45 +67,61 @@ def findBestFitLine(x, y, maximumDegrees: int)   ->  dict:
         return data
 
 
-def plotLOC(df: DataFrame, filename: str) -> None:
+def plotLOC(df: DataFrame, filename: str) -> tuple:
+    x: list = [x for x in range(len(df["loc_sum"]))]
+    y: list = df["loc_sum"].tolist()
+
     figure: Figure = plt.figure()
+
     plt.ylabel("LOC")
     plt.xlabel("Commit Number")
     plt.title("Lines of Code (LOC) Over Commits")
-    plt.scatter([x for x in range(len(df["loc_sum"]))], df["loc_sum"])
+    plt.plot(x, y)
     plt.tight_layout()
+
     figure.savefig(filename)
     figure.clf()
+    return (x, y)
 
+def plotDeltaLOC(df: DataFrame, filename: str) -> tuple:
+    x: list = [x for x in range(len(df["delta_loc"]))]
+    y: list = df["delta_loc"].tolist()
 
-def plotDeltaLOC(df: DataFrame, filename: str) -> None:
     figure: Figure = plt.figure()
+
     plt.ylabel("Delta LOC")
     plt.xlabel("Commit Number")
     plt.title("Change of Lines of Code (Delta LOC) Over Commits")
-    plt.plot([x for x in range(len(df["delta_loc"]))], df["delta_loc"])
+    plt.plot(x, y)
     plt.tight_layout()
+
     figure.savefig(filename)
     figure.clf()
+    return (x,y)
 
 
-def plotKLOC(df: DataFrame, filename: str) -> None:
+def plotKLOC(df: DataFrame, filename: str) -> tuple:
+    x: list = [x for x in range(len(df["kloc"]))]
+    y: list = df["kloc"].to_list()
+
     figure: Figure = plt.figure()
+
     plt.ylabel("KLOC")
     plt.xlabel("Commit Number")
     plt.title("Thousands of Lines of Code (KLOC) Over Commits")
-    plt.plot([x for x in range(len(df["kloc"]))], df["kloc"])
+    plt.plot(x, y)
     plt.tight_layout()
+
     figure.savefig(filename)
+    figure.clf()
 
+    return (x,y)
 
-def plotBestFitLOC(df: DataFrame, filename: str) -> None:
-    x: list = [x for x in range(len(df["loc_sum"]))]
-    y: list = df["loc_sum"]
+def plotBestFitLine(x: list, y:list, maximumDegree:int, filename: str) -> None:
 
     model = np.poly1d(np.polyfit(x, y, 15))
     print(r2_score(y, model(x)))
-    myLine = np.linspace(0, max(x), 100)
+    myLine: np.ndarray = np.linspace(0, max(x), 100)
 
     figure: Figure = plt.figure()
     plt.ylabel("?")
