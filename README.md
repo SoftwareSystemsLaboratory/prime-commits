@@ -4,7 +4,7 @@
 
 [![DOI](https://zenodo.org/badge/374020358.svg)](https://zenodo.org/badge/latestdoi/374020358)
 
-[![Publish to PyPi](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/pypi.yml/badge.svg)](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/pypi.yml)
+[![Release to PyPi, GitHub, and Zenodo](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/release.yml/badge.svg)](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/release.yml)
 
 ## About
 
