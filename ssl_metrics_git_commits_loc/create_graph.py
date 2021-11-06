@@ -2,14 +2,14 @@ from argparse import ArgumentParser, Namespace
 from os import path
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas
 from matplotlib.figure import Figure
-from numpy.polynomial import Polynomial as poly
-from scipy.optimize import curve_fit
 from pandas import DataFrame
+from sklearn.metrics import r2_score
 
 
-def get_argparse() -> Namespace:
+def getArgparse() -> Namespace:
     parser: ArgumentParser = ArgumentParser(
         prog="Convert Output",
         usage="This program converts a JSON file into various different formats.",
@@ -52,7 +52,22 @@ def get_argparse() -> Namespace:
     return parser.parse_args()
 
 
-def plot_LOC(df: DataFrame, filename: str) -> None:
+def findBestFitLine(x, y, maximumDegrees: int)   ->  dict:
+        # https://www.w3schools.com/Python/python_ml_polynomial_regression.asp
+        data: dict = {}
+
+        degree: int
+        for degree in maximumDegrees:
+            temp: dict = {}
+            model: np.poly1d = np.poly1d(np.polyfit(x, y, degree))
+            temp["model"] = model
+            temp["r2Score"] = r2_score(y, model(x))
+            data[degree] = temp
+
+        return data
+
+
+def plotLOC(df: DataFrame, filename: str) -> None:
     figure: Figure = plt.figure()
     plt.ylabel("LOC")
     plt.xlabel("Commit Number")
@@ -63,7 +78,7 @@ def plot_LOC(df: DataFrame, filename: str) -> None:
     figure.clf()
 
 
-def plot_DeltaLOC(df: DataFrame, filename: str) -> None:
+def plotDeltaLOC(df: DataFrame, filename: str) -> None:
     figure: Figure = plt.figure()
     plt.ylabel("Delta LOC")
     plt.xlabel("Commit Number")
@@ -74,7 +89,7 @@ def plot_DeltaLOC(df: DataFrame, filename: str) -> None:
     figure.clf()
 
 
-def plot_KLOC(df: DataFrame, filename: str) -> None:
+def plotKLOC(df: DataFrame, filename: str) -> None:
     figure: Figure = plt.figure()
     plt.ylabel("KLOC")
     plt.xlabel("Commit Number")
@@ -84,45 +99,27 @@ def plot_KLOC(df: DataFrame, filename: str) -> None:
     figure.savefig(filename)
 
 
-# def plot_BestFit_LOC(df: DataFrame, filename: str) -> None:
-#     figure: Figure = plt.figure()
-#     plt.ylabel("?")
-#     plt.xlabel("Commit Number")
-#     plt.title("Line of Best Fit for LOC Graph")
+def plotBestFitLOC(df: DataFrame, filename: str) -> None:
+    x: list = [x for x in range(len(df["loc_sum"]))]
+    y: list = df["loc_sum"]
 
-#     x: list = [x for x in range(len(df["loc_sum"]))]
-#     yActual = df["loc_sum"]
+    model = np.poly1d(np.polyfit(x, y, 15))
+    print(r2_score(y, model(x)))
+    myLine = np.linspace(0, max(x), 100)
 
-#     p = poly.fit(x, yActual, 3).convert().coef
-#     pLength: int = len(p)
-#     yBestFit: list = []
+    figure: Figure = plt.figure()
+    plt.ylabel("?")
+    plt.xlabel("Commit Number")
+    plt.title("Line of Best Fit for LOC Graph")
 
-#     xValue: int
-#     for xValue in x:
-#         sum: float = 0
-
-#         pointer: int
-#         for pointer in range(pLength):
-#             sum += (xValue ** (pLength - (pointer + 1))) * p[pointer]
-
-#         sum += p[-1]
-#         yBestFit.append(sum)
-
-#     equation: str = ""
-#     for pointer in range(pLength):
-#         equation += f"{p[pointer]}x^{pLength - (pointer + 1)} + "
-
-#     plt.plot(x, yBestFit)
-#     # plt.plot(x, yActual, color="black")
-
-#     plt.tight_layout()
-#     figure.savefig(filename)
-#     figure.clf()
-#     print(equation)
+    plt.plot(x, y)
+    plt.plot(myLine, model(myLine), "g--")
+    figure.savefig(filename)
+    figure.clf()
 
 
 def main() -> None:
-    args: Namespace = get_argparse()
+    args: Namespace = getArgparse()
 
     if args.input[-5::] != ".json":
         print("Invalid input file type. Input file must be JSON")
@@ -130,10 +127,10 @@ def main() -> None:
 
     df: DataFrame = pandas.read_json(args.input)
 
-    plot_LOC(df, filename=args.graph_loc)
-    plot_DeltaLOC(df, filename=args.graph_delta_loc)
-    plot_KLOC(df, filename=args.graph_k_loc)
-    plot_BestFit_LOC(df, args.graph_best_fit_loc)
+    plotLOC(df, filename=args.graph_loc)
+    plotDeltaLOC(df, filename=args.graph_delta_loc)
+    plotKLOC(df, filename=args.graph_k_loc)
+    plotBestFitLOC(df, args.graph_best_fit_loc)
 
 
 if __name__ == "__main__":

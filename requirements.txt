@@ -3,4 +3,4 @@ numpy
 pandas
 progress
 python-dateutil
-scipy
+scikit-learn
