@@ -49,6 +49,7 @@ def plot_LOC(df: DataFrame, filename: str) -> None:
     plt.xlabel("Commit Number")
     plt.title("Lines of Code (LOC) Over Commits")
     plt.plot([x for x in range(len(df["loc_sum"]))], df["loc_sum"])
+    plt.tight_layout()
     figure.savefig(filename)
     figure.clf()
 
@@ -59,6 +60,7 @@ def plot_DeltaLOC(df: DataFrame, filename: str) -> None:
     plt.xlabel("Commit Number")
     plt.title("Change of Lines of Code (Delta LOC) Over Commits")
     plt.plot([x for x in range(len(df["delta_loc"]))], df["delta_loc"])
+    plt.tight_layout()
     figure.savefig(filename)
     figure.clf()
 
@@ -69,6 +71,7 @@ def plot_KLOC(df: DataFrame, filename: str) -> None:
     plt.xlabel("Commit Number")
     plt.title("Thousands of Lines of Code (KLOC) Over Commits")
     plt.plot([x for x in range(len(df["kloc"]))], df["kloc"])
+    plt.tight_layout()
     figure.savefig(filename)
 
 
