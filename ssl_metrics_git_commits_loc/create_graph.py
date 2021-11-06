@@ -164,6 +164,18 @@ def plotBestFitLine(
 
 
 def main() -> None:
+    locXLabel: str = "Commit"
+    locYLabel: str = "LOC"
+    locTitle: str = "Lines of Code (LOC) / Commits"
+
+    dlocXLabel: str = locXLabel
+    dlocYLabel: str = "ΔLOC"
+    dlocTitle: str = "Change of Lines of Code (ΔLOC) / Days"
+
+    klocXLabel: str = locXLabel
+    klocYLabel: str = "KLOC"
+    klocTitle: str = "Thousands of Lines of Code (KLOC) / Days"
+
     args: Namespace = getArgparse()
 
     if args.input[-5::] != ".json":
@@ -172,17 +184,35 @@ def main() -> None:
 
     df: DataFrame = pandas.read_json(args.input)
 
-    loc: tuple = plotLOC(df, filename=args.graph_loc)
-    dloc: tuple = plotDeltaLOC(df, filename=args.graph_delta_loc)
-    kloc: tuple = plotKLOC(df, filename=args.graph_k_loc)
+    loc: tuple = plotLOC(
+        df=df,
+        xLabel=locXLabel,
+        yLabel=locYLabel,
+        title=locTitle,
+        filename=args.graph_loc,
+    )
+    dloc: tuple = plotDeltaLOC(
+        df=df,
+        xLabel=dlocXLabel,
+        yLabel=dlocYLabel,
+        title=dlocTitle,
+        filename=args.graph_delta_loc,
+    )
+    kloc: tuple = plotKLOC(
+        df=df,
+        xLabel=klocXLabel,
+        yLabel=klocYLabel,
+        title=klocTitle,
+        filename=args.graph_k_loc,
+    )
 
     plotBestFitLine(
         x=loc[0],
         y=loc[1],
         maximumDegree=15,
-        xLabel="Commit Number",
-        yLabel="LOC",
-        title="Lines of Code (LOC) Over Commits",
+        xLabel=locXLabel,
+        yLabel=locYLabel,
+        title=locTitle,
         filename=args.graph_best_fit_loc,
     )
 
