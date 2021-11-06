@@ -128,6 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+*.json
 .vscode
 *.png
 *.pdf
+
+!.zenodo.json
