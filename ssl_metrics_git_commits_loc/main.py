@@ -32,9 +32,9 @@ def get_argparse() -> ArgumentParser:
         required=True,
     )
     parser.add_argument(
-        "-s",
-        "--save-json",
-        help="Save analysis to JSON file (EX: --save-json=output.json)",
+        "-o",
+        "--output",
+        help="Output analysis to a JSON file",
         type=str,
         required=True,
     )
@@ -205,8 +205,8 @@ def main() -> bool:
         delta_loc_iter = map(lambda info: info["delta_loc"], commit_info)
         loc_sum = reduce(lambda x, y: x + y, delta_loc_iter, 0)
 
-    if args.save_json:
-        exportJSON(join(pwd, args.save_json), commit_info)
+    if args.output:
+        exportJSON(join(pwd, args.output), commit_info)
 
     os.chdir(pwd)
     return True

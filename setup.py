@@ -56,8 +56,8 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "ssl-metrics-git-commits-loc = ssl_metrics_git_commits_loc.main:main",
-            "ssl-metrics-git-commits-graph = ssl_metrics_git_commits_loc.create_graph:main",
+            "ssl-metrics-git-commits-loc-extract = ssl_metrics_git_commits_loc.main:main",
+            "ssl-metrics-git-commits-loc-graph = ssl_metrics_git_commits_loc.create_graph:main",
         ]
     },
 )

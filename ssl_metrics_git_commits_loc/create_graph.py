@@ -24,28 +24,28 @@ def getArgparse() -> Namespace:
     )
     parser.add_argument(
         "-l",
-        "--graph-loc",
+        "--graph-loc-filename",
         help="The filename to output the LOC graph to",
         type=str,
         required=True,
     )
     parser.add_argument(
         "-d",
-        "--graph-delta-loc",
+        "--graph-delta-loc-filename",
         help="The filename to output the Delta LOC graph to",
         type=str,
         required=True,
     )
     parser.add_argument(
         "-k",
-        "--graph-k-loc",
+        "--graph-k-loc-filename",
         help="The filename to output the K LOC graph to",
         type=str,
         required=True,
     )
     parser.add_argument(
         "-m",
-        "--maximum-degree",
+        "--maximum-degree-polynomial",
         help="Estimated maximum degree of polynomial",
         type=int,
         required=True,
@@ -278,27 +278,27 @@ def main() -> None:
         xLabel=locXLabel,
         yLabel=locYLabel,
         title=locTitle,
-        maximumDegree=15,
+        maximumDegree=args.maximum_degree_polynomial,
         repositoryName=args.repository_name,
-        filename=args.graph_loc,
+        filename=args.graph_loc_filename,
     )
     dloc: tuple = plotDeltaLOC(
         df=df,
         xLabel=dlocXLabel,
         yLabel=dlocYLabel,
         title=dlocTitle,
-        maximumDegree=args.maximum_degree,
+        maximumDegree=args.maximum_degree_polynomial,
         repositoryName=args.repository_name,
-        filename=args.graph_delta_loc,
+        filename=args.graph_delta_loc_filename,
     )
     kloc: tuple = plotKLOC(
         df=df,
         xLabel=klocXLabel,
         yLabel=klocYLabel,
         title=klocTitle,
-        maximumDegree=args.maximum_degree,
+        maximumDegree=args.maximum_degree_polynomial,
         repositoryName=args.repository_name,
-        filename=args.graph_k_loc,
+        filename=args.graph_k_loc_filename,
     )
 
 
