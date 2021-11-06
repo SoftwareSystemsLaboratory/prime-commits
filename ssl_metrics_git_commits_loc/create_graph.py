@@ -44,11 +44,19 @@ def getArgparse() -> Namespace:
         required=True,
     )
     parser.add_argument(
-        "-b",
-        "--graph-best-fit-loc",
-        help="The filename to output the Line of Best Fit for the LOC graph",
-        type=str,
+        "-m",
+        "--maximum-degree",
+        help="Estimated maximum degree of polynomial",
+        type=int,
         required=True,
+    )
+    parser.add_argument(
+        "-r",
+        "--repository-name",
+        help="Name of the repository that is being analyzed",
+        type=str,
+        required=False,
+        default="",
     )
     return parser.parse_args()
 
@@ -72,17 +80,53 @@ def plotLOC(
     xLabel: str,
     yLabel: str,
     title: str,
+    maximumDegree: int,
+    repositoryName: str,
     filename: str,
 ) -> tuple:
     x: list = [x for x in range(len(df["loc_sum"]))]
     y: list = df["loc_sum"].tolist()
 
     figure: Figure = plt.figure()
+    plt.suptitle(repositoryName)
 
+    # Actual Data
+    plt.subplot(2, 2, 1)
     plt.xlabel(xlabel=xLabel)
     plt.ylabel(ylabel=yLabel)
     plt.title(title)
     plt.plot(x, y)
+    plt.tight_layout()
+
+    # Best Fit
+    plt.subplot(2, 2, 2)
+    data: tuple = findBestFitLine(x=x, y=y, maximumDegrees=maximumDegree)
+    bfModel: np.poly1d = data[1]
+    line: np.ndarray = np.linspace(0, max(x), 100)
+    plt.ylabel(ylabel=yLabel)
+    plt.xlabel(xlabel=xLabel)
+    plt.title("Best Fit Line")
+    plt.plot(line, bfModel(line))
+    plt.tight_layout()
+
+    # Velocity of Best Fit
+    plt.subplot(2, 2, 3)
+    velocityModel = np.polyder(p=bfModel, m=1)
+    line: np.ndarray = np.linspace(0, max(x), 100)
+    plt.ylabel(ylabel="Velocity Unit")
+    plt.xlabel(xlabel=xLabel)
+    plt.title("Velocity")
+    plt.plot(line, velocityModel(line))
+    plt.tight_layout()
+
+    # Acceleration of Best Fit
+    plt.subplot(2, 2, 4)
+    accelerationModel = np.polyder(p=bfModel, m=2)
+    line: np.ndarray = np.linspace(0, max(x), 100)
+    plt.ylabel(ylabel="Acceleration Unit")
+    plt.xlabel(xlabel=xLabel)
+    plt.title("Acceleration")
+    plt.plot(line, accelerationModel(line))
     plt.tight_layout()
 
     figure.savefig(filename)
@@ -95,17 +139,53 @@ def plotDeltaLOC(
     xLabel: str,
     yLabel: str,
     title: str,
+    maximumDegree: int,
+    repositoryName: str,
     filename: str,
 ) -> tuple:
     x: list = [x for x in range(len(df["delta_loc"]))]
     y: list = df["delta_loc"].tolist()
 
     figure: Figure = plt.figure()
+    plt.suptitle(repositoryName)
 
+    # Actual Data
+    plt.subplot(2, 2, 1)
     plt.xlabel(xlabel=xLabel)
     plt.ylabel(ylabel=yLabel)
     plt.title(title)
     plt.plot(x, y)
+    plt.tight_layout()
+
+    # Best Fit
+    plt.subplot(2, 2, 2)
+    data: tuple = findBestFitLine(x=x, y=y, maximumDegrees=maximumDegree)
+    bfModel: np.poly1d = data[1]
+    line: np.ndarray = np.linspace(0, max(x), 100)
+    plt.ylabel(ylabel=yLabel)
+    plt.xlabel(xlabel=xLabel)
+    plt.title("Best Fit Line")
+    plt.plot(line, bfModel(line))
+    plt.tight_layout()
+
+    # Velocity of Best Fit
+    plt.subplot(2, 2, 3)
+    velocityModel = np.polyder(p=bfModel, m=1)
+    line: np.ndarray = np.linspace(0, max(x), 100)
+    plt.ylabel(ylabel="Velocity Unit")
+    plt.xlabel(xlabel=xLabel)
+    plt.title("Velocity")
+    plt.plot(line, velocityModel(line))
+    plt.tight_layout()
+
+    # Acceleration of Best Fit
+    plt.subplot(2, 2, 4)
+    accelerationModel = np.polyder(p=bfModel, m=2)
+    line: np.ndarray = np.linspace(0, max(x), 100)
+    plt.ylabel(ylabel="Acceleration Unit")
+    plt.xlabel(xlabel=xLabel)
+    plt.title("Acceleration")
+    plt.plot(line, accelerationModel(line))
     plt.tight_layout()
 
     figure.savefig(filename)
@@ -118,75 +198,59 @@ def plotKLOC(
     xLabel: str,
     yLabel: str,
     title: str,
+    maximumDegree: int,
+    repositoryName: str,
     filename: str,
 ) -> tuple:
     x: list = [x for x in range(len(df["kloc"]))]
     y: list = df["kloc"].to_list()
 
     figure: Figure = plt.figure()
+    plt.suptitle(repositoryName)
 
+    # Actual Data
+    plt.subplot(2, 2, 1)
     plt.xlabel(xlabel=xLabel)
     plt.ylabel(ylabel=yLabel)
     plt.title(title)
     plt.plot(x, y)
     plt.tight_layout()
 
+    # Best Fit
+    plt.subplot(2, 2, 2)
+    data: tuple = findBestFitLine(x=x, y=y, maximumDegrees=maximumDegree)
+    bfModel: np.poly1d = data[1]
+    line: np.ndarray = np.linspace(0, max(x), 100)
+    plt.ylabel(ylabel=yLabel)
+    plt.xlabel(xlabel=xLabel)
+    plt.title("Best Fit Line")
+    plt.plot(line, bfModel(line))
+    plt.tight_layout()
+
+    # Velocity of Best Fit
+    plt.subplot(2, 2, 3)
+    velocityModel = np.polyder(p=bfModel, m=1)
+    line: np.ndarray = np.linspace(0, max(x), 100)
+    plt.ylabel(ylabel="Velocity Unit")
+    plt.xlabel(xlabel=xLabel)
+    plt.title("Velocity")
+    plt.plot(line, velocityModel(line))
+    plt.tight_layout()
+
+    # Acceleration of Best Fit
+    plt.subplot(2, 2, 4)
+    accelerationModel = np.polyder(p=bfModel, m=2)
+    line: np.ndarray = np.linspace(0, max(x), 100)
+    plt.ylabel(ylabel="Acceleration Unit")
+    plt.xlabel(xlabel=xLabel)
+    plt.title("Acceleration")
+    plt.plot(line, accelerationModel(line))
+    plt.tight_layout()
+
     figure.savefig(filename)
     figure.clf()
-
     return (x, y)
 
-
-def plotBestFitLine(
-    x: list,
-    y: list,
-    maximumDegree: int,
-    xLabel: str,
-    yLabel: str,
-    title: str,
-    filename: str,
-) -> np.poly1d:
-    data: tuple = findBestFitLine(x=x, y=y, maximumDegrees=maximumDegree)
-
-    model: np.poly1d = data[1]
-    line: np.ndarray = np.linspace(0, max(x), 100)
-
-    figure: Figure = plt.figure()
-
-    plt.ylabel(ylabel=yLabel)
-    plt.xlabel(xlabel=xLabel)
-    plt.title(title)
-
-    plt.scatter(x, y, color="black")
-    plt.plot(line, model(line))
-    figure.savefig(filename)
-    figure.clf()
-
-    return model
-
-def plotDerivative (
-    model: np.poly1d,
-    order: int,
-    maximumXValue: int,
-    xLabel: str,
-    yLabel: str,
-    title: str,
-    filename: str,
-) -> np.poly1d:
-    model = np.polyder(p=model, m=order)
-    line: np.ndarray = np.linspace(0, maximumXValue, 100)
-
-    figure: Figure = plt.figure()
-
-    plt.ylabel(ylabel=yLabel)
-    plt.xlabel(xlabel=xLabel)
-    plt.title(title)
-
-    plt.plot(line, model(line))
-    figure.savefig(filename)
-    figure.clf()
-
-    return model
 
 def main() -> None:
     locXLabel: str = "Commit"
@@ -214,6 +278,8 @@ def main() -> None:
         xLabel=locXLabel,
         yLabel=locYLabel,
         title=locTitle,
+        maximumDegree=15,
+        repositoryName=args.repository_name,
         filename=args.graph_loc,
     )
     dloc: tuple = plotDeltaLOC(
@@ -221,6 +287,8 @@ def main() -> None:
         xLabel=dlocXLabel,
         yLabel=dlocYLabel,
         title=dlocTitle,
+        maximumDegree=args.maximum_degree,
+        repositoryName=args.repository_name,
         filename=args.graph_delta_loc,
     )
     kloc: tuple = plotKLOC(
@@ -228,22 +296,11 @@ def main() -> None:
         xLabel=klocXLabel,
         yLabel=klocYLabel,
         title=klocTitle,
+        maximumDegree=args.maximum_degree,
+        repositoryName=args.repository_name,
         filename=args.graph_k_loc,
     )
 
-    bfLOC: np.poly1d = plotBestFitLine(
-        x=loc[0],
-        y=loc[1],
-        maximumDegree=15,
-        xLabel=locXLabel,
-        yLabel=locYLabel,
-        title=locTitle,
-        filename=args.graph_best_fit_loc,
-    )
-
-    vLOC: np.poly1d = plotDerivative(model=bfLOC, order=1, maximumXValue=max(loc[0]), xLabel=locXLabel, yLabel="Velocity", title="Velocity of LOC / Commits", filename="velocityLOC.png")
-
-    aLOC: np.poly1d = plotDerivative(model=vLOC, order=1, maximumXValue=max(loc[0]), xLabel=locXLabel, yLabel="Acceleration", title="Acceleration of LOC / Commits", filename="accelerationLOC.png")
 
 if __name__ == "__main__":
     main()
