@@ -12,8 +12,9 @@ from sklearn.metrics import r2_score
 
 def getArgparse() -> Namespace:
     parser: ArgumentParser = ArgumentParser(
-        prog="Convert Output",
-        usage="This program converts a JSON file into various different formats.",
+        prog="ssl-metrics-git-commits-loc Graph Generator",
+        usage="This is a proof of concept demonstrating that it is possible to use git to extract various Lines of Code (LOC) data from a repository and graph various metrics from it.",
+        description="The only required arguement of this program is -i/--input. The default action is to do nothing until filenames for LOC, ΔLOC, and KLOC are specified."
     )
     parser.add_argument(
         "-i",
@@ -27,28 +28,29 @@ def getArgparse() -> Namespace:
         "--graph-loc-filename",
         help="The filename to output the LOC graph to",
         type=str,
-        required=True,
+        required=False,
     )
     parser.add_argument(
         "-d",
         "--graph-delta-loc-filename",
-        help="The filename to output the Delta LOC graph to",
+        help="The filename to output the ΔLOC graph to",
         type=str,
-        required=True,
+        required=False,
     )
     parser.add_argument(
         "-k",
         "--graph-k-loc-filename",
         help="The filename to output the K LOC graph to",
         type=str,
-        required=True,
+        required=False,
     )
     parser.add_argument(
         "-m",
         "--maximum-degree-polynomial",
         help="Estimated maximum degree of polynomial",
         type=int,
-        required=True,
+        required=False,
+        default=15
     )
     parser.add_argument(
         "-r",
@@ -56,7 +58,6 @@ def getArgparse() -> Namespace:
         help="Name of the repository that is being analyzed",
         type=str,
         required=False,
-        default="",
     )
     return parser.parse_args()
 
@@ -131,8 +132,9 @@ def _graphFigure(
     figure.clf()
 
 
-def plotLOC(
-    df: DataFrame,
+def plot(
+    x: list,
+    y: list,
     xLabel: str,
     yLabel: str,
     title: str,
@@ -140,8 +142,6 @@ def plotLOC(
     repositoryName: str,
     filename: str,
 ) -> tuple:
-    x: list = [x for x in range(len(df["loc_sum"]))]
-    y: list = df["loc_sum"].tolist()
     _graphFigure(
         repositoryName=repositoryName,
         xLabel=xLabel,
@@ -153,57 +153,14 @@ def plotLOC(
         filename=filename,
     )
     return (x, y)
-
-
-def plotDeltaLOC(
-    df: DataFrame,
-    xLabel: str,
-    yLabel: str,
-    title: str,
-    maximumDegree: int,
-    repositoryName: str,
-    filename: str,
-) -> tuple:
-    x: list = [x for x in range(len(df["delta_loc"]))]
-    y: list = df["delta_loc"].tolist()
-    _graphFigure(
-        repositoryName=repositoryName,
-        xLabel=xLabel,
-        yLabel=yLabel,
-        title=title,
-        x=x,
-        y=y,
-        maximumDegree=maximumDegree,
-        filename=filename,
-    )
-    return (x, y)
-
-
-def plotKLOC(
-    df: DataFrame,
-    xLabel: str,
-    yLabel: str,
-    title: str,
-    maximumDegree: int,
-    repositoryName: str,
-    filename: str,
-) -> tuple:
-    x: list = [x for x in range(len(df["kloc"]))]
-    y: list = df["kloc"].to_list()
-    _graphFigure(
-        repositoryName=repositoryName,
-        xLabel=xLabel,
-        yLabel=yLabel,
-        title=title,
-        x=x,
-        y=y,
-        maximumDegree=maximumDegree,
-        filename=filename,
-    )
-    return (x, y)
-
 
 def main() -> None:
+    args: Namespace = getArgparse()
+
+    if args.input[-5::] != ".json":
+        print("Invalid input file type. Input file must be JSON")
+        quit(1)
+
     locXLabel: str = "Commit"
     locYLabel: str = "LOC"
     locTitle: str = "Lines of Code (LOC) / Commits"
@@ -216,43 +173,50 @@ def main() -> None:
     klocYLabel: str = "KLOC"
     klocTitle: str = "Thousands of Lines of Code (KLOC) / Days"
 
-    args: Namespace = getArgparse()
-
-    if args.input[-5::] != ".json":
-        print("Invalid input file type. Input file must be JSON")
-        quit(1)
-
     df: DataFrame = pandas.read_json(args.input)
+    x: list = [x for x in range(len(df["kloc"]))]
+    yLoc: list = df["loc_sum"].tolist()
+    yDLoc: list = df["delta_loc"].tolist()
+    yKLoc: list = df["kloc"].to_list()
 
-    loc: tuple = plotLOC(
-        df=df,
-        xLabel=locXLabel,
-        yLabel=locYLabel,
-        title=locTitle,
-        maximumDegree=args.maximum_degree_polynomial,
-        repositoryName=args.repository_name,
-        filename=args.graph_loc_filename,
-    )
+    if args.graph_loc_filename != None:
+        # LOC
+        plot(
+            x=x,
+            y=yLoc,
+            xLabel=locXLabel,
+            yLabel=locYLabel,
+            title=locTitle,
+            maximumDegree=args.maximum_degree_polynomial,
+            repositoryName=args.repository_name,
+            filename=args.graph_loc_filename,
+        )
 
-    dloc: tuple = plotDeltaLOC(
-        df=df,
-        xLabel=dlocXLabel,
-        yLabel=dlocYLabel,
-        title=dlocTitle,
-        maximumDegree=args.maximum_degree_polynomial,
-        repositoryName=args.repository_name,
-        filename=args.graph_delta_loc_filename,
-    )
+    if args.graph_delta_loc_filename != None:
+        # DLOC
+        plot(
+            x=x,
+            y=yDLoc,
+            xLabel=dlocXLabel,
+            yLabel=dlocYLabel,
+            title=dlocTitle,
+            maximumDegree=args.maximum_degree_polynomial,
+            repositoryName=args.repository_name,
+            filename=args.graph_delta_loc_filename,
+        )
 
-    kloc: tuple = plotKLOC(
-        df=df,
-        xLabel=klocXLabel,
-        yLabel=klocYLabel,
-        title=klocTitle,
-        maximumDegree=args.maximum_degree_polynomial,
-        repositoryName=args.repository_name,
-        filename=args.graph_k_loc_filename,
-    )
+    if args.graph_k_loc_filename != None:
+        # KLOC
+        plot(
+            x=x,
+            y=yKLoc,
+            xLabel=klocXLabel,
+            yLabel=klocYLabel,
+            title=klocTitle,
+            maximumDegree=args.maximum_degree_polynomial,
+            repositoryName=args.repository_name,
+            filename=args.graph_k_loc_filename,
+        )
 
 
 if __name__ == "__main__":
