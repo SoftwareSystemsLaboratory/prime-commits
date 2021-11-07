@@ -12,8 +12,9 @@ from sklearn.metrics import r2_score
 
 def getArgparse() -> Namespace:
     parser: ArgumentParser = ArgumentParser(
-        prog="Convert Output",
-        usage="This program converts a JSON file into various different formats.",
+        prog="ssl-metrics-git-commits-loc Graph Generator",
+        usage="This is a proof of concept demonstrating that it is possible to use git to extract various Lines of Code (LOC) data from a repository and graph various metrics from it.",
+        description="The only required arguement of this program is -i/--input. The default action is to output figures of metrics referring to LOC, ΔLOC, and KLOC."
     )
     parser.add_argument(
         "-i",
@@ -27,28 +28,29 @@ def getArgparse() -> Namespace:
         "--graph-loc-filename",
         help="The filename to output the LOC graph to",
         type=str,
-        required=True,
+        required=False,
     )
     parser.add_argument(
         "-d",
         "--graph-delta-loc-filename",
-        help="The filename to output the Delta LOC graph to",
+        help="The filename to output the ΔLOC graph to",
         type=str,
-        required=True,
+        required=False,
     )
     parser.add_argument(
         "-k",
         "--graph-k-loc-filename",
         help="The filename to output the K LOC graph to",
         type=str,
-        required=True,
+        required=False,
     )
     parser.add_argument(
         "-m",
         "--maximum-degree-polynomial",
         help="Estimated maximum degree of polynomial",
         type=int,
-        required=True,
+        required=False,
+        default=15
     )
     parser.add_argument(
         "-r",
@@ -56,7 +58,6 @@ def getArgparse() -> Namespace:
         help="Name of the repository that is being analyzed",
         type=str,
         required=False,
-        default="",
     )
     return parser.parse_args()
 
@@ -178,38 +179,44 @@ def main() -> None:
     yDLoc: list = df["delta_loc"].tolist()
     yKLoc: list = df["kloc"].to_list()
 
-    loc: tuple = plot(
-        x=x,
-        y=yLoc,
-        xLabel=locXLabel,
-        yLabel=locYLabel,
-        title=locTitle,
-        maximumDegree=args.maximum_degree_polynomial,
-        repositoryName=args.repository_name,
-        filename=args.graph_loc_filename,
-    )
+    if args.graph_loc_filename != None:
+        # LOC
+        plot(
+            x=x,
+            y=yLoc,
+            xLabel=locXLabel,
+            yLabel=locYLabel,
+            title=locTitle,
+            maximumDegree=args.maximum_degree_polynomial,
+            repositoryName=args.repository_name,
+            filename=args.graph_loc_filename,
+        )
 
-    dloc: tuple = plot(
-        x=x,
-        y=yDLoc,
-        xLabel=dlocXLabel,
-        yLabel=dlocYLabel,
-        title=dlocTitle,
-        maximumDegree=args.maximum_degree_polynomial,
-        repositoryName=args.repository_name,
-        filename=args.graph_delta_loc_filename,
-    )
+    if args.graph_delta_loc_filename != None:
+        # DLOC
+        plot(
+            x=x,
+            y=yDLoc,
+            xLabel=dlocXLabel,
+            yLabel=dlocYLabel,
+            title=dlocTitle,
+            maximumDegree=args.maximum_degree_polynomial,
+            repositoryName=args.repository_name,
+            filename=args.graph_delta_loc_filename,
+        )
 
-    kloc: tuple = plot(
-        x=x,
-        x=yKLoc,
-        xLabel=klocXLabel,
-        yLabel=klocYLabel,
-        title=klocTitle,
-        maximumDegree=args.maximum_degree_polynomial,
-        repositoryName=args.repository_name,
-        filename=args.graph_k_loc_filename,
-    )
+    if args.graph_k_loc_filename != None:
+        # KLOC
+        plot(
+            x=x,
+            y=yKLoc,
+            xLabel=klocXLabel,
+            yLabel=klocYLabel,
+            title=klocTitle,
+            maximumDegree=args.maximum_degree_polynomial,
+            repositoryName=args.repository_name,
+            filename=args.graph_k_loc_filename,
+        )
 
 
 if __name__ == "__main__":
