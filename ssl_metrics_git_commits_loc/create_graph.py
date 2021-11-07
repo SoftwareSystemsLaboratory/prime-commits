@@ -14,7 +14,7 @@ def getArgparse() -> Namespace:
     parser: ArgumentParser = ArgumentParser(
         prog="ssl-metrics-git-commits-loc Graph Generator",
         usage="This is a proof of concept demonstrating that it is possible to use git to extract various Lines of Code (LOC) data from a repository and graph various metrics from it.",
-        description="The only required arguement of this program is -i/--input. The default action is to output figures of metrics referring to LOC, ΔLOC, and KLOC."
+        description="The only required arguement of this program is -i/--input. The default action is to do nothing until filenames for LOC, ΔLOC, and KLOC are specified."
     )
     parser.add_argument(
         "-i",
