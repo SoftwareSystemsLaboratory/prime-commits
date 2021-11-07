@@ -2,9 +2,7 @@
 
 > Using `git`, extract Lines of Code (LOC) data from a repository and graph various metrics from it
 
-[![DOI](https://zenodo.org/badge/374020358.svg)](https://zenodo.org/badge/latestdoi/374020358)
-
-[![Release to PyPi, GitHub, and Zenodo](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/release.yml/badge.svg)](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/release.yml)
+[![DOI](https://zenodo.org/badge/374020358.svg)](https://zenodo.org/badge/latestdoi/374020358) [![Release to PyPi, GitHub, and Zenodo](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/release.yml/badge.svg)](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/release.yml)
 
 ## About
 
