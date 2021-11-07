@@ -2,6 +2,8 @@ name: Release to PyPi, GitHub, and Zenodo
 
 on:
   push:
+    branches:
+      - main
     tags:
       "*"
   workflow_dispatch:
