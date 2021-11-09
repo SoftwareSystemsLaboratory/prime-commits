@@ -1,25 +1,29 @@
 {
-  "creators": [
-    {
-      "name": "Synovic, Nicholas",
-      "affiliation": "Loyola University Chicago",
-      "orcid": "0000-0003-0413-4594"
-    },
-    {
-      "name": "Thiruvathukal, George K.",
-      "affiliation": "Loyola University Chicago and Argonne National Laboratory",
-      "orcid": "0000-0002-0452-5571"
-    }
-  ],
-  "keywords": [
-    "software engineering",
-    "software metrics",
-    "repository mining",
-    "git",
-    "commits",
-    "KLOC",
-    "simple"
-  ],
-  "license": "GPL-3.0",
-  "upload_type": "software"
+    "upload_type": "software",
+    "title": "SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc",
+    "creators": [
+        {
+        "name": "Synovic, Nicholas",
+        "affiliation": "Loyola University Chicago",
+        "orcid": "0000-0003-0413-4594"
+        },
+        {
+        "name": "Thiruvathukal, George K.",
+        "affiliation": "Loyola University Chicago and Argonne National Laboratory",
+        "orcid": "0000-0002-0452-5571"
+        }
+    ],
+    "description": "This is a proof of concept demonstrating that it is possible to use git to extract various Lines of Code (LOC) data from a repository and graph various metrics from it.",
+    "access_right": "open",
+    "license": "BSD 3-Clause",
+    "prereserve_doi": true,
+    "keywords": [
+        "software engineering",
+        "software metrics",
+        "repository mining",
+        "git",
+        "commits",
+        "KLOC",
+        "simple"
+    ]
 }

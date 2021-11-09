@@ -94,7 +94,7 @@ def analyzeCommits(commits: list, date0: datetime):
                 "loc_sum": loc_sum,
                 "kloc": float(loc_sum / 1000),
                 "commit_date": commitDate,
-                "day_since_0": commit_day,
+                "days_since_0": commit_day,
             }
 
             commitCounter += 1

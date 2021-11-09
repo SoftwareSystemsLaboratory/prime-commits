@@ -1,6 +1,6 @@
 # SSL Metrics `git` Commit LOC Extractor
 
-> Using `git`, extract Lines of Code (LOC) data from a repository and graph various metrics from it
+> This is a proof of concept demonstrating that it is possible to use `git` to extract various Lines of Code (LOC) data from a repository and graph various metrics from it
 
 [![DOI](https://zenodo.org/badge/374020358.svg)](https://zenodo.org/badge/latestdoi/374020358) [![Release to PyPi, GitHub, and Zenodo](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/release.yml/badge.svg)](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/release.yml)
 
@@ -49,3 +49,5 @@ The graphs can be saved as a `.png`, `.pdf`, or any compatible format that `matp
 - `-k`, `--graph-k-loc-filename`: The filename to output the K LOC graph to
 - `-m`, `--maximum-degree-polynomial`: Estimated maximum degree of polynomial
 - `-r`, `--repository-name`: Name of the repository that is being analyzed
+- `--x-window-min`: The smallest x value that will be plotted
+- `--x-window-max`: The largest x value that will be plotted
