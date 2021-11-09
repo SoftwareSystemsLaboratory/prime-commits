@@ -12,9 +12,9 @@ from sklearn.metrics import r2_score
 
 def getArgparse() -> Namespace:
     parser: ArgumentParser = ArgumentParser(
-        prog="ssl-metrics-git-commits-loc Graph Generator",
-        usage="This is a proof of concept demonstrating that it is possible to use git to extract various Lines of Code (LOC) data from a repository and graph various metrics from it.",
-        description="The only required arguement of this program is -i/--input. The default action is to do nothing until filenames for LOC, ΔLOC, and KLOC are specified."
+        prog="ssl-metrics-git-bus-factor Graph Generator",
+        usage="This is a proof of concept demonstrating that it is possible to use git to compute the bus factor of a project.",
+        description="The only required arguement of this program is -i/--input. The default action is to do nothing until a filename for the graph is inputted.",
     )
     parser.add_argument(
         "-i",
@@ -24,23 +24,9 @@ def getArgparse() -> Namespace:
         required=True,
     )
     parser.add_argument(
-        "-l",
-        "--graph-loc-filename",
-        help="The filename to output the LOC graph to",
-        type=str,
-        required=False,
-    )
-    parser.add_argument(
-        "-d",
-        "--graph-delta-loc-filename",
-        help="The filename to output the ΔLOC graph to",
-        type=str,
-        required=False,
-    )
-    parser.add_argument(
-        "-k",
-        "--graph-k-loc-filename",
-        help="The filename to output the K LOC graph to",
+        "-o",
+        "--output",
+        help="The filename to output the bus factor graph to",
         type=str,
         required=False,
     )
@@ -50,7 +36,7 @@ def getArgparse() -> Namespace:
         help="Estimated maximum degree of polynomial",
         type=int,
         required=False,
-        default=15
+        default=15,
     )
     parser.add_argument(
         "-r",
@@ -58,6 +44,20 @@ def getArgparse() -> Namespace:
         help="Name of the repository that is being analyzed",
         type=str,
         required=False,
+    )
+    parser.add_argument(
+        "--x-window-min",
+        help="The smallest x value that will be plotted",
+        type=int,
+        required=False,
+        default=0,
+    )
+    parser.add_argument(
+        "--x-window-max",
+        help="The largest x value that will be plotted",
+        type=int,
+        required=False,
+        default=-1,
     )
     return parser.parse_args()
 
@@ -154,12 +154,16 @@ def plot(
     )
     return (x, y)
 
+
 def main() -> None:
     args: Namespace = getArgparse()
 
     if args.input[-5::] != ".json":
         print("Invalid input file type. Input file must be JSON")
         quit(1)
+    if args.x_window_min < 0:
+        print("Invalid x window min. X window min >= 0")
+        quit(2)
 
     locXLabel: str = "Commit"
     locYLabel: str = "LOC"
@@ -174,10 +178,21 @@ def main() -> None:
     klocTitle: str = "Thousands of Lines of Code (KLOC) / Days"
 
     df: DataFrame = pandas.read_json(args.input)
-    x: list = [x for x in range(len(df["kloc"]))]
-    yLoc: list = df["loc_sum"].tolist()
-    yDLoc: list = df["delta_loc"].tolist()
-    yKLoc: list = df["kloc"].to_list()
+
+    if args.x_window_max <= -1:
+        x: list = [x for x in range(len(df["kloc"]))][args.x_window_min :]
+        yLoc: list = df["loc_sum"].tolist()[args.x_window_min :]
+        yDLoc: list = df["delta_loc"].tolist()[args.x_window_min :]
+        yKLoc: list = df["kloc"].to_list()[args.x_window_min :]
+    else:
+        x: list = [x for x in range(len(df["kloc"]))][
+            args.x_window_min : args.x_window_max + 1
+        ]
+        yLoc: list = df["loc_sum"].tolist()[args.x_window_min : args.x_window_max + 1]
+        yDLoc: list = df["delta_loc"].tolist()[
+            args.x_window_min : args.x_window_max + 1
+        ]
+        yKLoc: list = df["kloc"].to_list()[args.x_window_min : args.x_window_max + 1]
 
     if args.graph_loc_filename != None:
         # LOC
