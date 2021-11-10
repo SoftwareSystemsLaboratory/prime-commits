@@ -15,7 +15,7 @@
     ],
     "description": "This is a proof of concept demonstrating that it is possible to use git to extract various Lines of Code (LOC) data from a repository and graph various metrics from it.",
     "access_right": "open",
-    "license": "BSD 3-Clause",
+    "license": "BSD-3-Clause",
     "prereserve_doi": true,
     "keywords": [
         "software engineering",
