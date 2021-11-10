@@ -18,12 +18,23 @@
     "license": "BSD-3-Clause",
     "prereserve_doi": true,
     "keywords": [
+        "commits",
+        "engineering",
+        "git",
+        "github",
+        "kloc",
+        "loyola",
+        "loyola university chicago",
+        "luc",
+        "mining",
+        "metrics",
+        "repository",
+        "repository mining",
+        "simple",
+        "software",
         "software engineering",
         "software metrics",
-        "repository mining",
-        "git",
-        "commits",
-        "KLOC",
-        "simple"
+        "software systems laboratory",
+        "ssl"
     ]
 }
