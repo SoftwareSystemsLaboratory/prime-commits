@@ -366,7 +366,6 @@ def main() -> None:
         print("No graph choosen. Defaulting to graphing all figures on a single chart")
         args.graph_all = True
 
-    title: str = "{}{} Lines of Code (LOC) / (Every {} Commits)"
     xLabel: str = f"Every {args.stepper} Commit(s)"
     yLabel0: str = "{}"
     yLabel1: str = "d/dx {}"
@@ -379,22 +378,23 @@ def main() -> None:
             args.x_min : -1 : args.stepper
         ]
         yLOC: list = df["loc_sum"].tolist()[args.x_min : -1 : args.stepper]
-        yDLoc: list = df["delta_loc"].tolist()[args.x_min : -1 : args.stepper]
-        yKLoc: list = df["kloc"].to_list()[args.x_min : -1 : args.stepper]
+        yDLOC: list = df["delta_loc"].tolist()[args.x_min : -1 : args.stepper]
+        yKLOC: list = df["kloc"].to_list()[args.x_min : -1 : args.stepper]
     else:
         xData: list = [x for x in range(len(df["loc_sum"]))][
             args.x_min : args.x_max + 1 : args.stepper
         ]
         yLOC: list = df["loc_sum"].tolist()[args.x_min : args.x_max + 1 : args.stepper]
-        yDLoc: list = df["delta_loc"].tolist()[
+        yDLOC: list = df["delta_loc"].tolist()[
             args.x_min : args.x_max + 1 : args.stepper
         ]
-        yKLoc: list = df["kloc"].to_list()[args.x_min : args.x_max + 1 : args.stepper]
+        yKLOC: list = df["kloc"].to_list()[args.x_min : args.x_max + 1 : args.stepper]
 
     if args.loc:
+        title: str = "{}{} {} / (Every {} Commits)"
         if args.graph_data:
             filename: str = _appendID(filename=args.output, id="loc_data")
-            title = title.format("", args.repository_name, args.stepper)
+            title = title.format("", args.repository_name, "Lines of Code (LOC)", args.stepper)
             graphChart(
                 figureType="data",
                 title=title,
@@ -407,7 +407,7 @@ def main() -> None:
 
         if args.graph_best_fit:
             filename: str = _appendID(filename=args.output, id="loc_best_fit")
-            title = title.format("Best Fit of ", args.repository_name, args.stepper)
+            title = title.format("Best Fit of ", args.repository_name, "Lines of Code (LOC)", args.stepper)
             graphChart(
                 figureType="best_fit",
                 title=title,
@@ -421,7 +421,7 @@ def main() -> None:
 
         if args.graph_velocity:
             filename: str = _appendID(filename=args.output, id="loc_velocity")
-            title = title.format("Velocity of ", args.repository_name, args.stepper)
+            title = title.format("Velocity of ", args.repository_name, "Lines of Code (LOC)", args.stepper)
             graphChart(
                 figureType="velocity",
                 title=title,
@@ -435,7 +435,7 @@ def main() -> None:
 
         if args.graph_acceleration:
             filename: str = _appendID(filename=args.output, id="loc_acceleration")
-            title = title.format("Acceleration of ", args.repository_name, args.stepper)
+            title = title.format("Acceleration of ", args.repository_name, "Lines of Code (LOC)", args.stepper)
             graphChart(
                 figureType="acceleration",
                 title=title,
@@ -450,7 +450,7 @@ def main() -> None:
 
         if args.graph_all:
             filename: str = _appendID(filename=args.output, id="loc_all")
-            title = title.format("", args.repository_name, args.stepper)
+            title = title.format("", args.repository_name, "Lines of Code (LOC)", args.stepper)
             graphChart(
                 figureType="all",
                 title=title,
@@ -475,7 +475,88 @@ def main() -> None:
             )
 
     if args.dloc:
-        pass
+        title: str = "{}{} {} / (Every {} Commits)"
+        if args.graph_data:
+            filename: str = _appendID(filename=args.output, id="dloc_data")
+            title = title.format("", args.repository_name, "Delta Lines of Code (DLOC)", args.stepper)
+            graphChart(
+                figureType="data",
+                title=title,
+                xLabel=xLabel,
+                yLabel=yLabel0.format("DLOC"),
+                xData=xData,
+                yData=yDLOC,
+                filename=filename,
+            )
+
+        if args.graph_best_fit:
+            filename: str = _appendID(filename=args.output, id="dloc_best_fit")
+            title = title.format("Best Fit of ", args.repository_name, "Delta Lines of Code (DLOC)", args.stepper)
+            graphChart(
+                figureType="best_fit",
+                title=title,
+                xLabel=xLabel,
+                yLabel=yLabel0.format("DLOC"),
+                xData=xData,
+                yData=yDLOC,
+                filename=filename,
+                maximumDegree=args.maximum_polynomial_degree,
+            )
+
+        if args.graph_velocity:
+            filename: str = _appendID(filename=args.output, id="dloc_velocity")
+            title = title.format("Velocity of ", args.repository_name, "Delta Lines of Code (DLOC)", args.stepper)
+            graphChart(
+                figureType="velocity",
+                title=title,
+                xLabel=xLabel,
+                yLabel=yLabel1.format("DLOC"),
+                xData=xData,
+                yData=yDLOC,
+                filename=filename,
+                maximumDegree=args.maximum_polynomial_degree,
+            )
+
+        if args.graph_acceleration:
+            filename: str = _appendID(filename=args.output, id="dloc_acceleration")
+            title = title.format("Acceleration of ", args.repository_name, "Delta Lines of Code (DLOC)", args.stepper)
+            graphChart(
+                figureType="acceleration",
+                title=title,
+                xLabel=xLabel,
+                yLabel=yLabel2.format("DLOC"),
+                xData=xData,
+                yData=yDLOC,
+                filename=filename,
+                maximumDegree=args.maximum_polynomial_degree,
+                subplotTitles=[],
+            )
+
+        if args.graph_all:
+            filename: str = _appendID(filename=args.output, id="dloc_all")
+            title = title.format("", args.repository_name, "Delta Lines of Code (DLOC)", args.stepper)
+            graphChart(
+                figureType="all",
+                title=title,
+                xLabel=xLabel,
+                yLabel=None,
+                xData=xData,
+                yData=yDLOC,
+                filename=filename,
+                maximumDegree=args.maximum_polynomial_degree,
+                subplotTitles=[
+                    "Data",
+                    "Best Fit",
+                    "Velocity",
+                    "Acceleration",
+                ],
+                yLabelList=[
+                    yLabel0.format("DLOC"),
+                    yLabel0.format("DLOC"),
+                    yLabel1.format("DLOC"),
+                    yLabel2.format("DLOC"),
+                ],
+            )
     if args.kloc:
         pass
 
