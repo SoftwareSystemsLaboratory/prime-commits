@@ -1,6 +1,7 @@
 from argparse import ArgumentParser, Namespace
 from operator import itemgetter
 from os import path
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,7 +15,7 @@ def getArgparse() -> Namespace:
     parser: ArgumentParser = ArgumentParser(
         prog="ssl-metrics-git-commits-loc Graph Generator",
         usage="This is a proof of concept demonstrating that it is possible to use Git commits to compute metrics.",
-        description="The default action is to graph all figures of LOC on a single chart. If multiple data and/or graphing options are choosen the output filename and the title of the figure/chartwill reflect the combination that is being graphed."
+        description="The default action is to graph all figures of LOC on a single chart. If multiple data and/or graphing options are choosen the output filename and the title of the figure/chartwill reflect the combination that is being graphed.",
     )
     parser.add_argument(
         "-i",
@@ -28,7 +29,7 @@ def getArgparse() -> Namespace:
         "--output",
         help="The filename to output the graph to",
         type=str,
-        required=False,
+        required=True,
     )
     parser.add_argument(
         "-r",
@@ -38,53 +39,44 @@ def getArgparse() -> Namespace:
         required=True,
     )
     parser.add_argument(
-        "--loc",
-        help="Utilize LOC data",
-        required=False,
-        action="store_true"
-        )
-    parser.add_argument(
-        "--dloc",
-        help="Utilize Delta LOC data",
-        required=False,
-        action="store_true"
+        "--loc", help="Utilize LOC data", required=False, action="store_true"
     )
     parser.add_argument(
-        "--kloc",
-        help="Utilize KLOC data",
-        required=False,
-        action="store_true"
-        )
+        "--dloc", help="Utilize Delta LOC data", required=False, action="store_true"
+    )
+    parser.add_argument(
+        "--kloc", help="Utilize KLOC data", required=False, action="store_true"
+    )
     parser.add_argument(
         "--graph-data",
         help="Graph the raw data. Discrete graph of the data",
         required=False,
-        action="store_true"
-        )
+        action="store_true",
+    )
     parser.add_argument(
         "--graph-best-fit",
         help="Graph the best fit polynomial of the data. Continous graph of the data. Polynomial degrees can be configured with `-m`",
         required=False,
-        action="store_true"
-        )
+        action="store_true",
+    )
     parser.add_argument(
         "--graph-velocity",
         help="Graph the velocity of the data. Computes the best fit polynomial and takes the first derivitve. Polynomial degrees can be configured with `-m`",
         required=False,
-        action="store_true"
-        )
+        action="store_true",
+    )
     parser.add_argument(
         "--graph-acceleration",
         help="Graph the acceleration of the data. Computes the best fit polynomial and takes the second derivitve. Polynomial degrees can be configured with `-m`",
         required=False,
-        action="store_true"
-        )
+        action="store_true",
+    )
     parser.add_argument(
         "--graph-all",
         help="Graphs all possible figures of the data onto one chart. Computes the best fit polynomial and takes the first and second derivitve. Polynomial degrees can be configured with `-m`",
         required=False,
-        action="store_true"
-        )
+        action="store_true",
+    )
     parser.add_argument(
         "--x-min",
         help="The smallest x value that will be plotted",
@@ -101,7 +93,7 @@ def getArgparse() -> Namespace:
     )
     parser.add_argument(
         "-m",
-        "--maximum-degree-polynomial",
+        "--maximum-polynomial-degree",
         help="Estimated maximum degree of the best fit polynomial",
         type=int,
         required=False,
@@ -132,83 +124,180 @@ def __findBestFitLine(x: list, y: list, maximumDegree: int) -> tuple:
     return max(data, key=itemgetter(0))
 
 
-def _graphFigure(
-    repositoryName: str,
+def _appendID(filename: str, id: str) -> str:
+    p = Path(filename)
+    return "{0}_{2}{1}".format(Path.joinpath(p.parent, p.stem), p.suffix, id)
+
+
+def _graphData(
+    title: str,
     xLabel: str,
     yLabel: str,
-    title: str,
-    x: list,
-    y: list,
-    maximumDegree: int,
-    filename: str,
-) -> None:
+    xData: list,
+    yData: list,
+) -> Figure:
     figure: Figure = plt.figure()
-    plt.suptitle(repositoryName)
-
-    # Actual Data
-    plt.subplot(2, 2, 1)
-    plt.xlabel(xlabel=xLabel)
-    plt.ylabel(ylabel=yLabel)
     plt.title(title)
-    plt.plot(x, y)
+    plt.xlabel(xlabel=xLabel)
+    plt.ylabel(ylabel=yLabel)
+    plt.plot(xData, yData)
     plt.tight_layout()
+    return figure
 
-    # Best Fit
-    plt.subplot(2, 2, 2)
-    data: tuple = __findBestFitLine(x=x, y=y, maximumDegree=maximumDegree)
+
+def _graphBestFit(
+    title: str,
+    xLabel: str,
+    yLabel: str,
+    xData: list,
+    yData: list,
+    maximumDegree: int,
+) -> Figure:
+    figure: Figure = plt.figure()
+    data: tuple = __findBestFitLine(
+        x=xData,
+        y=yData,
+        maximumDegree=maximumDegree,
+    )
     bfModel: np.poly1d = data[1]
-    line: np.ndarray = np.linspace(0, max(x), 100)
+    line: np.ndarray = np.linspace(0, max(xData), 100)
     plt.ylabel(ylabel=yLabel)
     plt.xlabel(xlabel=xLabel)
-    plt.title("Best Fit Line")
+    plt.title(title)
     plt.plot(line, bfModel(line))
     plt.tight_layout()
+    return figure
 
-    # Velocity of Best Fit
-    plt.subplot(2, 2, 3)
+
+def _graphVelocity(
+    title: str,
+    xLabel: str,
+    yLabel: str,
+    xData: list,
+    yData: list,
+    maximumDegree: int,
+) -> Figure:
+    figure: Figure = plt.figure()
+    data: tuple = __findBestFitLine(
+        x=xData,
+        y=yData,
+        maximumDegree=maximumDegree,
+    )
+    bfModel: np.poly1d = data[1]
     velocityModel = np.polyder(p=bfModel, m=1)
-    line: np.ndarray = np.linspace(0, max(x), 100)
-    plt.ylabel(ylabel="Velocity Unit")
+    line: np.ndarray = np.linspace(0, max(xData), 100)
+    plt.ylabel(ylabel=yLabel)
     plt.xlabel(xlabel=xLabel)
-    plt.title("Velocity")
+    plt.title(title)
     plt.plot(line, velocityModel(line))
     plt.tight_layout()
+    return figure
 
-    # Acceleration of Best Fit
-    plt.subplot(2, 2, 4)
+
+def _graphAcceleration(
+    title: str,
+    xLabel: str,
+    yLabel: str,
+    xData: list,
+    yData: list,
+    maximumDegree: int,
+) -> Figure:
+    figure: Figure = plt.figure()
+    data: tuple = __findBestFitLine(
+        x=xData,
+        y=yData,
+        maximumDegree=maximumDegree,
+    )
+    bfModel: np.poly1d = data[1]
     accelerationModel = np.polyder(p=bfModel, m=2)
-    line: np.ndarray = np.linspace(0, max(x), 100)
-    plt.ylabel(ylabel="Acceleration Unit")
+    line: np.ndarray = np.linspace(0, max(xData), 100)
+    plt.ylabel(ylabel=yLabel)
     plt.xlabel(xlabel=xLabel)
-    plt.title("Acceleration")
+    plt.title(title)
     plt.plot(line, accelerationModel(line))
     plt.tight_layout()
+    return figure
+
+
+def _graphAll(
+    title: str,
+    xLabel: str,
+    yLabel: str,
+    xData: list,
+    yData: list,
+    maximumDegree: int,
+) -> Figure:
+    pass
+
+
+def graphChart(
+    figureType: str,
+    title: str,
+    xLabel: str,
+    yLabel: str,
+    xData: list,
+    yData: list,
+    filename: str,
+    maximumDegree: int = None,
+) -> None:
+    if figureType == "data":
+        figure: Figure = _graphData(
+            title=title,
+            xLabel=xLabel,
+            yLabel=yLabel,
+            xData=xData,
+            yData=yData,
+        )
+    if figureType == "best_fit":
+        figure: Figure = _graphBestFit()(
+            title=title,
+            xLabel=xLabel,
+            yLabel=yLabel,
+            xData=xData,
+            yData=yData,
+            maximumDegree=maximumDegree,
+        )
+    if figureType == "velocity":
+        figure: Figure = _graphVelocity(
+            title=title,
+            xLabel=xLabel,
+            yLabel=yLabel,
+            xData=xData,
+            yData=yData,
+            maximumDegree=maximumDegree,
+        )
+    if figureType == "acceleration":
+        figure: Figure = _graphAcceleration(
+            title=title,
+            xLabel=xLabel,
+            yLabel=yLabel,
+            xData=xData,
+            yData=yData,
+            maximumDegree=maximumDegree,
+        )
 
     figure.savefig(filename)
     figure.clf()
 
+    # # Velocity of Best Fit
+    # plt.subplot(2, 2, 3)
+    # velocityModel = np.polyder(p=bfModel, m=1)
+    # line: np.ndarray = np.linspace(0, max(x), 100)
+    # plt.ylabel(ylabel="Velocity Unit")
+    # plt.xlabel(xlabel=xLabel)
+    # plt.title("Velocity")
+    # plt.plot(line, velocityModel(line))
+    # plt.tight_layout()
 
-def plot(
-    x: list,
-    y: list,
-    xLabel: str,
-    yLabel: str,
-    title: str,
-    maximumDegree: int,
-    repositoryName: str,
-    filename: str,
-) -> tuple:
-    _graphFigure(
-        repositoryName=repositoryName,
-        xLabel=xLabel,
-        yLabel=yLabel,
-        title=title,
-        x=x,
-        y=y,
-        maximumDegree=maximumDegree,
-        filename=filename,
-    )
-    return (x, y)
+    # # Acceleration of Best Fit
+    # plt.subplot(2, 2, 4)
+    # accelerationModel = np.polyder(p=bfModel, m=2)
+    # line: np.ndarray = np.linspace(0, max(x), 100)
+    # plt.ylabel(ylabel="Acceleration Unit")
+    # plt.xlabel(xlabel=xLabel)
+    # plt.title("Acceleration")
+    # plt.plot(line, accelerationModel(line))
+    # plt.tight_layout()
 
 
 def main() -> None:
@@ -220,110 +309,163 @@ def main() -> None:
     if args.x_min < 0:
         print("Invalid x window min. X window min >= 0")
         quit(2)
-    if args.maximum_degree_polynomial < 1:
-        print("The maximum degree polynomial is too small. Maximum degree polynomial >= 1")
+    if args.maximum_polynomial_degree < 1:
+        print(
+            "The maximum degree polynomial is too small. Maximum degree polynomial >= 1"
+        )
         quit(3)
     if args.stepper < 1:
         print("The stepper is too small. Stepper >= 1")
         quit(4)
 
-    if (args.loc and args.dloc and args.kloc) is False:
+    if (args.loc is False) and (args.dloc is False) and (args.kloc is False):
         print("No data source choosen. Defaulting to LOC")
         args.loc = True
-    if (args.graph_data and args.graph_best_fit and args.graph_velocity and args.args.graph_acceleration and args.args.graph_all) is False:
+    if (
+        (args.graph_data is False)
+        and (args.graph_best_fit is False)
+        and (args.graph_velocity is False)
+        and (args.args.graph_acceleration is False)
+        and (args.args.graph_all is False)
+    ):
         print("No graph choosen. Defaulting to graphing all figures on a single chart")
         args.graph_all = True
 
+    title: str = "{}{} Lines of Code (LOC) / (Every {} Commits)"
+    xLabel: str = f"Every {args.stepper} Commit"
+    yLabel0: str = f"LOC"
+    yLabel1: str = f"d/dx LOC"
+    yLabel2: str = f"d^2/dx^2 LOC"
+
+    df: DataFrame = pandas.read_json(args.input)
+
+    if args.x_max <= -1:
+        xData: list = [x for x in range(len(df["loc_sum"]))][
+            args.x_min : -1 : args.stepper
+        ]
+        yLOC: list = df["loc_sum"].tolist()[args.x_min : -1 : args.stepper]
+        yDLoc: list = df["delta_loc"].tolist()[args.x_min : -1 : args.stepper]
+        yKLoc: list = df["kloc"].to_list()[args.x_min : -1 : args.stepper]
+    else:
+        xData: list = [x for x in range(len(df["loc_sum"]))][
+            args.x_min : args.x_max + 1 : args.stepper
+        ]
+        yLOC: list = df["loc_sum"].tolist()[args.x_min : args.x_max + 1 : args.stepper]
+        yDLoc: list = df["delta_loc"].tolist()[
+            args.x_min : args.x_max + 1 : args.stepper
+        ]
+        yKLoc: list = df["kloc"].to_list()[args.x_min : args.x_max + 1 : args.stepper]
+
     if args.loc:
+        filename: str = _appendID(filename=args.output, id="loc")
+
         if args.graph_data:
-            title: str = f"{args.repository} Lines of Code (LOC) / (Commits % {args.stepper})"
-            xLabel: str = f"Commits % {args.stepper}"
-            yLabel: str = f"LOC"
+            title = title.format("", args.repository_name, args.stepper)
+            filename: str = _appendID(filename=filename, id="data")
+            graphChart(
+                figureType="data",
+                title=title,
+                xLabel=xLabel,
+                yLabel=yLabel0,
+                xData=xData,
+                yData=yLOC,
+                filename=filename,
+            )
+
         if args.graph_best_fit:
-            title: str = f"Best Fit {args.repository} Lines of Code (LOC) / (Commits % {args.stepper})"
-            xLabel: str = f"Commits % {args.stepper}"
-            yLabel: str = f"LOC"
+            title = title.format("Best Fit of ", args.repository_name, args.stepper)
+            filename: str = _appendID(filename=filename, id="best_fit")
+            graphChart(
+                figureType="best_fit",
+                title=title,
+                xLabel=xLabel,
+                yLabel=yLabel0,
+                xData=xData,
+                yData=yLOC,
+                filename=filename,
+                maximumDegree=args.maximum_polynomial_degree,
+            )
+
         if args.graph_velocity:
-            pass
+            title = title.format("Velocity of ", args.repository_name, args.stepper)
+            filename: str = _appendID(filename=filename, id="velocity")
+            graphChart(
+                figureType="velocity",
+                title=title,
+                xLabel=xLabel,
+                yLabel=yLabel0,
+                xData=xData,
+                yData=yLOC,
+                filename=filename,
+            )
+
         if args.graph_acceleration:
-            title: str = f"Best Fit {args.repository} Lines of Code (LOC) / (Commits % {args.stepper})"
-            xLabel: str = f"Commit % {args.stepper}"
-            yLabel: str = f"d^2/dx^2 LOC"
+            title = title.format("Acceleration of ", args.repository_name, args.stepper)
+            filename: str = _appendID(filename=filename, id="velocity")
+            graphChart(
+                figureType="acceleration",
+                title=title,
+                xLabel=xLabel,
+                yLabel=yLabel0,
+                xData=xData,
+                yData=yLOC,
+                filename=filename,
+            )
+
         if args.graph_all:
-            title: str = f"Best Fit {args.repository} Lines of Code (LOC) / (Commits % {args.stepper})"
-            xLabel: str = f"Commit % {args.stepper}"
-            yLabel0: str = f"LOC"
-            yLabel1: str = f"d/dx LOC"
-            yLabel2: str = f"d^2/dx^2 LOC"
+            pass
 
     if args.dloc:
         pass
     if args.kloc:
         pass
 
-    dlocXLabel: str = locXLabel
+    dlocXLabel: str = 0
     dlocYLabel: str = "ΔLOC"
     dlocTitle: str = "Change of Lines of Code (ΔLOC) / Commits"
 
-    klocXLabel: str = locXLabel
+    klocXLabel: str = 0
     klocYLabel: str = "KLOC"
     klocTitle: str = "Thousands of Lines of Code (KLOC) / Commits"
 
-    df: DataFrame = pandas.read_json(args.input)
+    # if args.graph_loc_filename != None:
+    #     # LOC
+    #     plot(
+    #         x=x,
+    #         y=yLOC,
+    #         xLabel=locXLabel,
+    #         yLabel=locYLabel,
+    #         title=locTitle,
+    #         maximumDegree=args.maximum_polynomial_degree,
+    #         repositoryName=args.repository_name_name,
+    #         filename=args.graph_loc_filename,
+    #     )
 
-    if args.x_window_max <= -1:
-        x: list = [x for x in range(len(df["kloc"]))][args.x_window_min :]
-        yLoc: list = df["loc_sum"].tolist()[args.x_window_min :]
-        yDLoc: list = df["delta_loc"].tolist()[args.x_window_min :]
-        yKLoc: list = df["kloc"].to_list()[args.x_window_min :]
-    else:
-        x: list = [x for x in range(len(df["kloc"]))][
-            args.x_window_min : args.x_window_max + 1
-        ]
-        yLoc: list = df["loc_sum"].tolist()[args.x_window_min : args.x_window_max + 1]
-        yDLoc: list = df["delta_loc"].tolist()[
-            args.x_window_min : args.x_window_max + 1
-        ]
-        yKLoc: list = df["kloc"].to_list()[args.x_window_min : args.x_window_max + 1]
+    # if args.graph_delta_loc_filename != None:
+    #     # DLOC
+    #     plot(
+    #         x=x,
+    #         y=yDLoc,
+    #         xLabel=dlocXLabel,
+    #         yLabel=dlocYLabel,
+    #         title=dlocTitle,
+    #         maximumDegree=args.maximum_polynomial_degree,
+    #         repositoryName=args.repository_name_name,
+    #         filename=args.graph_delta_loc_filename,
+    #     )
 
-    if args.graph_loc_filename != None:
-        # LOC
-        plot(
-            x=x,
-            y=yLoc,
-            xLabel=locXLabel,
-            yLabel=locYLabel,
-            title=locTitle,
-            maximumDegree=args.maximum_degree_polynomial,
-            repositoryName=args.repository_name,
-            filename=args.graph_loc_filename,
-        )
-
-    if args.graph_delta_loc_filename != None:
-        # DLOC
-        plot(
-            x=x,
-            y=yDLoc,
-            xLabel=dlocXLabel,
-            yLabel=dlocYLabel,
-            title=dlocTitle,
-            maximumDegree=args.maximum_degree_polynomial,
-            repositoryName=args.repository_name,
-            filename=args.graph_delta_loc_filename,
-        )
-
-    if args.graph_k_loc_filename != None:
-        # KLOC
-        plot(
-            x=x,
-            y=yKLoc,
-            xLabel=klocXLabel,
-            yLabel=klocYLabel,
-            title=klocTitle,
-            maximumDegree=args.maximum_degree_polynomial,
-            repositoryName=args.repository_name,
-            filename=args.graph_k_loc_filename,
-        )
+    # if args.graph_k_loc_filename != None:
+    #     # KLOC
+    #     plot(
+    #         x=x,
+    #         y=yKLoc,
+    #         xLabel=klocXLabel,
+    #         yLabel=klocYLabel,
+    #         title=klocTitle,
+    #         maximumDegree=args.maximum_polynomial_degree,
+    #         repositoryName=args.repository_name_name,
+    #         filename=args.graph_k_loc_filename,
+    #     )
 
 
 if __name__ == "__main__":
