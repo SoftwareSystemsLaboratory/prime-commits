@@ -1,7 +1,4 @@
 from argparse import ArgumentParser, Namespace
-from operator import itemgetter
-from os import path
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,7 +7,8 @@ from matplotlib.figure import Figure
 from pandas import DataFrame
 
 from libs.fileOperations import appendID
-from libs.math import findBestFitLine
+from libs.graphing import graph
+from libs.polynomialMath import findBestFitLine
 
 
 def getArgparse() -> Namespace:
@@ -112,96 +110,6 @@ def getArgparse() -> Namespace:
     return parser.parse_args()
 
 
-def _graphData(
-    title: str,
-    xLabel: str,
-    yLabel: str,
-    xData: list,
-    yData: list,
-) -> Figure:
-    figure: Figure = plt.figure()
-    plt.title(title)
-    plt.xlabel(xlabel=xLabel)
-    plt.ylabel(ylabel=yLabel)
-    plt.plot(xData, yData)
-    plt.tight_layout()
-    return figure
-
-
-def _graphBestFit(
-    title: str,
-    xLabel: str,
-    yLabel: str,
-    xData: list,
-    yData: list,
-    maximumDegree: int,
-) -> Figure:
-    figure: Figure = plt.figure()
-    data: tuple = findBestFitLine(
-        x=xData,
-        y=yData,
-        maximumDegree=maximumDegree,
-    )
-    bfModel: np.poly1d = data[1]
-    line: np.ndarray = np.linspace(0, max(xData), 100)
-    plt.ylabel(ylabel=yLabel)
-    plt.xlabel(xlabel=xLabel)
-    plt.title(title)
-    plt.plot(line, bfModel(line))
-    plt.tight_layout()
-    return figure
-
-
-def _graphVelocity(
-    title: str,
-    xLabel: str,
-    yLabel: str,
-    xData: list,
-    yData: list,
-    maximumDegree: int,
-) -> Figure:
-    figure: Figure = plt.figure()
-    data: tuple = findBestFitLine(
-        x=xData,
-        y=yData,
-        maximumDegree=maximumDegree,
-    )
-    bfModel: np.poly1d = data[1]
-    velocityModel = np.polyder(p=bfModel, m=1)
-    line: np.ndarray = np.linspace(0, max(xData), 100)
-    plt.ylabel(ylabel=yLabel)
-    plt.xlabel(xlabel=xLabel)
-    plt.title(title)
-    plt.plot(line, velocityModel(line))
-    plt.tight_layout()
-    return figure
-
-
-def _graphAcceleration(
-    title: str,
-    xLabel: str,
-    yLabel: str,
-    xData: list,
-    yData: list,
-    maximumDegree: int,
-) -> Figure:
-    figure: Figure = plt.figure()
-    data: tuple = findBestFitLine(
-        x=xData,
-        y=yData,
-        maximumDegree=maximumDegree,
-    )
-    bfModel: np.poly1d = data[1]
-    accelerationModel = np.polyder(p=bfModel, m=2)
-    line: np.ndarray = np.linspace(0, max(xData), 100)
-    plt.ylabel(ylabel=yLabel)
-    plt.xlabel(xlabel=xLabel)
-    plt.title(title)
-    plt.plot(line, accelerationModel(line))
-    plt.tight_layout()
-    return figure
-
-
 def _graphAll(
     title: str,
     xLabel: str,
@@ -269,7 +177,7 @@ def graphChart(
     yLabelList: list = None,
 ) -> None:
     if figureType == "data":
-        figure: Figure = _graphData(
+        figure: Figure = graph(
             title=title,
             xLabel=xLabel,
             yLabel=yLabel,
@@ -277,31 +185,34 @@ def graphChart(
             yData=yData,
         )
     if figureType == "best_fit":
-        figure: Figure = _graphBestFit(
+        figure: Figure = graph(
             title=title,
             xLabel=xLabel,
             yLabel=yLabel,
             xData=xData,
             yData=yData,
             maximumDegree=maximumDegree,
+            bestFit=True,
         )
     if figureType == "velocity":
-        figure: Figure = _graphVelocity(
+        figure: Figure = graph(
             title=title,
             xLabel=xLabel,
             yLabel=yLabel,
             xData=xData,
             yData=yData,
             maximumDegree=maximumDegree,
+            velocity=True,
         )
     if figureType == "acceleration":
-        figure: Figure = _graphAcceleration(
+        figure: Figure = graph(
             title=title,
             xLabel=xLabel,
             yLabel=yLabel,
             xData=xData,
             yData=yData,
             maximumDegree=maximumDegree,
+            acceleration=True,
         )
     if figureType == "all":
         figure: Figure = _graphAll(
@@ -337,16 +248,16 @@ def main() -> None:
         quit(4)
 
     if (args.loc is False) and (args.dloc is False) and (args.kloc is False):
-        print("No data source choosen. Defaulting to LOC")
+        print("No data option choosen. Defaulting to --loc")
         args.loc = True
     if (
         (args.graph_data is False)
         and (args.graph_best_fit is False)
         and (args.graph_velocity is False)
-        and (args.args.graph_acceleration is False)
-        and (args.args.graph_all is False)
+        and (args.graph_acceleration is False)
+        and (args.graph_all is False)
     ):
-        print("No graph choosen. Defaulting to graphing all figures on a single chart")
+        print("No graph option choosen. Defaulting to --graph-all")
         args.graph_all = True
 
     xLabel: str = f"Every {args.stepper} Commit(s)"
