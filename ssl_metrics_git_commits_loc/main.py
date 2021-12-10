@@ -6,6 +6,7 @@ from functools import reduce
 from os.path import exists, join
 import itertools
 from subprocess import run, PIPE
+from concurrent.futures import ProcessPoolExecutor
 
 from dateutil.parser import parse as dateParse
 import numpy as np
@@ -222,15 +223,18 @@ def main() -> bool:
     # git log --skip=N --max-count=1
     # https://stackoverflow.com/a/24239999
     # Compute the number of commits per core
+    # totalCommits: int = int(run(["git", "rev-list", "--count", f"{args.branch}"], stdout=PIPE).stdout.__str__()[2:-3])
 
-    totalCommits: int = int(run(["git", "rev-list", "--count", f"{args.branch}"], stdout=PIPE).stdout.__str__()[2:-3]) - 1
+    # totalCommitsArray: list = np.arange(totalCommits, step=totalCommits // args.cores)
 
-    totalCommitsArray: list = np.arange(totalCommits, step=totalCommits // args.cores)
+    # pairings: list = pairwise(totalCommitsArray, args.cores, totalCommits)
 
-    print(pairwise(totalCommitsArray, args.cores, totalCommits))
-    quit()
+    # print(pairings)
 
-    # Get list of commits from starting from the first commit of the repository
+    # with ProcessPoolExecutor() as executor:
+    #     pass
+
+    # # Get list of commits from starting from the first commit of the repository
     # Git log help page: https://www.git-scm.com/docs/git-log
     with os.popen(r'git log --reverse --pretty=format:"%an;%ae;%H;%ci"') as gitLogPipe:
         commits: list = [parseCommitLineFromLog(line=commit) for commit in gitLogPipe]
