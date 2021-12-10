@@ -222,12 +222,55 @@ def _graphAcceleration(
 def _graphAll(
     title: str,
     xLabel: str,
-    yLabel: str,
+    yLabelList: list,
     xData: list,
     yData: list,
     maximumDegree: int,
+    subplotTitles: list,
 ) -> Figure:
-    pass
+    figure: Figure = plt.figure()
+    plt.suptitle(title)
+
+    # Data
+    plt.subplot(2, 2, 1)
+    plt.xlabel(xlabel=xLabel)
+    plt.ylabel(ylabel=yLabelList[0])
+    plt.title(subplotTitles[0])
+    plt.plot(xData, yData)
+    plt.tight_layout()
+
+    # Best Fit
+    plt.subplot(2, 2, 2)
+    data: tuple = __findBestFitLine(x=xData, y=yData, maximumDegree=maximumDegree)
+    bfModel: np.poly1d = data[1]
+    line: np.ndarray = np.linspace(0, max(xData), 100)
+    plt.ylabel(ylabel=yLabelList[1])
+    plt.xlabel(xlabel=xLabel)
+    plt.title(subplotTitles[1])
+    plt.plot(line, bfModel(line))
+    plt.tight_layout()
+
+    # Velocity
+    plt.subplot(2, 2, 3)
+    velocityModel = np.polyder(p=bfModel, m=1)
+    line: np.ndarray = np.linspace(0, max(xData), 100)
+    plt.ylabel(ylabel=yLabelList[2])
+    plt.xlabel(xlabel=xLabel)
+    plt.title(subplotTitles[2])
+    plt.plot(line, velocityModel(line))
+    plt.tight_layout()
+
+    # Acceleration
+    plt.subplot(2, 2, 4)
+    accelerationModel = np.polyder(p=bfModel, m=2)
+    line: np.ndarray = np.linspace(0, max(xData), 100)
+    plt.ylabel(ylabel=yLabelList[3])
+    plt.xlabel(xlabel=xLabel)
+    plt.title(subplotTitles[3])
+    plt.plot(line, accelerationModel(line))
+    plt.tight_layout()
+
+    return figure
 
 
 def graphChart(
@@ -239,6 +282,8 @@ def graphChart(
     yData: list,
     filename: str,
     maximumDegree: int = None,
+    subplotTitles: list = None,
+    yLabelList: list = None,
 ) -> None:
     if figureType == "data":
         figure: Figure = _graphData(
@@ -274,6 +319,16 @@ def graphChart(
             xData=xData,
             yData=yData,
             maximumDegree=maximumDegree,
+        )
+    if figureType == "all":
+        figure: Figure = _graphAll(
+            title=title,
+            xLabel=xLabel,
+            xData=xData,
+            yData=yData,
+            maximumDegree=maximumDegree,
+            subplotTitles=subplotTitles,
+            yLabelList=yLabelList,
         )
 
     figure.savefig(filename)
@@ -312,7 +367,7 @@ def main() -> None:
         args.graph_all = True
 
     title: str = "{}{} Lines of Code (LOC) / (Every {} Commits)"
-    xLabel: str = f"Every {args.stepper} Commit"
+    xLabel: str = f"Every {args.stepper} Commit(s)"
     yLabel0: str = f"LOC"
     yLabel1: str = f"d/dx LOC"
     yLabel2: str = f"d^2/dx^2 LOC"
@@ -371,7 +426,7 @@ def main() -> None:
                 figureType="velocity",
                 title=title,
                 xLabel=xLabel,
-                yLabel=yLabel0,
+                yLabel=yLabel1,
                 xData=xData,
                 yData=yLOC,
                 filename=filename,
@@ -385,15 +440,29 @@ def main() -> None:
                 figureType="acceleration",
                 title=title,
                 xLabel=xLabel,
-                yLabel=yLabel0,
+                yLabel=yLabel2,
                 xData=xData,
                 yData=yLOC,
                 filename=filename,
                 maximumDegree=args.maximum_polynomial_degree,
+                subplotTitles=[],
             )
 
         if args.graph_all:
-            pass
+            filename: str = _appendID(filename=args.output, id="loc_all")
+            title = title.format("", args.repository_name, args.stepper)
+            graphChart(
+                figureType="all",
+                title=title,
+                xLabel=xLabel,
+                yLabel=None,
+                xData=xData,
+                yData=yLOC,
+                filename=filename,
+                maximumDegree=args.maximum_polynomial_degree,
+                subplotTitles=[1, 2, 3 , 4],
+                yLabelList=[yLabel0, yLabel0, yLabel1, yLabel2],
+            )
 
     if args.dloc:
         pass
