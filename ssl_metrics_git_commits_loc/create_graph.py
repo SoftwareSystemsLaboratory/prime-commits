@@ -102,10 +102,18 @@ def getArgparse() -> Namespace:
     parser.add_argument(
         "-m",
         "--maximum-degree-polynomial",
-        help="Estimated maximum degree of the best fit polynomial ",
+        help="Estimated maximum degree of the best fit polynomial",
         type=int,
         required=False,
         default=15,
+    )
+    parser.add_argument(
+        "-s",
+        "--stepper",
+        help="Step through every nth data point",
+        type=int,
+        required=False,
+        default=1,
     )
     return parser.parse_args()
 
@@ -215,14 +223,33 @@ def main() -> None:
     if args.maximum_degree_polynomial < 1:
         print("The maximum degree polynomial is too small. Maximum degree polynomial >= 1")
         quit(3)
+    if args.stepper < 1:
+        print("The stepper is too small. Stepper >= 1")
+        quit(4)
+
     if (args.loc and args.dloc and args.kloc) is False:
         print("No data source choosen. Defaulting to LOC")
         args.loc = True
     if (args.graph_data and args.graph_best_fit and args.graph_velocity and args.args.graph_acceleration and args.args.graph_all) is False:
         print("No graph choosen. Defaulting to graphing all figures on a single chart")
         args.graph_all = True
-    print(args)
-    quit()
+
+    if args.loc:
+        if args.graph_data:
+            pass
+        if args.graph_best_fit:
+            pass
+        if args.graph_velocity:
+            pass
+        if args.graph_acceleration:
+            pass
+        if args.graph_all:
+            pass
+
+    if args.dloc:
+        pass
+    if args.kloc:
+        pass
 
     locXLabel: str = "Commit"
     locYLabel: str = "LOC"
