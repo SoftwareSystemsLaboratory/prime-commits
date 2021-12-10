@@ -249,7 +249,7 @@ def graphChart(
             yData=yData,
         )
     if figureType == "best_fit":
-        figure: Figure = _graphBestFit()(
+        figure: Figure = _graphBestFit(
             title=title,
             xLabel=xLabel,
             yLabel=yLabel,
@@ -278,26 +278,6 @@ def graphChart(
 
     figure.savefig(filename)
     figure.clf()
-
-    # # Velocity of Best Fit
-    # plt.subplot(2, 2, 3)
-    # velocityModel = np.polyder(p=bfModel, m=1)
-    # line: np.ndarray = np.linspace(0, max(x), 100)
-    # plt.ylabel(ylabel="Velocity Unit")
-    # plt.xlabel(xlabel=xLabel)
-    # plt.title("Velocity")
-    # plt.plot(line, velocityModel(line))
-    # plt.tight_layout()
-
-    # # Acceleration of Best Fit
-    # plt.subplot(2, 2, 4)
-    # accelerationModel = np.polyder(p=bfModel, m=2)
-    # line: np.ndarray = np.linspace(0, max(x), 100)
-    # plt.ylabel(ylabel="Acceleration Unit")
-    # plt.xlabel(xlabel=xLabel)
-    # plt.title("Acceleration")
-    # plt.plot(line, accelerationModel(line))
-    # plt.tight_layout()
 
 
 def main() -> None:
@@ -357,11 +337,9 @@ def main() -> None:
         yKLoc: list = df["kloc"].to_list()[args.x_min : args.x_max + 1 : args.stepper]
 
     if args.loc:
-        filename: str = _appendID(filename=args.output, id="loc")
-
         if args.graph_data:
+            filename: str = _appendID(filename=args.output, id="loc_data")
             title = title.format("", args.repository_name, args.stepper)
-            filename: str = _appendID(filename=filename, id="data")
             graphChart(
                 figureType="data",
                 title=title,
@@ -373,8 +351,8 @@ def main() -> None:
             )
 
         if args.graph_best_fit:
+            filename: str = _appendID(filename=args.output, id="loc_best_fit")
             title = title.format("Best Fit of ", args.repository_name, args.stepper)
-            filename: str = _appendID(filename=filename, id="best_fit")
             graphChart(
                 figureType="best_fit",
                 title=title,
@@ -387,8 +365,8 @@ def main() -> None:
             )
 
         if args.graph_velocity:
+            filename: str = _appendID(filename=args.output, id="loc_velocity")
             title = title.format("Velocity of ", args.repository_name, args.stepper)
-            filename: str = _appendID(filename=filename, id="velocity")
             graphChart(
                 figureType="velocity",
                 title=title,
@@ -397,11 +375,12 @@ def main() -> None:
                 xData=xData,
                 yData=yLOC,
                 filename=filename,
+                maximumDegree=args.maximum_polynomial_degree,
             )
 
         if args.graph_acceleration:
+            filename: str = _appendID(filename=args.output, id="loc_acceleration")
             title = title.format("Acceleration of ", args.repository_name, args.stepper)
-            filename: str = _appendID(filename=filename, id="velocity")
             graphChart(
                 figureType="acceleration",
                 title=title,
@@ -410,6 +389,7 @@ def main() -> None:
                 xData=xData,
                 yData=yLOC,
                 filename=filename,
+                maximumDegree=args.maximum_polynomial_degree,
             )
 
         if args.graph_all:
@@ -427,45 +407,6 @@ def main() -> None:
     klocXLabel: str = 0
     klocYLabel: str = "KLOC"
     klocTitle: str = "Thousands of Lines of Code (KLOC) / Commits"
-
-    # if args.graph_loc_filename != None:
-    #     # LOC
-    #     plot(
-    #         x=x,
-    #         y=yLOC,
-    #         xLabel=locXLabel,
-    #         yLabel=locYLabel,
-    #         title=locTitle,
-    #         maximumDegree=args.maximum_polynomial_degree,
-    #         repositoryName=args.repository_name_name,
-    #         filename=args.graph_loc_filename,
-    #     )
-
-    # if args.graph_delta_loc_filename != None:
-    #     # DLOC
-    #     plot(
-    #         x=x,
-    #         y=yDLoc,
-    #         xLabel=dlocXLabel,
-    #         yLabel=dlocYLabel,
-    #         title=dlocTitle,
-    #         maximumDegree=args.maximum_polynomial_degree,
-    #         repositoryName=args.repository_name_name,
-    #         filename=args.graph_delta_loc_filename,
-    #     )
-
-    # if args.graph_k_loc_filename != None:
-    #     # KLOC
-    #     plot(
-    #         x=x,
-    #         y=yKLoc,
-    #         xLabel=klocXLabel,
-    #         yLabel=klocYLabel,
-    #         title=klocTitle,
-    #         maximumDegree=args.maximum_polynomial_degree,
-    #         repositoryName=args.repository_name_name,
-    #         filename=args.graph_k_loc_filename,
-    #     )
 
 
 if __name__ == "__main__":
