@@ -236,32 +236,38 @@ def main() -> None:
 
     if args.loc:
         if args.graph_data:
-            pass
+            title: str = f"{args.repository} Lines of Code (LOC) / (Commits % {args.stepper})"
+            xLabel: str = f"Commits % {args.stepper}"
+            yLabel: str = f"LOC"
         if args.graph_best_fit:
-            pass
+            title: str = f"Best Fit {args.repository} Lines of Code (LOC) / (Commits % {args.stepper})"
+            xLabel: str = f"Commits % {args.stepper}"
+            yLabel: str = f"LOC"
         if args.graph_velocity:
             pass
         if args.graph_acceleration:
-            pass
+            title: str = f"Best Fit {args.repository} Lines of Code (LOC) / (Commits % {args.stepper})"
+            xLabel: str = f"Commit % {args.stepper}"
+            yLabel: str = f"d^2/dx^2 LOC"
         if args.graph_all:
-            pass
+            title: str = f"Best Fit {args.repository} Lines of Code (LOC) / (Commits % {args.stepper})"
+            xLabel: str = f"Commit % {args.stepper}"
+            yLabel0: str = f"LOC"
+            yLabel1: str = f"d/dx LOC"
+            yLabel2: str = f"d^2/dx^2 LOC"
 
     if args.dloc:
         pass
     if args.kloc:
         pass
 
-    locXLabel: str = "Commit"
-    locYLabel: str = "LOC"
-    locTitle: str = "Lines of Code (LOC) / Commits"
-
     dlocXLabel: str = locXLabel
     dlocYLabel: str = "ΔLOC"
-    dlocTitle: str = "Change of Lines of Code (ΔLOC) / Days"
+    dlocTitle: str = "Change of Lines of Code (ΔLOC) / Commits"
 
     klocXLabel: str = locXLabel
     klocYLabel: str = "KLOC"
-    klocTitle: str = "Thousands of Lines of Code (KLOC) / Days"
+    klocTitle: str = "Thousands of Lines of Code (KLOC) / Commits"
 
     df: DataFrame = pandas.read_json(args.input)
 
