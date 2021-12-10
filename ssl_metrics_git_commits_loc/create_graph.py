@@ -557,8 +557,90 @@ def main() -> None:
                     yLabel2.format("DLOC"),
                 ],
             )
+
     if args.kloc:
-        pass
+        title: str = "{}{} {} / (Every {} Commits)"
+        if args.graph_data:
+            filename: str = _appendID(filename=args.output, id="kloc_data")
+            title = title.format("", args.repository_name, "Thousands of Lines of Code (KLOC)", args.stepper)
+            graphChart(
+                figureType="data",
+                title=title,
+                xLabel=xLabel,
+                yLabel=yLabel0.format("KLOC"),
+                xData=xData,
+                yData=yKLOC,
+                filename=filename,
+            )
+
+        if args.graph_best_fit:
+            filename: str = _appendID(filename=args.output, id="kloc_best_fit")
+            title = title.format("Best Fit of ", args.repository_name, "Thousands of Lines of Code (KLOC)", args.stepper)
+            graphChart(
+                figureType="best_fit",
+                title=title,
+                xLabel=xLabel,
+                yLabel=yLabel0.format("KLOC"),
+                xData=xData,
+                yData=yKLOC,
+                filename=filename,
+                maximumDegree=args.maximum_polynomial_degree,
+            )
+
+        if args.graph_velocity:
+            filename: str = _appendID(filename=args.output, id="kloc_velocity")
+            title = title.format("Velocity of ", args.repository_name, "Thousands of Lines of Code (KLOC)", args.stepper)
+            graphChart(
+                figureType="velocity",
+                title=title,
+                xLabel=xLabel,
+                yLabel=yLabel1.format("KLOC"),
+                xData=xData,
+                yData=yKLOC,
+                filename=filename,
+                maximumDegree=args.maximum_polynomial_degree,
+            )
+
+        if args.graph_acceleration:
+            filename: str = _appendID(filename=args.output, id="kloc_acceleration")
+            title = title.format("Acceleration of ", args.repository_name, "Thousands of Lines of Code (KLOC)", args.stepper)
+            graphChart(
+                figureType="acceleration",
+                title=title,
+                xLabel=xLabel,
+                yLabel=yLabel2.format("KLOC"),
+                xData=xData,
+                yData=yKLOC,
+                filename=filename,
+                maximumDegree=args.maximum_polynomial_degree,
+                subplotTitles=[],
+            )
+
+        if args.graph_all:
+            filename: str = _appendID(filename=args.output, id="kloc_all")
+            title = title.format("", args.repository_name, "Thousands of Lines of Code (KLOC)", args.stepper)
+            graphChart(
+                figureType="all",
+                title=title,
+                xLabel=xLabel,
+                yLabel=None,
+                xData=xData,
+                yData=yKLOC,
+                filename=filename,
+                maximumDegree=args.maximum_polynomial_degree,
+                subplotTitles=[
+                    "Data",
+                    "Best Fit",
+                    "Velocity",
+                    "Acceleration",
+                ],
+                yLabelList=[
+                    yLabel0.format("KLOC"),
+                    yLabel0.format("KLOC"),
+                    yLabel1.format("KLOC"),
+                    yLabel2.format("KLOC"),
+                ],
+            )
 
     dlocXLabel: str = 0
     dlocYLabel: str = "ΔLOC"
