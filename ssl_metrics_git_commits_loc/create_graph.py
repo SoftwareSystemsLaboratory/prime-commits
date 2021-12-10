@@ -12,9 +12,8 @@ from sklearn.metrics import r2_score
 
 def getArgparse() -> Namespace:
     parser: ArgumentParser = ArgumentParser(
-        prog="ssl-metrics-git-bus-factor Graph Generator",
-        usage="This is a proof of concept demonstrating that it is possible to use git to compute the bus factor of a project.",
-        description="The only required arguement of this program is -i/--input. The default action is to do nothing until a filename for the graph is inputted.",
+        prog="ssl-metrics-git-commits-loc Graph Generator",
+        usage="This is a proof of concept demonstrating that it is possible to use Git commits to compute metrics.",
     )
     parser.add_argument(
         "-i",
@@ -26,14 +25,14 @@ def getArgparse() -> Namespace:
     parser.add_argument(
         "-o",
         "--output",
-        help="The filename to output the bus factor graph to",
+        help="The filename to output the graph to",
         type=str,
         required=False,
     )
     parser.add_argument(
         "-m",
         "--maximum-degree-polynomial",
-        help="Estimated maximum degree of polynomial",
+        help="Estimated maximum degree of the best fit polynomial ",
         type=int,
         required=False,
         default=15,
@@ -41,19 +40,19 @@ def getArgparse() -> Namespace:
     parser.add_argument(
         "-r",
         "--repository-name",
-        help="Name of the repository that is being analyzed",
+        help="Name of the repository that is being analyzed. Will be used as the graph title",
         type=str,
         required=False,
     )
     parser.add_argument(
-        "--x-window-min",
+        "--x-min",
         help="The smallest x value that will be plotted",
         type=int,
         required=False,
         default=0,
     )
     parser.add_argument(
-        "--x-window-max",
+        "--x-max",
         help="The largest x value that will be plotted",
         type=int,
         required=False,
