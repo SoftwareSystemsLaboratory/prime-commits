@@ -1,17 +1,18 @@
+import itertools
 import json
 import os
 from argparse import ArgumentParser
 from datetime import datetime
 from functools import reduce
 from os.path import exists, join
-import itertools
-from subprocess import run, PIPE
-from concurrent.futures import ProcessPoolExecutor
 
-from dateutil.parser import parse as dateParse
 import numpy as np
+from dateutil.parser import parse as dateParse
 from numpy.lib.function_base import iterable
 from progress.bar import Bar
+
+# from subprocess import PIPE, run
+# from concurrent.futures import ProcessPoolExecutor
 
 
 # Command line arguement parsing
@@ -182,7 +183,11 @@ def exportJSON(filename, commitInfo):
         json.dump(commitInfo, jsonf, indent=4)
 
 
-def pairwise(iterable, coreCount:int, maxValue:int,) -> list:
+def pairwise(
+    iterable,
+    coreCount: int,
+    maxValue: int,
+) -> list:
     # https://www.py4u.net/discuss/10288
     data: list = []
     a, b = itertools.tee(iterable)
@@ -205,6 +210,7 @@ def pairwise(iterable, coreCount:int, maxValue:int,) -> list:
         data[-1][1] = maxValue
 
     return data
+
 
 # Script to execute program
 def main() -> bool:
