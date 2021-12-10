@@ -176,61 +176,67 @@ def graphChart(
 
 
 def main() -> None:
-    def _graphDataChart(title: str, yLabel: str, filename: str) -> None:
+    def _graphDataChart(title: str, yLabel: str, yData: list, filename: str) -> None:
         graphChart(
             figureType="data",
             title=title,
             xLabel=xLabel,
             yLabel=yLabel,
             xData=xData,
-            yData=yLOC,
+            yData=yData,
             filename=filename,
         )
 
-    def _graphBestFitChart(title: str, yLabel: str, filename: str) -> None:
+    def _graphBestFitChart(title: str, yLabel: str, yData: list, filename: str) -> None:
         graphChart(
             figureType="best_fit",
             title=title,
             xLabel=xLabel,
             yLabel=yLabel,
             xData=xData,
-            yData=yLOC,
+            yData=yData,
             filename=filename,
             maximumDegree=args.maximum_polynomial_degree,
         )
 
-    def _graphVelocityChart(title: str, yLabel: str, filename: str) -> None:
+    def _graphVelocityChart(
+        title: str, yLabel: str, yData: list, filename: str
+    ) -> None:
         graphChart(
             figureType="velocity",
             title=title,
             xLabel=xLabel,
             yLabel=yLabel,
             xData=xData,
-            yData=yLOC,
+            yData=yData,
             filename=filename,
             maximumDegree=args.maximum_polynomial_degree,
         )
 
-    def _graphAccelerationChart(title: str, yLabel: str, filename: str) -> None:
+    def _graphAccelerationChart(
+        title: str, yLabel: str, yData: list, filename: str
+    ) -> None:
         graphChart(
             figureType="acceleration",
             title=title,
             xLabel=xLabel,
             yLabel=yLabel,
             xData=xData,
-            yData=yLOC,
+            yData=yData,
             filename=filename,
             maximumDegree=args.maximum_polynomial_degree,
         )
 
-    def _graphAllCharts(title: str, yLabelList: list, filename: str) -> None:
+    def _graphAllCharts(
+        title: str, yLabelList: list, yData: list, filename: str
+    ) -> None:
         graphChart(
             figureType="all",
             title=title,
             xLabel=xLabel,
             yLabel=None,
             xData=xData,
-            yData=yLOC,
+            yData=yData,
             filename=filename,
             maximumDegree=args.maximum_polynomial_degree,
             subplotTitles=[
@@ -314,6 +320,7 @@ def main() -> None:
             _graphDataChart(
                 title=title,
                 yLabel=yLabel0.format("LOC"),
+                yData=yLOC,
                 filename=filename,
             )
 
@@ -323,6 +330,7 @@ def main() -> None:
             _graphBestFitChart(
                 title=title,
                 yLabel=yLabel0.format("LOC"),
+                yData=yLOC,
                 filename=filename,
             )
 
@@ -332,6 +340,7 @@ def main() -> None:
             _graphVelocityChart(
                 title=title,
                 yLabel=yLabel1.format("LOC"),
+                yData=yLOC,
                 filename=filename,
             )
 
@@ -343,6 +352,7 @@ def main() -> None:
             _graphAccelerationChart(
                 title=title,
                 yLabel=yLabel2.format("LOC"),
+                yData=yLOC,
                 filename=filename,
             )
 
@@ -355,7 +365,12 @@ def main() -> None:
                 yLabel1.format("LOC"),
                 yLabel2.format("LOC"),
             ]
-            _graphAllCharts(title=title, yLabelList=yLabelList, filename=filename)
+            _graphAllCharts(
+                title=title,
+                yLabelList=yLabelList,
+                yData=yLOC,
+                filename=filename,
+            )
 
     if args.dloc:
         if args.graph_data:
@@ -364,6 +379,7 @@ def main() -> None:
             _graphDataChart(
                 title=title,
                 yLabel=yLabel0.format("DLOC"),
+                yData=yDLOC,
                 filename=filename,
             )
 
@@ -375,6 +391,7 @@ def main() -> None:
             _graphBestFitChart(
                 title=title,
                 yLabel=yLabel0.format("DLOC"),
+                yData=yDLOC,
                 filename=filename,
             )
 
@@ -386,6 +403,7 @@ def main() -> None:
             _graphVelocityChart(
                 title=title,
                 yLabel=yLabel1.format("DLOC"),
+                yData=yDLOC,
                 filename=filename,
             )
 
@@ -397,6 +415,7 @@ def main() -> None:
             _graphAccelerationChart(
                 title=title,
                 yLabel=yLabel2.format("DLOC"),
+                yData=yDLOC,
                 filename=filename,
             )
 
@@ -409,7 +428,12 @@ def main() -> None:
                 yLabel1.format("DLOC"),
                 yLabel2.format("DLOC"),
             ]
-            _graphAllCharts(title=title, yLabelList=yLabelList, filename=filename)
+            _graphAllCharts(
+                title=title,
+                yLabelList=yLabelList,
+                yData=yDLOC,
+                filename=filename,
+            )
 
     if args.kloc:
         if args.graph_data:
@@ -433,6 +457,7 @@ def main() -> None:
             _graphBestFitChart(
                 title=title,
                 yLabel=yLabel0.format("KLOC"),
+                yData=yKLOC,
                 filename=filename,
             )
 
@@ -446,6 +471,7 @@ def main() -> None:
             _graphVelocityChart(
                 title=title,
                 yLabel=yLabel1.format("KLOC"),
+                yData=yKLOC,
                 filename=filename,
             )
 
@@ -463,6 +489,7 @@ def main() -> None:
             _graphAccelerationChart(
                 title=title,
                 yLabel=yLabel2.format("KLOC"),
+                yData=yKLOC,
                 filename=filename,
             )
 
@@ -480,6 +507,7 @@ def main() -> None:
             _graphAllCharts(
                 title=title,
                 yLabelList=yLabelList,
+                yData=yKLOC,
                 filename=filename,
             )
 
