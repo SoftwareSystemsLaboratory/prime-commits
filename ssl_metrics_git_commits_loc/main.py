@@ -4,9 +4,10 @@ from argparse import ArgumentParser
 from datetime import datetime
 from functools import reduce
 from os.path import exists, join
+from math import floor
 
 from dateutil.parser import parse as dateParse
-from progress.bar import IncrementalBar
+from progress.bar import Bar
 
 
 # Command line arguement parsing
@@ -26,7 +27,7 @@ def get_argparse() -> ArgumentParser:
     parser.add_argument(
         "-b",
         "--branch",
-        help="Default branch for analysis to be ran on",
+        help="Git branch for analysis to be ran on",
         default="main",
         type=str,
         required=True,
@@ -35,6 +36,13 @@ def get_argparse() -> ArgumentParser:
         "-o",
         "--output",
         help="Output analysis to a JSON file",
+        type=str,
+        required=True,
+    )
+    parser.add_argument(
+        "-c",
+        "--cores",
+        help="Number of cores to use for analysis",
         type=str,
         required=True,
     )
@@ -65,9 +73,9 @@ def parseCommitLineFromLog(line: str) -> dict:
 
 # Conducts the LOC and delta LOC analysis of a repository branch
 def analyzeCommits(commits: list, date0: datetime):
-    loc_sum: int = 0  # TODO: Rename this variable
+    loc_sum: int = 0
     commitCounter: int = 0
-    with IncrementalBar("Processing commits... ", max=len(commits) - 1) as ib:
+    with Bar("Processing commits... ", max=len(commits) - 1) as ib:
         for index in range(len(commits) - 1):
             authorName: str = commits[index]["author_name"]
             authorEmail: str = commits[index]["author_email"]
@@ -181,6 +189,19 @@ def main() -> bool:
         return False
     os.chdir(args.directory)
     os.system(f"git checkout {args.branch}")
+
+    # Compute the number of commits per core
+    ammountOfCommits: int = int(os.system(f"git rev-list --count {args.branch}"))
+    commitsPerCore: int = floor(ammountOfCommits // args.cores)
+
+
+    # TODO: Write algorithm to create a list of tuples that are the range to iterate over. This is to make the program run on multiple cores
+    # git log --skip=N --max-count=1
+    # https://stackoverflow.com/a/24239999
+    rangesOfCommits: list = []
+    core: int
+    for core in commitsPerCore:
+        rangeOfCommits: tuple = (core * commitsPerCore, core)
 
     # Get list of commits from starting from the first commit of the repository
     # Git log help page: https://www.git-scm.com/docs/git-log
