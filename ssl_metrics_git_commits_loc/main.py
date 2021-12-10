@@ -4,9 +4,12 @@ from argparse import ArgumentParser
 from datetime import datetime
 from functools import reduce
 from os.path import exists, join
-from math import floor
+import itertools
+from subprocess import run, PIPE
 
 from dateutil.parser import parse as dateParse
+import numpy as np
+from numpy.lib.function_base import iterable
 from progress.bar import Bar
 
 
@@ -43,8 +46,9 @@ def get_argparse() -> ArgumentParser:
         "-c",
         "--cores",
         help="Number of cores to use for analysis",
-        type=str,
-        required=True,
+        type=int,
+        required=False,
+        default=1,
     )
     return parser
 
@@ -177,6 +181,30 @@ def exportJSON(filename, commitInfo):
         json.dump(commitInfo, jsonf, indent=4)
 
 
+def pairwise(iterable, coreCount:int, maxValue:int,) -> list:
+    # https://www.py4u.net/discuss/10288
+    data: list = []
+    a, b = itertools.tee(iterable)
+    next(b, None)
+
+    x: tuple
+    for x in zip(a, b):
+        temp: list = [x[0], x[1]]
+        if temp[0] == 0:
+            pass
+        else:
+            temp[0] += 1
+        data.append(temp)
+
+    if len(data) < coreCount:
+        data.append([data[-1][1] + 1, maxValue])
+        print(data)
+
+    if data[-1][1] != maxValue:
+        data[-1][1] = maxValue
+
+    return data
+
 # Script to execute program
 def main() -> bool:
     # Setup variables
@@ -190,18 +218,17 @@ def main() -> bool:
     os.chdir(args.directory)
     os.system(f"git checkout {args.branch}")
 
-    # Compute the number of commits per core
-    ammountOfCommits: int = int(os.system(f"git rev-list --count {args.branch}"))
-    commitsPerCore: int = floor(ammountOfCommits // args.cores)
-
-
     # TODO: Write algorithm to create a list of tuples that are the range to iterate over. This is to make the program run on multiple cores
     # git log --skip=N --max-count=1
     # https://stackoverflow.com/a/24239999
-    rangesOfCommits: list = []
-    core: int
-    for core in commitsPerCore:
-        rangeOfCommits: tuple = (core * commitsPerCore, core)
+    # Compute the number of commits per core
+
+    totalCommits: int = int(run(["git", "rev-list", "--count", f"{args.branch}"], stdout=PIPE).stdout.__str__()[2:-3]) - 1
+
+    totalCommitsArray: list = np.arange(totalCommits, step=totalCommits // args.cores)
+
+    print(pairwise(totalCommitsArray, args.cores, totalCommits))
+    quit()
 
     # Get list of commits from starting from the first commit of the repository
     # Git log help page: https://www.git-scm.com/docs/git-log
