@@ -39,64 +39,49 @@ def getArgparse() -> Namespace:
     parser.add_argument(
         "--loc",
         help="Utilize LOC data",
-        type=bool,
-        required=True,
+        required=False,
         action="store_true"
         )
     parser.add_argument(
         "--dloc",
         help="Utilize Delta LOC data",
-        type=bool,
-        required=True,
+        required=False,
         action="store_true"
     )
     parser.add_argument(
         "--kloc",
         help="Utilize KLOC data",
-        type=bool,
-        required=True,
-        action="store_true"
-        )
-    parser.add_argument(
-        "--kloc",
-        help="Utilize KLOC data",
-        type=bool,
-        required=True,
+        required=False,
         action="store_true"
         )
     parser.add_argument(
         "--graph-data",
         help="Graph the raw data. Discrete graph of the data",
-        type=bool,
-        required=True,
+        required=False,
         action="store_true"
         )
     parser.add_argument(
         "--graph-best-fit",
         help="Graph the best fit polynomial of the data. Continous graph of the data. Polynomial degrees can be configured with `-m`",
-        type=bool,
-        required=True,
+        required=False,
         action="store_true"
         )
     parser.add_argument(
         "--graph-velocity",
         help="Graph the velocity of the data. Computes the best fit polynomial and takes the first derivitve. Polynomial degrees can be configured with `-m`",
-        type=bool,
-        required=True,
+        required=False,
         action="store_true"
         )
     parser.add_argument(
         "--graph-acceleration",
         help="Graph the acceleration of the data. Computes the best fit polynomial and takes the second derivitve. Polynomial degrees can be configured with `-m`",
-        type=bool,
-        required=True,
+        required=False,
         action="store_true"
         )
     parser.add_argument(
         "--graph-all",
         help="Graphs all possible figures of the data onto one chart. Computes the best fit polynomial and takes the first and second derivitve. Polynomial degrees can be configured with `-m`",
-        type=bool,
-        required=True,
+        required=False,
         action="store_true"
         )
     parser.add_argument(
@@ -223,9 +208,12 @@ def main() -> None:
     if args.input[-5::] != ".json":
         print("Invalid input file type. Input file must be JSON")
         quit(1)
-    if args.x_window_min < 0:
+    if args.x_min < 0:
         print("Invalid x window min. X window min >= 0")
         quit(2)
+
+    print(args)
+    quit()
 
     locXLabel: str = "Commit"
     locYLabel: str = "LOC"
