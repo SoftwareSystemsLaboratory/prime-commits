@@ -14,6 +14,7 @@ def getArgparse() -> Namespace:
     parser: ArgumentParser = ArgumentParser(
         prog="ssl-metrics-git-commits-loc Graph Generator",
         usage="This is a proof of concept demonstrating that it is possible to use Git commits to compute metrics.",
+        description="The default action is to graph all figures of LOC on a single chart. If multiple data and/or graphing options are choosen the output filename and the title of the figure/chartwill reflect the combination that is being graphed."
     )
     parser.add_argument(
         "-i",
@@ -211,7 +212,15 @@ def main() -> None:
     if args.x_min < 0:
         print("Invalid x window min. X window min >= 0")
         quit(2)
-
+    if args.maximum_degree_polynomial < 1:
+        print("The maximum degree polynomial is too small. Maximum degree polynomial >= 1")
+        quit(3)
+    if (args.loc and args.dloc and args.kloc) is False:
+        print("No data source choosen. Defaulting to LOC")
+        args.loc = True
+    if (args.graph_data and args.graph_best_fit and args.graph_velocity and args.args.graph_acceleration and args.args.graph_all) is False:
+        print("No graph choosen. Defaulting to graphing all figures on a single chart")
+        args.graph_all = True
     print(args)
     quit()
 
