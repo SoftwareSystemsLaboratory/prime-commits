@@ -1,3 +1,4 @@
+import itertools
 import json
 import os
 from argparse import ArgumentParser
@@ -5,8 +6,13 @@ from datetime import datetime
 from functools import reduce
 from os.path import exists, join
 
+import numpy as np
 from dateutil.parser import parse as dateParse
-from progress.bar import IncrementalBar
+from numpy.lib.function_base import iterable
+from progress.bar import Bar
+
+# from subprocess import PIPE, run
+# from concurrent.futures import ProcessPoolExecutor
 
 
 # Command line arguement parsing
@@ -26,7 +32,7 @@ def get_argparse() -> ArgumentParser:
     parser.add_argument(
         "-b",
         "--branch",
-        help="Default branch for analysis to be ran on",
+        help="Git branch for analysis to be ran on",
         default="main",
         type=str,
         required=True,
@@ -37,6 +43,14 @@ def get_argparse() -> ArgumentParser:
         help="Output analysis to a JSON file",
         type=str,
         required=True,
+    )
+    parser.add_argument(
+        "-c",
+        "--cores",
+        help="Number of cores to use for analysis",
+        type=int,
+        required=False,
+        default=1,
     )
     return parser
 
@@ -65,9 +79,9 @@ def parseCommitLineFromLog(line: str) -> dict:
 
 # Conducts the LOC and delta LOC analysis of a repository branch
 def analyzeCommits(commits: list, date0: datetime):
-    loc_sum: int = 0  # TODO: Rename this variable
+    loc_sum: int = 0
     commitCounter: int = 0
-    with IncrementalBar("Processing commits... ", max=len(commits) - 1) as ib:
+    with Bar("Processing commits... ", max=len(commits) - 1) as ib:
         for index in range(len(commits) - 1):
             authorName: str = commits[index]["author_name"]
             authorEmail: str = commits[index]["author_email"]
@@ -169,6 +183,35 @@ def exportJSON(filename, commitInfo):
         json.dump(commitInfo, jsonf, indent=4)
 
 
+def pairwise(
+    iterable,
+    coreCount: int,
+    maxValue: int,
+) -> list:
+    # https://www.py4u.net/discuss/10288
+    data: list = []
+    a, b = itertools.tee(iterable)
+    next(b, None)
+
+    x: tuple
+    for x in zip(a, b):
+        temp: list = [x[0], x[1]]
+        if temp[0] == 0:
+            pass
+        else:
+            temp[0] += 1
+        data.append(temp)
+
+    if len(data) < coreCount:
+        data.append([data[-1][1] + 1, maxValue])
+        print(data)
+
+    if data[-1][1] != maxValue:
+        data[-1][1] = maxValue
+
+    return data
+
+
 # Script to execute program
 def main() -> bool:
     # Setup variables
@@ -182,7 +225,22 @@ def main() -> bool:
     os.chdir(args.directory)
     os.system(f"git checkout {args.branch}")
 
-    # Get list of commits from starting from the first commit of the repository
+    # TODO: Write algorithm to create a list of tuples that are the range to iterate over. This is to make the program run on multiple cores
+    # git log --skip=N --max-count=1
+    # https://stackoverflow.com/a/24239999
+    # Compute the number of commits per core
+    # totalCommits: int = int(run(["git", "rev-list", "--count", f"{args.branch}"], stdout=PIPE).stdout.__str__()[2:-3])
+
+    # totalCommitsArray: list = np.arange(totalCommits, step=totalCommits // args.cores)
+
+    # pairings: list = pairwise(totalCommitsArray, args.cores, totalCommits)
+
+    # print(pairings)
+
+    # with ProcessPoolExecutor() as executor:
+    #     pass
+
+    # # Get list of commits from starting from the first commit of the repository
     # Git log help page: https://www.git-scm.com/docs/git-log
     with os.popen(r'git log --reverse --pretty=format:"%an;%ae;%H;%ci"') as gitLogPipe:
         commits: list = [parseCommitLineFromLog(line=commit) for commit in gitLogPipe]
