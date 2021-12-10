@@ -1,3 +1,5 @@
+from textwrap import wrap
+
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import Figure
@@ -17,7 +19,7 @@ def graph(
     acceleration: bool = False,
 ) -> Figure:
     figure: Figure = plt.figure()
-    plt.title(title)
+    plt.title("\n".join(wrap(title, width=60)))
     plt.xlabel(xlabel=xLabel)
     plt.ylabel(ylabel=yLabel)
 
