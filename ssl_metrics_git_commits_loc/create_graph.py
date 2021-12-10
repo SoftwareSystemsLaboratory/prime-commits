@@ -30,20 +30,75 @@ def getArgparse() -> Namespace:
         required=False,
     )
     parser.add_argument(
-        "-m",
-        "--maximum-degree-polynomial",
-        help="Estimated maximum degree of the best fit polynomial ",
-        type=int,
-        required=False,
-        default=15,
-    )
-    parser.add_argument(
         "-r",
         "--repository-name",
-        help="Name of the repository that is being analyzed. Will be used as the graph title",
+        help="Name of the repository that is being analyzed. Will be used in the graph title",
         type=str,
-        required=False,
+        required=True,
     )
+    parser.add_argument(
+        "--loc",
+        help="Utilize LOC data",
+        type=bool,
+        required=True,
+        action="store_true"
+        )
+    parser.add_argument(
+        "--dloc",
+        help="Utilize Delta LOC data",
+        type=bool,
+        required=True,
+        action="store_true"
+    )
+    parser.add_argument(
+        "--kloc",
+        help="Utilize KLOC data",
+        type=bool,
+        required=True,
+        action="store_true"
+        )
+    parser.add_argument(
+        "--kloc",
+        help="Utilize KLOC data",
+        type=bool,
+        required=True,
+        action="store_true"
+        )
+    parser.add_argument(
+        "--graph-data",
+        help="Graph the raw data. Discrete graph of the data",
+        type=bool,
+        required=True,
+        action="store_true"
+        )
+    parser.add_argument(
+        "--graph-best-fit",
+        help="Graph the best fit polynomial of the data. Continous graph of the data. Polynomial degrees can be configured with `-m`",
+        type=bool,
+        required=True,
+        action="store_true"
+        )
+    parser.add_argument(
+        "--graph-velocity",
+        help="Graph the velocity of the data. Computes the best fit polynomial and takes the first derivitve. Polynomial degrees can be configured with `-m`",
+        type=bool,
+        required=True,
+        action="store_true"
+        )
+    parser.add_argument(
+        "--graph-acceleration",
+        help="Graph the acceleration of the data. Computes the best fit polynomial and takes the second derivitve. Polynomial degrees can be configured with `-m`",
+        type=bool,
+        required=True,
+        action="store_true"
+        )
+    parser.add_argument(
+        "--graph-all",
+        help="Graphs all possible figures of the data onto one chart. Computes the best fit polynomial and takes the first and second derivitve. Polynomial degrees can be configured with `-m`",
+        type=bool,
+        required=True,
+        action="store_true"
+        )
     parser.add_argument(
         "--x-min",
         help="The smallest x value that will be plotted",
@@ -58,15 +113,23 @@ def getArgparse() -> Namespace:
         required=False,
         default=-1,
     )
+    parser.add_argument(
+        "-m",
+        "--maximum-degree-polynomial",
+        help="Estimated maximum degree of the best fit polynomial ",
+        type=int,
+        required=False,
+        default=15,
+    )
     return parser.parse_args()
 
 
-def __findBestFitLine(x: list, y: list, maximumDegrees: int) -> tuple:
+def __findBestFitLine(x: list, y: list, maximumDegree: int) -> tuple:
     # https://www.w3schools.com/Python/python_ml_polynomial_regression.asp
     data: list = []
 
     degree: int
-    for degree in range(maximumDegrees):
+    for degree in range(maximumDegree):
         model: np.poly1d = np.poly1d(np.polyfit(x, y, degree))
         r2Score: np.float64 = r2_score(y, model(x))
         temp: tuple = (r2Score, model)
@@ -98,7 +161,7 @@ def _graphFigure(
 
     # Best Fit
     plt.subplot(2, 2, 2)
-    data: tuple = __findBestFitLine(x=x, y=y, maximumDegrees=maximumDegree)
+    data: tuple = __findBestFitLine(x=x, y=y, maximumDegree=maximumDegree)
     bfModel: np.poly1d = data[1]
     line: np.ndarray = np.linspace(0, max(x), 100)
     plt.ylabel(ylabel=yLabel)
