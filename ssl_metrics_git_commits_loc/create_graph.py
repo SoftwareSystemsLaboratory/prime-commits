@@ -368,9 +368,9 @@ def main() -> None:
 
     title: str = "{}{} Lines of Code (LOC) / (Every {} Commits)"
     xLabel: str = f"Every {args.stepper} Commit(s)"
-    yLabel0: str = f"LOC"
-    yLabel1: str = f"d/dx LOC"
-    yLabel2: str = f"d^2/dx^2 LOC"
+    yLabel0: str = "{}"
+    yLabel1: str = "d/dx {}"
+    yLabel2: str = "d^2/dx^2 {}"
 
     df: DataFrame = pandas.read_json(args.input)
 
@@ -399,7 +399,7 @@ def main() -> None:
                 figureType="data",
                 title=title,
                 xLabel=xLabel,
-                yLabel=yLabel0,
+                yLabel=yLabel0.format("LOC"),
                 xData=xData,
                 yData=yLOC,
                 filename=filename,
@@ -412,7 +412,7 @@ def main() -> None:
                 figureType="best_fit",
                 title=title,
                 xLabel=xLabel,
-                yLabel=yLabel0,
+                yLabel=yLabel0.format("LOC"),
                 xData=xData,
                 yData=yLOC,
                 filename=filename,
@@ -426,7 +426,7 @@ def main() -> None:
                 figureType="velocity",
                 title=title,
                 xLabel=xLabel,
-                yLabel=yLabel1,
+                yLabel=yLabel1.format("LOC"),
                 xData=xData,
                 yData=yLOC,
                 filename=filename,
@@ -440,7 +440,7 @@ def main() -> None:
                 figureType="acceleration",
                 title=title,
                 xLabel=xLabel,
-                yLabel=yLabel2,
+                yLabel=yLabel2.format("LOC"),
                 xData=xData,
                 yData=yLOC,
                 filename=filename,
@@ -460,8 +460,18 @@ def main() -> None:
                 yData=yLOC,
                 filename=filename,
                 maximumDegree=args.maximum_polynomial_degree,
-                subplotTitles=[1, 2, 3 , 4],
-                yLabelList=[yLabel0, yLabel0, yLabel1, yLabel2],
+                subplotTitles=[
+                    "Data",
+                    "Best Fit",
+                    "Velocity",
+                    "Acceleration",
+                ],
+                yLabelList=[
+                    yLabel0.format("LOC"),
+                    yLabel0.format("LOC"),
+                    yLabel1.format("LOC"),
+                    yLabel2.format("LOC"),
+                ],
             )
 
     if args.dloc:
