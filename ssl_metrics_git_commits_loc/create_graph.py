@@ -545,14 +545,6 @@ def main() -> None:
                 ],
             )
 
-    dlocXLabel: str = 0
-    dlocYLabel: str = "ΔLOC"
-    dlocTitle: str = "Change of Lines of Code (ΔLOC) / Commits"
-
-    klocXLabel: str = 0
-    klocYLabel: str = "KLOC"
-    klocTitle: str = "Thousands of Lines of Code (KLOC) / Commits"
-
 
 if __name__ == "__main__":
     main()
