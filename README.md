@@ -51,3 +51,27 @@ The graphs can be saved as a `.png`, `.pdf`, or any compatible format that `matp
 - `-r`, `--repository-name`: Name of the repository that is being analyzed
 - `--x-window-min`: The smallest x value that will be plotted
 - `--x-window-max`: The largest x value that will be plotted
+
+## Example Outputs
+
+All outputs were generated using the data from [`examples/json/ssl-metrics-git-commits-loc.json`](examples/json/ssl-metrics-git-commits-loc.json) and with the following command:
+
+`python ssl-metrics-git-commits-loc/create_graph.py -i ../examples/json/ssl-metrics-git-commits-loc.json -o out.png -r SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc --*DATA* --graph-all`
+
+Where `--*DATA*` is either:
+
+- `loc`
+- `dloc`
+- `kloc`
+
+### Lines of Code (LOC) on 1/4/2022
+
+[![LOC](examples/images/out_loc_all.png)](examples/images/out_loc_all.png)
+
+### Delta Lines of Code (DLOC) on 1/4/2022
+
+[![LOC](examples/images/out_dloc_all.png)](examples/images/out_dloc_all.png)
+
+### Thousands of Lines of Code (KLOC) on 1/4/2022
+
+[![LOC](examples/images/out_kloc_all.png)](examples/images/out_kloc_all.png)

@@ -134,3 +134,6 @@ dmypy.json
 *.pdf
 
 !.zenodo.json
+
+!examples/json/*.json
+!examples/images/*.png

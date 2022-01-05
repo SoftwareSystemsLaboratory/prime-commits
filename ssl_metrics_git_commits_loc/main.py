@@ -6,16 +6,9 @@ from datetime import datetime
 from functools import reduce
 from os.path import exists, join
 
-import numpy as np
 from dateutil.parser import parse as dateParse
-from numpy.lib.function_base import iterable
 from progress.bar import Bar
 
-# from subprocess import PIPE, run
-# from concurrent.futures import ProcessPoolExecutor
-
-
-# Command line arguement parsing
 def get_argparse() -> ArgumentParser:
     parser: ArgumentParser = ArgumentParser(
         prog="ssl-metrics-git-commits-loc",
@@ -55,14 +48,12 @@ def get_argparse() -> ArgumentParser:
     return parser
 
 
-# Checks if a Git repo exists at a given directory
 def repoExists(directory: str = ".") -> bool:
     if exists(join(directory, ".git")) is False:
         return False
     return True
 
 
-# Returns dict{str, datetime}
 def parseCommitLineFromLog(line: str) -> dict:
     splitLine: list = line.split(";")
     name: str = splitLine[0]
@@ -77,7 +68,6 @@ def parseCommitLineFromLog(line: str) -> dict:
     }
 
 
-# Conducts the LOC and delta LOC analysis of a repository branch
 def analyzeCommits(commits: list, date0: datetime):
     loc_sum: int = 0
     commitCounter: int = 0
@@ -92,7 +82,6 @@ def analyzeCommits(commits: list, date0: datetime):
 
             gdf: dict = gitDiffTree(hashX, hashY)
 
-            # Get the LOC from Git diff tree line
             loc = map(lambda info: info["loc"], gdf)
 
             delta_sum = reduce(lambda x, y: x + y, loc, 0)
@@ -116,9 +105,8 @@ def analyzeCommits(commits: list, date0: datetime):
             yield result
 
 
-# Generate individual lines of a Git diff tree between two commits
 def gitDiffTree(hashX: str, hashY: str) -> dict:
-    # Git diff help page: https://www.git-scm.com/docs/git-diff
+    # git diff help page: https://www.git-scm.com/docs/git-diff
     with os.popen(f"git diff-tree -r {hashX} {hashY}") as diffTreePipe:
         for line in diffTreePipe:
 
@@ -132,11 +120,10 @@ def gitDiffTree(hashX: str, hashY: str) -> dict:
             elif lineStatus == "M":
                 deltaLines(lineInfo)
             else:
-                continue  # Does not yield lineInfo
+                continue
             yield lineInfo
 
 
-# Parse pipe line into a dictionary of values
 def parseDiffTreeLine(line: str) -> dict:
     tokens: list = line.split()
     try:
@@ -152,17 +139,14 @@ def parseDiffTreeLine(line: str) -> dict:
     }
 
 
-# Used for add status
 def addLines(line: dict) -> None:
     line["loc"] = countFileLines(line["sha1Dst"])
 
 
-# Used for delete status
 def deleteLines(line: dict) -> None:
     line["loc"] = -countFileLines(line["sha1Src"])
 
 
-# Used for modification status
 def deltaLines(line: dict) -> None:
     loc_before = countFileLines(line["sha1Src"])
     loc_after = countFileLines(line["sha1Dst"])
@@ -188,7 +172,6 @@ def pairwise(
     coreCount: int,
     maxValue: int,
 ) -> list:
-    # https://www.py4u.net/discuss/10288
     data: list = []
     a, b = itertools.tee(iterable)
     next(b, None)
@@ -212,40 +195,20 @@ def pairwise(
     return data
 
 
-# Script to execute program
 def main() -> bool:
-    # Setup variables
     pwd = os.getcwd()
     args = get_argparse().parse_args()
 
-    # Test if directory is a Git repo
-    # If True, change directory to Git repo and checkout specified branch
     if repoExists(directory=args.directory) is False:
         return False
+
     os.chdir(args.directory)
     os.system(f"git checkout {args.branch}")
 
-    # TODO: Write algorithm to create a list of tuples that are the range to iterate over. This is to make the program run on multiple cores
-    # git log --skip=N --max-count=1
-    # https://stackoverflow.com/a/24239999
-    # Compute the number of commits per core
-    # totalCommits: int = int(run(["git", "rev-list", "--count", f"{args.branch}"], stdout=PIPE).stdout.__str__()[2:-3])
-
-    # totalCommitsArray: list = np.arange(totalCommits, step=totalCommits // args.cores)
-
-    # pairings: list = pairwise(totalCommitsArray, args.cores, totalCommits)
-
-    # print(pairings)
-
-    # with ProcessPoolExecutor() as executor:
-    #     pass
-
-    # # Get list of commits from starting from the first commit of the repository
     # Git log help page: https://www.git-scm.com/docs/git-log
     with os.popen(r'git log --reverse --pretty=format:"%an;%ae;%H;%ci"') as gitLogPipe:
         commits: list = [parseCommitLineFromLog(line=commit) for commit in gitLogPipe]
 
-        # Hack to get the first commit into the commits list
         commit0AuthorName: str = commits[0]["author_name"]
         commit0AuthorEmail: str = commits[0]["author_email"]
         commit0Date: datetime = commits[0]["date"]
