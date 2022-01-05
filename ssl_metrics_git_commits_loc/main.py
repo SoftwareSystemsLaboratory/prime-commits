@@ -9,6 +9,7 @@ from os.path import exists, join
 from dateutil.parser import parse as dateParse
 from progress.bar import Bar
 
+
 def get_argparse() -> ArgumentParser:
     parser: ArgumentParser = ArgumentParser(
         prog="ssl-metrics-git-commits-loc",

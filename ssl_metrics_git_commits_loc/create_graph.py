@@ -1,10 +1,11 @@
 from argparse import ArgumentParser, Namespace
 
 import pandas
-from libs.fileOperations import appendID
-from libs.graphing import graph, graphAll
 from matplotlib.figure import Figure
 from pandas import DataFrame
+
+from libs.fileOperations import appendID
+from libs.graphing import graph, graphAll
 
 
 def getArgparse() -> Namespace:
@@ -334,9 +335,7 @@ def main() -> None:
             )
 
         if args.graph_acceleration:
-            title: str = t(
-                "Acceleration of ", args.repository_name, "LOC"
-            )
+            title: str = t("Acceleration of ", args.repository_name, "LOC")
             filename: str = appendID(filename=args.output, id="loc_acceleration")
             _graphAccelerationChart(
                 title=title,
@@ -373,9 +372,7 @@ def main() -> None:
             )
 
         if args.graph_best_fit:
-            title: str = t(
-                "Best Fit of ", args.repository_name, "DLOC"
-            )
+            title: str = t("Best Fit of ", args.repository_name, "DLOC")
             filename: str = appendID(filename=args.output, id="dloc_best_fit")
             _graphBestFitChart(
                 title=title,
@@ -385,9 +382,7 @@ def main() -> None:
             )
 
         if args.graph_velocity:
-            title: str = t(
-                "Velocity of ", args.repository_name, "DLOC"
-            )
+            title: str = t("Velocity of ", args.repository_name, "DLOC")
             filename: str = appendID(filename=args.output, id="dloc_velocity")
             _graphVelocityChart(
                 title=title,
@@ -397,9 +392,7 @@ def main() -> None:
             )
 
         if args.graph_acceleration:
-            title: str = t(
-                "Acceleration of ", args.repository_name, "DLOC"
-            )
+            title: str = t("Acceleration of ", args.repository_name, "DLOC")
             filename: str = appendID(filename=args.output, id="dloc_acceleration")
             _graphAccelerationChart(
                 title=title,
@@ -426,9 +419,7 @@ def main() -> None:
 
     if args.kloc:
         if args.graph_data:
-            title: str = t(
-                "", args.repository_name, "KLOC"
-            )
+            title: str = t("", args.repository_name, "KLOC")
             filename: str = appendID(filename=args.output, id="kloc_data")
             _graphDataChart(
                 title=title,
@@ -465,9 +456,7 @@ def main() -> None:
             )
 
         if args.graph_acceleration:
-            title: str = t(
-                "", args.repository_name, "KLOC"
-            )
+            title: str = t("", args.repository_name, "KLOC")
             filename: str = appendID(filename=args.output, id="kloc_acceleration")
             title = title.format(
                 "Acceleration of ",
@@ -483,9 +472,7 @@ def main() -> None:
             )
 
         if args.graph_all:
-            title: str = t(
-                "", args.repository_name, "KLOC"
-            )
+            title: str = t("", args.repository_name, "KLOC")
             filename: str = appendID(filename=args.output, id="kloc_all")
             yLabelList: list = [
                 yLabel0.format("KLOC"),
