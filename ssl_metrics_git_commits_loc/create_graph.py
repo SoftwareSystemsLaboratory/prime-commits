@@ -1,11 +1,8 @@
 from argparse import ArgumentParser, Namespace
 
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas
 from libs.fileOperations import appendID
 from libs.graphing import graph, graphAll
-from libs.polynomialMath import findBestFitLine
 from matplotlib.figure import Figure
 from pandas import DataFrame
 
