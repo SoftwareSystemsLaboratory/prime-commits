@@ -282,7 +282,7 @@ def main() -> None:
     df: DataFrame = pandas.read_json(args.input)
 
     t: str = (
-        lambda typeOfGraph, repositoryName, yUnits: f"{typeOfGraph}{repositoryName} {yUnits} / (Every {args.stepper} Commits)"
+        lambda typeOfGraph, repositoryName, yUnits: f"{typeOfGraph}{repositoryName} {yUnits} / Every {args.stepper} Commits"
     )
     x: list = lambda maxValue: [x for x in range(len(df["loc_sum"]))][
         args.x_min : maxValue : args.stepper
