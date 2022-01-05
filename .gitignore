@@ -135,5 +135,5 @@ dmypy.json
 
 !.zenodo.json
 
-!examples/images/*.json
-!examples/json/*.png
+!examples/json/*.json
+!examples/images/*.png
