@@ -249,7 +249,6 @@ def main() -> None:
 
     args: Namespace = getArgparse()
 
-    # Error checking command line inputs
     if args.input[-5::] != ".json":
         print("Invalid input file type. Input file must be JSON")
         quit(1)
@@ -265,7 +264,6 @@ def main() -> None:
         print("The stepper is too small. Stepper >= 1")
         quit(4)
 
-    # Handling lack of command line inputs
     if (args.loc is False) and (args.dloc is False) and (args.kloc is False):
         print("No data option choosen. Defaulting to --loc")
         args.loc = True
@@ -279,16 +277,13 @@ def main() -> None:
         print("No graph option choosen. Defaulting to --graph-all")
         args.graph_all = True
 
-    # Declare unformatted strings
     xLabel: str = f"Every {args.stepper} Commit(s)"
     yLabel0: str = "{}"
     yLabel1: str = "d/dx {}"
     yLabel2: str = "d^2/dx^2 {}"
 
-    # Load JSON into DataFramw
     df: DataFrame = pandas.read_json(args.input)
 
-    # Declare lambda functions
     t: str = (
         lambda typeOfGraph, repositoryName, yUnits: f"{typeOfGraph}{repositoryName} {yUnits} / (Every {args.stepper} Commits)"
     )
@@ -299,7 +294,6 @@ def main() -> None:
         args.x_min : maxValue : args.stepper
     ]
 
-    # Compute lists of values
     if args.x_max <= -1:
         xData: list = x(-1)
         yLOC: list = y("loc_sum", -1)
@@ -311,7 +305,6 @@ def main() -> None:
         yDLOC: list = y("delta_loc", args.x_max + 1)
         yKLOC: list = y("kloc", args.x_max + 1)
 
-    # Handle arguement conditions
     if args.loc:
         if args.graph_data:
             title: str = t("", args.repository_name, "Lines of Code (LOC)")
