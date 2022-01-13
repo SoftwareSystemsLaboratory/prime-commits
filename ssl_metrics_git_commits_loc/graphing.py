@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import Figure
 
-from .polynomialMath import findBestFitLine
+from polynomialMath import findBestFitLine
 
 
 def graph(
