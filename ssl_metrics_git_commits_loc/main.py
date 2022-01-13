@@ -6,13 +6,8 @@ from datetime import datetime
 from functools import reduce
 from os.path import exists, join
 
-import numpy as np
 from dateutil.parser import parse as dateParse
-from numpy.lib.function_base import iterable
 from progress.bar import Bar
-
-# from subprocess import PIPE, run
-# from concurrent.futures import ProcessPoolExecutor
 
 
 # Command line arguement parsing
@@ -224,21 +219,6 @@ def main() -> bool:
         return False
     os.chdir(args.directory)
     os.system(f"git checkout {args.branch}")
-
-    # TODO: Write algorithm to create a list of tuples that are the range to iterate over. This is to make the program run on multiple cores
-    # git log --skip=N --max-count=1
-    # https://stackoverflow.com/a/24239999
-    # Compute the number of commits per core
-    # totalCommits: int = int(run(["git", "rev-list", "--count", f"{args.branch}"], stdout=PIPE).stdout.__str__()[2:-3])
-
-    # totalCommitsArray: list = np.arange(totalCommits, step=totalCommits // args.cores)
-
-    # pairings: list = pairwise(totalCommitsArray, args.cores, totalCommits)
-
-    # print(pairings)
-
-    # with ProcessPoolExecutor() as executor:
-    #     pass
 
     # # Get list of commits from starting from the first commit of the repository
     # Git log help page: https://www.git-scm.com/docs/git-log
