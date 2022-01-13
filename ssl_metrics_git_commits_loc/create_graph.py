@@ -247,7 +247,6 @@ def main() -> None:
 
     args: Namespace = getArgparse()
 
-    # Error checking command line inputs
     if args.input[-5::] != ".json":
         print("Invalid input file type. Input file must be JSON")
         quit(1)
@@ -263,7 +262,6 @@ def main() -> None:
         print("The stepper is too small. Stepper >= 1")
         quit(4)
 
-    # Handling lack of command line inputs
     if (args.loc is False) and (args.dloc is False) and (args.kloc is False):
         print("No data option choosen. Defaulting to --loc")
         args.loc = True
@@ -277,18 +275,15 @@ def main() -> None:
         print("No graph option choosen. Defaulting to --graph-all")
         args.graph_all = True
 
-    # Declare unformatted strings
     xLabel: str = f"Every {args.stepper} Commit(s)"
     yLabel0: str = "{}"
     yLabel1: str = "d/dx {}"
     yLabel2: str = "d^2/dx^2 {}"
 
-    # Load JSON into DataFramw
     df: DataFrame = pandas.read_json(args.input)
 
-    # Declare lambda functions
     t: str = (
-        lambda typeOfGraph, repositoryName, yUnits: f"{typeOfGraph}{repositoryName} {yUnits} / (Every {args.stepper} Commits)"
+        lambda typeOfGraph, repositoryName, yUnits: f"{typeOfGraph}{repositoryName} {yUnits} / Every {args.stepper} Commits"
     )
     x: list = lambda maxValue: [x for x in range(len(df["loc_sum"]))][
         args.x_min : maxValue : args.stepper
@@ -297,7 +292,6 @@ def main() -> None:
         args.x_min : maxValue : args.stepper
     ]
 
-    # Compute lists of values
     if args.x_max <= -1:
         xData: list = x(-1)
         yLOC: list = y("loc_sum", -1)
@@ -309,10 +303,9 @@ def main() -> None:
         yDLOC: list = y("delta_loc", args.x_max + 1)
         yKLOC: list = y("kloc", args.x_max + 1)
 
-    # Handle arguement conditions
     if args.loc:
         if args.graph_data:
-            title: str = t("", args.repository_name, "Lines of Code (LOC)")
+            title: str = t("", args.repository_name, "LOC")
             filename: str = appendID(filename=args.output, id="loc_data")
             _graphDataChart(
                 title=title,
@@ -322,7 +315,7 @@ def main() -> None:
             )
 
         if args.graph_best_fit:
-            title: str = t("Best Fit of ", args.repository_name, "Lines of Code (LOC)")
+            title: str = t("Best Fit of ", args.repository_name, "LOC")
             filename: str = appendID(filename=args.output, id="loc_best_fit")
             _graphBestFitChart(
                 title=title,
@@ -332,7 +325,7 @@ def main() -> None:
             )
 
         if args.graph_velocity:
-            title: str = t("Velocity of ", args.repository_name, "Lines of Code (LOC)")
+            title: str = t("Velocity of ", args.repository_name, "LOC")
             filename: str = appendID(filename=args.output, id="loc_velocity")
             _graphVelocityChart(
                 title=title,
@@ -343,7 +336,7 @@ def main() -> None:
 
         if args.graph_acceleration:
             title: str = t(
-                "Acceleration of ", args.repository_name, "Lines of Code (LOC)"
+                "Acceleration of ", args.repository_name, "LOC"
             )
             filename: str = appendID(filename=args.output, id="loc_acceleration")
             _graphAccelerationChart(
@@ -355,7 +348,7 @@ def main() -> None:
 
         if args.graph_all:
             filename: str = appendID(filename=args.output, id="loc_all")
-            title = t("", args.repository_name, "Lines of Code (LOC)")
+            title = t("", args.repository_name, "LOC")
             yLabelList: list = [
                 yLabel0.format("LOC"),
                 yLabel0.format("LOC"),
@@ -371,7 +364,7 @@ def main() -> None:
 
     if args.dloc:
         if args.graph_data:
-            title: str = t("", args.repository_name, "Delta Lines of Code (DLOC)")
+            title: str = t("", args.repository_name, "DLOC")
             filename: str = appendID(filename=args.output, id="dloc_data")
             _graphDataChart(
                 title=title,
@@ -382,7 +375,7 @@ def main() -> None:
 
         if args.graph_best_fit:
             title: str = t(
-                "Best Fit of ", args.repository_name, "Delta Lines of Code (DLOC)"
+                "Best Fit of ", args.repository_name, "DLOC"
             )
             filename: str = appendID(filename=args.output, id="dloc_best_fit")
             _graphBestFitChart(
@@ -394,7 +387,7 @@ def main() -> None:
 
         if args.graph_velocity:
             title: str = t(
-                "Velocity of ", args.repository_name, "Delta Lines of Code (DLOC)"
+                "Velocity of ", args.repository_name, "DLOC"
             )
             filename: str = appendID(filename=args.output, id="dloc_velocity")
             _graphVelocityChart(
@@ -406,7 +399,7 @@ def main() -> None:
 
         if args.graph_acceleration:
             title: str = t(
-                "Acceleration of ", args.repository_name, "Delta Lines of Code (DLOC)"
+                "Acceleration of ", args.repository_name, "DLOC"
             )
             filename: str = appendID(filename=args.output, id="dloc_acceleration")
             _graphAccelerationChart(
@@ -417,7 +410,7 @@ def main() -> None:
             )
 
         if args.graph_all:
-            title: str = t("", args.repository_name, "Delta Lines of Code (DLOC)")
+            title: str = t("", args.repository_name, "DLOC")
             filename: str = appendID(filename=args.output, id="dloc_all")
             yLabelList: list = [
                 yLabel0.format("DLOC"),
@@ -435,7 +428,7 @@ def main() -> None:
     if args.kloc:
         if args.graph_data:
             title: str = t(
-                "", args.repository_name, "Thousands of Lines of Code (KLOC)"
+                "", args.repository_name, "KLOC"
             )
             filename: str = appendID(filename=args.output, id="kloc_data")
             _graphDataChart(
@@ -448,7 +441,7 @@ def main() -> None:
             title: str = t(
                 "Best Fit of ",
                 args.repository_name,
-                "Thousands of Lines of Code (KLOC)",
+                "KLOC",
             )
             filename: str = appendID(filename=args.output, id="kloc_best_fit")
             _graphBestFitChart(
@@ -462,7 +455,7 @@ def main() -> None:
             title: str = t(
                 "Velocity of ",
                 args.repository_name,
-                "Thousands of Lines of Code (KLOC)",
+                "KLOC",
             )
             filename: str = appendID(filename=args.output, id="kloc_velocity")
             _graphVelocityChart(
@@ -474,13 +467,13 @@ def main() -> None:
 
         if args.graph_acceleration:
             title: str = t(
-                "", args.repository_name, "Thousands of Lines of Code (KLOC)"
+                "", args.repository_name, "KLOC"
             )
             filename: str = appendID(filename=args.output, id="kloc_acceleration")
             title = title.format(
                 "Acceleration of ",
                 args.repository_name,
-                "Thousands of Lines of Code (KLOC)",
+                "KLOC",
                 args.stepper,
             )
             _graphAccelerationChart(
@@ -492,7 +485,7 @@ def main() -> None:
 
         if args.graph_all:
             title: str = t(
-                "", args.repository_name, "Thousands of Lines of Code (KLOC)"
+                "", args.repository_name, "KLOC"
             )
             filename: str = appendID(filename=args.output, id="kloc_all")
             yLabelList: list = [
