@@ -1,13 +1,11 @@
 from argparse import ArgumentParser, Namespace
 
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas
-from fileOperations import appendID
-from graphing import graph, graphAll
-from polynomialMath import findBestFitLine
 from matplotlib.figure import Figure
 from pandas import DataFrame
+
+from fileOperations import appendID
+from graphing import graph, graphAll
 
 
 def getArgparse() -> Namespace:
