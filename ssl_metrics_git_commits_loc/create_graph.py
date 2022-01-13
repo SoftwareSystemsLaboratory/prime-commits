@@ -4,8 +4,8 @@ import pandas
 from matplotlib.figure import Figure
 from pandas import DataFrame
 
-from fileOperations import appendID
-from graphing import graph, graphAll
+from ssl_metrics_git_commits_loc.fileOperations import appendID
+from ssl_metrics_git_commits_loc.graphing import graph, graphAll
 
 
 def getArgparse() -> Namespace:
