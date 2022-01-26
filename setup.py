@@ -21,6 +21,7 @@ setup(
         "GitHub Repository": "https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc",
     },
     keywords=[
+        "bus factor",
         "commits",
         "engineering",
         "git",
@@ -38,7 +39,7 @@ setup(
         "software engineering",
         "software metrics",
         "software systems laboratory",
-        "ssl",
+        "ssl"
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
