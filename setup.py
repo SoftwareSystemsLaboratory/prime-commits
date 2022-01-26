@@ -12,7 +12,7 @@ setup(
     description="SSL Metrics - Git History (LOC/KLOC) Analysis",
     author="Software and Systems Laboratory - Loyola University Chicago",
     author_email="ssl-metrics@ssl.luc.edu",
-    license="Apache License 2.0",
+    license="BSD",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://ssl.cs.luc.edu/projects/metricsDashboard",
@@ -21,10 +21,13 @@ setup(
         "GitHub Repository": "https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc",
     },
     keywords=[
+        "bus factor",
         "commits",
         "engineering",
         "git",
         "github",
+        "issue density",
+        "issues",
         "kloc",
         "loyola",
         "loyola university chicago",
@@ -38,7 +41,7 @@ setup(
         "software engineering",
         "software metrics",
         "software systems laboratory",
-        "ssl",
+        "ssl"
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
