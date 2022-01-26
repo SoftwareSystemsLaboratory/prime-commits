@@ -18,10 +18,13 @@
     "license": "BSD-3-Clause",
     "prereserve_doi": true,
     "keywords": [
+        "bus factor",
         "commits",
         "engineering",
         "git",
         "github",
+        "issue density",
+        "issues",
         "kloc",
         "loyola",
         "loyola university chicago",
