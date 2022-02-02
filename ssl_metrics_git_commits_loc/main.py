@@ -212,7 +212,7 @@ def main() -> bool:
     os.system(f"git checkout {args.branch}")
 
     # Git log help page: https://www.git-scm.com/docs/git-log
-    with os.popen(r'git log --reverse --pretty=format:"%an;%ae;%H;%ci"') as gitLogPipe:
+    with os.popen(r'git log --reverse --pretty=format:"%an;%ae;%H;%B;%ci"') as gitLogPipe:
         commits: list = [parseCommitLineFromLog(line=commit) for commit in gitLogPipe]
 
         commit0AuthorName: str = commits[0]["author_name"]
