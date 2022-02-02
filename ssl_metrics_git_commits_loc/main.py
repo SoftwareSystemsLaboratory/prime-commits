@@ -61,13 +61,11 @@ def parseCommitLineFromLog(line: str) -> dict:
     name: str = splitLine[0]
     email: str = splitLine[1]
     hash: str = splitLine[2]
-    message: str = splitLine[3].strip()
     date = splitLine[-1]
     return {
         "author_name": name,
         "author_email": email,
         "hash": hash,
-        "message": message,
         "date": dateParse(date),
     }
 
@@ -83,7 +81,6 @@ def analyzeCommits(commits: list, date0: datetime):
             hashY: str = commits[index + 1]["hash"]
             commitDate: str = commits[index]["date"].strftime("%m/%d/%Y")
             dateY: datetime = commits[index + 1]["date"]
-            commitMessage: str = commits[index]["message"]
 
             gdf: dict = gitDiffTree(hashX, hashY)
 
@@ -98,7 +95,6 @@ def analyzeCommits(commits: list, date0: datetime):
                 "author_name": authorName,
                 "author_email": authorEmail,
                 "hash": hashY,
-                "message": commitMessage,
                 "delta_loc": delta_sum,
                 "loc_sum": loc_sum,
                 "kloc": float(loc_sum / 1000),
@@ -212,19 +208,17 @@ def main() -> bool:
     os.system(f"git checkout {args.branch}")
 
     # Git log help page: https://www.git-scm.com/docs/git-log
-    with os.popen(r'git log --reverse --pretty=format:"%an;%ae;%H;%B;%ci"') as gitLogPipe:
+    with os.popen(r'git log --reverse --pretty=format:"%an;%ae;%H;%ci"') as gitLogPipe:
         commits: list = [parseCommitLineFromLog(line=commit) for commit in gitLogPipe]
 
         commit0AuthorName: str = commits[0]["author_name"]
         commit0AuthorEmail: str = commits[0]["author_email"]
-        commit0Message: datetime = commits[0]["message"]
         commit0Date: datetime = commits[0]["date"]
         commits = [
             {
                 "author_name": commit0AuthorName,
                 "author_email": commit0AuthorEmail,
                 "hash": "--root",
-                "message": commit0Message,
                 "date": commit0Date,
             }
         ] + commits
