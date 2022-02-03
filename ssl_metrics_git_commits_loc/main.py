@@ -13,8 +13,10 @@ from progress.bar import Bar
 # Command line arguement parsing
 def get_argparse() -> ArgumentParser:
     parser: ArgumentParser = ArgumentParser(
-        prog="ssl-metrics-git-commits-loc",
-        usage="This program outputs the lines of code (LOC) per commit and the delta LOC of a Git repository in JSON format.",
+        prog="SSL Metrics Git Commits LOC Extraction Utility",
+        usage="Extraction utility to extract statistics from git commits",
+        description="This prgram takes in a git repository and generates a JSON file of statistics derived from git commits",
+        epilog="This utility was developed by Nicholas M. Synovic",
     )
     parser.add_argument(
         "-d",
