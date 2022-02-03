@@ -10,9 +10,10 @@ from ssl_metrics_git_commits_loc.graphing import graph, graphAll
 
 def getArgparse() -> Namespace:
     parser: ArgumentParser = ArgumentParser(
-        prog="ssl-metrics-git-commits-loc Graph Generator",
-        usage="This is a proof of concept demonstrating that it is possible to use Git commits to compute metrics.",
-        description="The default action is to graph all figures of LOC on a single chart. If multiple data and/or graphing options are choosen the output filename and the title of the figure/chartwill reflect the combination that is being graphed.",
+        prog="SSL Metrics Git Commits LOC Graphing Utility",
+        usage="Graphing utility to visualize statistics from the SSL Metrics Git Commits LOC Extraction Utility",
+        description="This prgram takes in a JSON file of values extracted from a git repository with ssl-metrics-git-commits-loc and generates graph based off of that information",
+        epilog="This utility was developed by Nicholas M. Synovic",
     )
     parser.add_argument(
         "-i",
