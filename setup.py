@@ -6,10 +6,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
+    # TODO: Change name
+    # TODO: Change packages
+    # TODO: Change description
     name="ssl-metrics-git-commits-loc",
     packages=["ssl_metrics_git_commits_loc"],
     version=version.version(),
-    description="SSL Metrics - Git History (LOC/KLOC) Analysis",
+    description="SSL Metrics - Git Commits Extractor",
     author="Software and Systems Laboratory - Loyola University Chicago",
     author_email="ssl-metrics@ssl.luc.edu",
     license="BSD",
@@ -41,7 +44,7 @@ setup(
         "software engineering",
         "software metrics",
         "software systems laboratory",
-        "ssl"
+        "ssl",
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -60,12 +63,12 @@ setup(
     ],
     python_requires=">=3.9",
     install_requires=[
-        "matplotlib>=3.4.3",
-        "numpy>=1.21.2",
-        "pandas>=1.3.3",
-        "progress>=1.6",
-        "python-dateutil>=2.8.2",
-        "scikit-learn>=1.0.1",
+        "matplotlib",
+        "numpy",
+        "pandas",
+        "progress",
+        "python-dateutil",
+        "scikit-learn",
     ],
     entry_points={
         "console_scripts": [
