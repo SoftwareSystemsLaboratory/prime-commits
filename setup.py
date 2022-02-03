@@ -41,7 +41,7 @@ setup(
         "software engineering",
         "software metrics",
         "software systems laboratory",
-        "ssl"
+        "ssl",
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
