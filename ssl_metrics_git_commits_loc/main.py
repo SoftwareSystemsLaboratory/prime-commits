@@ -16,7 +16,7 @@ def get_argparse() -> ArgumentParser:
         prog="SSL Metrics Git Commits LOC Extraction Utility",
         usage="Extraction utility to extract statistics from git commits",
         description="This prgram takes in a git repository and generates a JSON file of statistics derived from git commits",
-        epilog="This utility was developed by Nicholas M. Synovic",
+        epilog="This utility was developed by Nicholas M. Synovic and George K. Thiruvathukal",
     )
     parser.add_argument(
         "-d",
