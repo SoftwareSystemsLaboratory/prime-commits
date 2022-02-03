@@ -6,13 +6,10 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    # TODO: Change name
-    # TODO: Change packages
-    # TODO: Change description
     name="ssl-metrics-git-commits-loc",
     packages=["ssl_metrics_git_commits_loc"],
     version=version.version(),
-    description="SSL Metrics - Git Commits Extractor",
+    description="SSL Metrics - Git Commits LOC Extractor",
     author="Software and Systems Laboratory - Loyola University Chicago",
     author_email="ssl-metrics@ssl.luc.edu",
     license="BSD",
