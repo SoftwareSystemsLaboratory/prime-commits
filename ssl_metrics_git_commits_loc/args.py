@@ -3,7 +3,7 @@
 from argparse import ArgumentParser, Namespace
 
 
-def get_args() -> Namespace:
+def get_graph_args() -> Namespace:
     """
     returns arguments for create_graph.py
     """

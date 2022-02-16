@@ -5,7 +5,7 @@ from matplotlib.figure import Figure
 from pandas import DataFrame
 
 from args import get_graph_args, check_args
-from graph_util import Graph, graph_all, appendID
+from graph_util import Graph, appendID
 
 
 def main() -> None:
@@ -41,19 +41,15 @@ def main() -> None:
 
     # create graphs
 
-    for arg, name in zip([args.loc, args.dloc, args.kloc], ["LOC", "KLOC", "DLOC"]):
+    for arg, name in zip([args.loc, args.kloc, args.dloc], ["LOC", "KLOC", "DLOC"]):
         if arg:
 
-            print(arg, name)
             jobs = ["data", "best_fit", "velocity", "acceleration"]
             graph_types = [args.data, args.best_fit, args.velocity, args.acceleration]
 
-            print((graph_types, jobs))
             for arg2, job, i in zip(graph_types, jobs, [0, 1, 2, 3]):
 
-                print(arg2, job)
                 if arg2:
-                    print(arg2)
 
                     subtitles = [job.replace("_", " ").capitalize() for job in jobs]
                     prefix = f"""{job.replace("_"," ").capitalize()+" of " if job not in ["data", "all"] else ""}"""
