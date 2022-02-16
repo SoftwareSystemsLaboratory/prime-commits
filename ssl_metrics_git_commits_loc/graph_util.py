@@ -27,15 +27,6 @@ def appendID(filename: str, id: str) -> str:
     return f"{Path.joinpath(p.parent, p.stem)}_{id}{p.suffix}"
 
 
-"""TODO
-make graph class
-remove code smells
-el 4:30->5:45 ... 8pm -> 11:15 ... 1:30
-
-fix naming conventions ... zen of python style guide
-"""
-
-
 class Graph:
     def __init__(
         self, *, job="data", x, y, title, xlabel, ylabel, maxdeg=None, filename
@@ -60,8 +51,8 @@ class Graph:
 
         # https://towardsdatascience.com/clearing-the-confusion-once-and-for-all-fig-ax-plt-subplots-b122bb7783ca
 
-        # sum(self.jobs.values()) .. number of jobs
-        # fig, axs
+        # if job == "all":
+        # fig, axs = subplots(2,2)
         # axs[0].plot()
         # axs[1].plot()
 
@@ -92,39 +83,3 @@ class Graph:
             fig.savefig(self.filename)
 
         return fig, ax
-
-
-def graph_all(
-    *,
-    title: str,
-    xlabel: str,
-    ylabels: list,
-    x: list,
-    y: list,
-    maxdeg: int,
-    subtitles: list,
-    filename: str,
-):
-
-    fig, axs = plt.subplots(2,2)
-    plt.suptitle(title)
-
-    for i, job in enumerate(["data", "best_fit", "velocity", "acceleration"]):
-        g = Graph(
-            job=job,
-            x=x,
-            y=y,
-            title=subtitles[i],
-            xlabel=xlabel,
-            ylabel=ylabels[i],
-            maxdeg=maxdeg,
-            filename=filename
-        )
-        _, ax = g.build(save=False)
-        # fig.axes[int(i<2)][i%2] = ax
-
-        fig.add_axes(ax)
-        print(len(fig.axes))
-
-    print('temp')
-    fig2.savefig(filename)

@@ -3,7 +3,11 @@
 from argparse import ArgumentParser, Namespace
 
 
-def get_graph_args() -> Namespace:
+def get_args() -> Namespace:
+    """
+    returns arguments for create_graph.py
+    """
+
     parser: ArgumentParser = ArgumentParser(
         prog="SSL Metrics Git Commits LOC Graphing Utility",
         usage="Graphing utility to visualize statistics from the SSL Metrics Git Commits LOC Extraction Utility",
@@ -41,32 +45,26 @@ def get_graph_args() -> Namespace:
         "--kloc", help="Utilize KLOC data", required=False, action="store_true"
     )
     parser.add_argument(
-        "--graph-data",
+        "--data",
         help="Graph the raw data. Discrete graph of the data",
         required=False,
         action="store_true",
     )
     parser.add_argument(
-        "--graph-best-fit",
+        "--best-fit",
         help="Graph the best fit polynomial of the data. Continous graph of the data. Polynomial degrees can be configured with `-m`",
         required=False,
         action="store_true",
     )
     parser.add_argument(
-        "--graph-velocity",
+        "--velocity",
         help="Graph the velocity of the data. Computes the best fit polynomial and takes the first derivitve. Polynomial degrees can be configured with `-m`",
         required=False,
         action="store_true",
     )
     parser.add_argument(
-        "--graph-acceleration",
+        "--acceleration",
         help="Graph the acceleration of the data. Computes the best fit polynomial and takes the second derivitve. Polynomial degrees can be configured with `-m`",
-        required=False,
-        action="store_true",
-    )
-    parser.add_argument(
-        "--graph-all",
-        help="Graphs all possible figures of the data onto one chart. Computes the best fit polynomial and takes the first and second derivitve. Polynomial degrees can be configured with `-m`",
         required=False,
         action="store_true",
     )
@@ -131,14 +129,6 @@ def check_args(args):
         print("No data option choosen. Defaulting to --loc")
         args.loc = True
 
-    if not any(
-        [
-            args.graph_data,
-            args.graph_best_fit,
-            args.graph_velocity,
-            args.graph_acceleration,
-            args.graph_all,
-        ]
-    ):
-        print("No graph option choosen. Defaulting to --graph-all")
-        args.graph_all = True
+    if not any([args.data, args.best_fit, args.velocity, args.acceleration]):
+        print("No graph option choosen. Defaulting to --data")
+        args.data = True
