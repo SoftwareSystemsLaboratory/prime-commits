@@ -11,14 +11,9 @@ authors:
   email: nsynovic@luc.edu
   affiliation: Loyola University Chicago
   orcid: 'https://orcid.org/0000-0003-0413-4594'
-- given-names: Rohan
-  family-names: Sethi
-  email: rsethi@luc.edu
-  affiliation: Loyola University Chicago
-  orcid: 'https://orcid.org/0000-0002-9587-3722'
   
 title: "SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc"
-version: 0.1
-doi: 10.5281/zenodo.5930833
-date-released: 2022-01-31
+version: 0.9.1
+doi: 10.5281/zenodo.5904903
+date-released: 2022-01-26
 url: "https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc"
