@@ -198,9 +198,6 @@ def main() -> bool:
 
     os.chdir(args.directory)
 
-    '''TODO can remove these lines?'''
-    # os.system(f"git checkout {args.branch}")
-
     start = time.perf_counter()
 
     # Git log help page: https://www.git-scm.com/docs/git-log
@@ -224,19 +221,15 @@ def main() -> bool:
 
             date0 = commits[0]["date"]
 
-            commit_info = list(tqdm(executor.map(analyze_commit, repeat(commits), [
-                               i for i in range(len(commits)-1)], repeat(date0)), total=len(commits)-1))
+            commits = list(tqdm(executor.map(analyze_commit, repeat(commits), [
+                i for i in range(len(commits)-1)], repeat(date0)), total=len(commits)-1))
 
             loc_sums = [0]
-            for commit in commit_info:
+            for commit in commits:
                 loc_sums.append(commit['delta_loc'] + loc_sums[-1])
             loc_sums = loc_sums[1:]
 
-            commit_info = list(executor.map(generate_loc_sum, commit_info, loc_sums))
-
-        '''TODO can remove these lines?'''
-        # delta_loc_iter = map(lambda info: info["delta_loc"], commit_info)
-        # loc_sum = reduce(lambda x, y: x + y, delta_loc_iter, 0)
+            commits = list(executor.map(generate_loc_sum, commits, loc_sums))
 
     os.chdir(pwd)
     exportJSON(args.output, commit_info)
