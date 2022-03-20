@@ -103,7 +103,7 @@ def gitDiffTree(hashX: str, hashY: str) -> dict:
         for line in diffTreePipe:
 
             lineInfo: dict = parseDiffTreeLine(line)
-            lineStatus: str = lineInfo["status"]
+            lineStatus: str = lineInfo.get("status")
 
             if lineStatus == "A":
                 addLines(lineInfo)
