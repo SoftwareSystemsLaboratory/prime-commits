@@ -12,8 +12,6 @@ from tqdm import tqdm
 
 from dateutil.parser import parse as dateParse
 
-# Command line arguement parsing
-
 
 def get_argparse() -> ArgumentParser:
     parser: ArgumentParser = ArgumentParser(
@@ -45,14 +43,14 @@ def get_argparse() -> ArgumentParser:
         type=str,
         required=True,
     )
-    parser.add_argument(
-        "-c",
-        "--cores",
-        help="Number of cores to use for analysis",
-        type=int,
-        required=False,
-        default=1,
-    )
+    # parser.add_argument(
+    #     "-c",
+    #     "--cores",
+    #     help="Number of cores to use for analysis",
+    #     type=int,
+    #     required=False,
+    #     default=1,
+    # )
     return parser
 
 
