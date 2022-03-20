@@ -4,3 +4,4 @@ pandas
 progress
 python-dateutil
 scikit-learn
+tqdm

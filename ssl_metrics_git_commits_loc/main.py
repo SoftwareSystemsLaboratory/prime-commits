@@ -11,10 +11,10 @@ import time
 from tqdm import tqdm
 
 from dateutil.parser import parse as dateParse
-from progress.bar import Bar
-
 
 # Command line arguement parsing
+
+
 def get_argparse() -> ArgumentParser:
     parser: ArgumentParser = ArgumentParser(
         prog="SSL Metrics Git Commits LOC Extraction Utility",
