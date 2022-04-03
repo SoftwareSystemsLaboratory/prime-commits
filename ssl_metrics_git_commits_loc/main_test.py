@@ -19,7 +19,7 @@ class TestMain(unittest.TestCase):
         name: str = "Wild E. Coyote"
         email: str = "wec@mail.com"
         hash: str = "123abc"
-        date: str = "1-2-90"    # Month - Day - Year
+        date: str = "1-2-90"    # Month-Day-Year
         parameter: str = ";".join([name, email, hash, date])
         testCase: dict = {"author_name": name, "author_email": email, "hash": hash, "date": dateParse(date)}
         self.assertTrue(main.parseCommitLineFromLog(line=parameter) == testCase)
