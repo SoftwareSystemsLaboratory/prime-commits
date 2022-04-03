@@ -1,7 +1,7 @@
 import itertools
 import json
 import os
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from datetime import datetime
 from functools import reduce
 from os.path import exists, join
@@ -10,7 +10,7 @@ from dateutil.parser import parse as dateParse
 from progress.bar import Bar
 
 
-def get_argparse() -> ArgumentParser:
+def getArgs() -> Namespace:
     authors: list = ["Nicholas M. Synovic", "George K. Thiruvathukal"]
     parser: ArgumentParser = ArgumentParser(
         prog="SSL Metrics Git Commits LOC Extraction Utility",
@@ -49,7 +49,7 @@ def get_argparse() -> ArgumentParser:
         type=int,
         required=False,
     )
-    return parser
+    return parser.parse_args()
 
 
 def repoExists(directory: str = ".") -> bool:
@@ -201,7 +201,7 @@ def pairwise(
 
 def main() -> bool:
     pwd = os.getcwd()
-    args = get_argparse().parse_args()
+    args = getArgs()()
 
     if repoExists(directory=args.directory) is False:
         return False
