@@ -14,6 +14,7 @@
   - [About](#about)
   - [Developer Tooling](#developer-tooling)
     - [Operating System](#operating-system)
+    - [Python Tools](#python-tools)
     - [Shell Tools](#shell-tools)
   - [How To Use](#how-to-use)
     - [Installation](#installation)
@@ -34,6 +35,15 @@ To maximize the utility of this project and the greater SSL Metrics project, the
 All tools developed for the greater SSL Metrics project **must target** Mac OS and Linux. SSL Metrics software is not supported or recommended to run on Windows *but can be modified to do so at your own risk*.
 
 It is recomendded to develop on Mac OS or Linux. However, if you are on a Windows machine, you can use WSL to develop as well.
+
+### Python Tools
+
+- `matplotlib`
+- `numpy`
+- `pandas`
+- `progress`
+- `python-dateutil`
+- `scikit-learn`
 
 ### Shell Tools
 
