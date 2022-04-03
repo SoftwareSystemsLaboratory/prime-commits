@@ -53,9 +53,7 @@ def getArgs() -> Namespace:
 
 
 def repoExists(directory: str = ".") -> bool:
-    if exists(join(directory, ".git")) is False:
-        return False
-    return True
+    return exists(join(directory, ".git"))
 
 
 def parseCommitLineFromLog(line: str) -> dict:
