@@ -5,6 +5,7 @@ from argparse import ArgumentParser, Namespace
 from datetime import datetime
 from functools import reduce
 from os.path import exists, join
+from typing import List
 
 from dateutil.parser import parse as dateParse
 from progress.bar import Bar
@@ -70,7 +71,7 @@ def parseCommitLineFromLog(line: str) -> dict:
     }
 
 
-def analyzeCommits(commits: list, date0: datetime):
+def analyzeCommits(commits: List[dict], date0: datetime):
     loc_sum: int = 0
     commitCounter: int = 0
     with Bar("Processing commits... ", max=len(commits) - 1) as ib:
