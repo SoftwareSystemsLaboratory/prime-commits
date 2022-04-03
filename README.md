@@ -50,7 +50,8 @@ It is recomendded to develop on Mac OS or Linux. However, if you are on a Window
 You will need the following shell software to run this application:
 
 - `git`
-- `wc`
+- `cloc`
+- `SLOCCount` (optional)
 
 ## How To Use
 
