@@ -199,7 +199,7 @@ def pairwise(
 
 def main() -> bool:
     pwd = os.getcwd()
-    args = getArgs()()
+    args = getArgs()
 
     if repoExists(directory=args.directory) is False:
         return False
