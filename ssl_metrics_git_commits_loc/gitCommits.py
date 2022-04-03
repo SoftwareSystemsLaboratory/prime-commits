@@ -15,8 +15,8 @@ def commitMetadata(commit: str) ->  list:
 
 def commitLOC(commit:str)   ->  list:
     info: os._wrap_close
-    with os.popen(fr'cloc --git {commit}'):
-        pass
+    with os.popen(fr'cloc {commit} --config options.txt --json | jq .SUM[]') as info:
+        print(info.read())
 
 def main()  ->  None:
     df: DataFrame = DataFrame(columns=["author_name", "author_email", "author_date", "author_date_unix", "committer_name", "committer_email", "committer_date", "committer_date_unix"])
@@ -25,7 +25,7 @@ def main()  ->  None:
     commit: str
     for commit in commits:
         # df.loc[len(df.index)] = commitMetadata(commit=commit)
-
+        commitLOC(commit)
     # print(df)
 
 

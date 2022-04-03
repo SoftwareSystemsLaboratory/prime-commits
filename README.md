@@ -52,6 +52,7 @@ You will need the following shell software to run this application:
 - `git`
 - `cloc`
 - `SLOCCount` (optional)
+- `jq`
 
 ## How To Use
 
