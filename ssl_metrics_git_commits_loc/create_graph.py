@@ -4,7 +4,7 @@ import pandas
 from matplotlib.figure import Figure
 from pandas import DataFrame
 
-from args import get_graph_args, check_args
+from args import check_args, get_graph_args
 from graph_util import Graph, appendID
 
 

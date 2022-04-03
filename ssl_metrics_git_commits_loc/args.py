@@ -7,7 +7,7 @@ def get_graph_args() -> Namespace:
     """
     returns arguments for create_graph.py
     """
-    
+
     authors = ["Nicholas M. Synovic", "Matthew Hyatt"]
     parser: ArgumentParser = ArgumentParser(
         prog="SSL Metrics Git Commits LOC Graphing Utility",

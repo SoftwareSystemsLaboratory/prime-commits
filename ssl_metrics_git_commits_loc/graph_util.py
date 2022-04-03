@@ -2,10 +2,11 @@ from operator import itemgetter
 from pathlib import Path
 from textwrap import wrap
 
-from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.figure import Figure
 from sklearn.metrics import r2_score
+
 
 def findBestFitLine(x: list, y: list, maximumDegree: int) -> tuple:
     # https://www.w3schools.com/Python/python_ml_polynomial_regression.asp
@@ -57,7 +58,11 @@ class Graph:
         # axs[1].plot()
 
         fig, ax = plt.subplots()
-        ax.set(xlabel=self.xlabel, ylabel=self.ylabel, title="\n".join(wrap(self.title, width=60)))
+        ax.set(
+            xlabel=self.xlabel,
+            ylabel=self.ylabel,
+            title="\n".join(wrap(self.title, width=60)),
+        )
 
         if type(self.maxdeg) is int:
             data: tuple = findBestFitLine(x=self.x, y=self.y, maximumDegree=self.maxdeg)
