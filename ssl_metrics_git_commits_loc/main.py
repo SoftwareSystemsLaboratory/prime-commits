@@ -45,9 +45,9 @@ def get_argparse() -> ArgumentParser:
         "-c",
         "--cores",
         help="Number of cores to use for analysis",
+        default=1,
         type=int,
         required=False,
-        default=1,
     )
     return parser
 
