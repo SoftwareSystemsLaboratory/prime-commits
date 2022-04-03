@@ -10,13 +10,13 @@ from dateutil.parser import parse as dateParse
 from progress.bar import Bar
 
 
-# Command line arguement parsing
 def get_argparse() -> ArgumentParser:
+    authors: list = ["Nicholas M. Synovic", "George K. Thiruvathukal"]
     parser: ArgumentParser = ArgumentParser(
         prog="SSL Metrics Git Commits LOC Extraction Utility",
         usage="Extraction utility to extract statistics from git commits",
         description="This prgram takes in a git repository and generates a JSON file of statistics derived from git commits",
-        epilog="This utility was developed by Nicholas M. Synovic and George K. Thiruvathukal",
+        epilog=f"This utility was developed by {' and '.join(authors)}",
     )
     parser.add_argument(
         "-d",
