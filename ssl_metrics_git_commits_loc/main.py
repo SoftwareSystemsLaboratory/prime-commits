@@ -99,12 +99,10 @@ def main() -> bool:
             "removed_lines_of_comments",
             "removed_lines_of_code",
             "removed_number_of_files",
-
             "delta_lines_of_blanks",
             "delta_lines_of_comments",
             "delta_lines_of_code",
             "delta_number_of_files",
-
             "author_days_since_0",
             "committer_days_since_0",
         ]
