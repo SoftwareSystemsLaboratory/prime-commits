@@ -9,7 +9,7 @@ setup(
     name="ssl-metrics-git-commits-loc",
     packages=["ssl_metrics_git_commits_loc"],
     version=version.version(),
-    description="SSL Metrics - Git Commits LOC Extractor",
+    description="SSL Metrics - Git Commits LOC Exploder",
     author="Software and Systems Laboratory - Loyola University Chicago",
     author_email="ssl-metrics@ssl.luc.edu",
     license="BSD",
@@ -70,7 +70,7 @@ setup(
     entry_points={
         "console_scripts": [
             "ssl-metrics-git-commits-loc-extract = ssl_metrics_git_commits_loc.main:main",
-            "ssl-metrics-git-commits-loc-graph = ssl_metrics_git_commits_loc.create_graph:main",
+            "ssl-metrics-git-commits-loc-graph = ssl_metrics_git_commits_loc.graph:main",
         ]
     },
 )
