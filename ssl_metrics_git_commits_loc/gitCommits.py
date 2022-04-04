@@ -23,14 +23,14 @@ def commitMetadata(commit: str) -> list:
 
 def commitLOC(commit: str) -> Any:
     info: os._wrap_close
-    with os.popen(rf"cloc {commit} --config options.txt --json | jq .SUM") as info:
+    with os.popen(rf"cloc {commit} --config options.txt --json 2>/dev/null | jq .SUM") as info:
         return json.loads(info.read().strip()).values()
 
 
 def commitsDiff(newCommit: str, oldCommit: str) -> list:
     info: os._wrap_close
     with os.popen(
-        rf"cloc --diff {newCommit} {oldCommit} --config options.txt --json | jq --raw-output .SUM"
+        rf"cloc --quiet --diff {newCommit} {oldCommit} --config options.txt --json 2>/dev/null | jq --raw-output .SUM"
     ) as info:
         try:
             data: dict = json.loads(info.read().strip())
