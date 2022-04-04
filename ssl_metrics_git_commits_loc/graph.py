@@ -8,7 +8,7 @@ from pandas import DataFrame
 
 def getArgs() -> Namespace:
     name: str = "CLIME"
-    authors: list = ["Nicholas M. Synovic"]
+    authors: list = ["Nicholas M. Synovic", "Matthew Hyatt", "George K. Thiruvathukal"]
     parser: ArgumentParser = ArgumentParser(
         prog=f"{name} Git Commit LOC Exploder Grapher",
         description=f"A tool for graphing LOC information from the output of the {name} Commit LOC Exploder",
