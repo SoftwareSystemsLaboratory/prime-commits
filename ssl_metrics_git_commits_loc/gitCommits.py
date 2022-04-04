@@ -1,11 +1,12 @@
 import json
 import os
-
-from pandas import DataFrame
-from progress.bar import Bar
-from dateutil.parser import parse as dateParse
 from datetime import datetime
 from typing import Iterable
+
+from dateutil.parser import parse as dateParse
+from pandas import DataFrame
+from progress.bar import Bar
+
 
 def gitCommits() -> list:
     with os.popen(r'git log --reverse --pretty=format:"%H"') as commits:
@@ -121,12 +122,17 @@ def main() -> None:
                 diff[3] = list(loc)[3]
             else:
                 try:
-                    diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c - 1])
+                    diff: list = commitsDiff(
+                        newCommit=commits[c], oldCommit=commits[c - 1]
+                    )
                 except IndexError:
                     diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c])
 
             data.extend(diff)
-            data.append(dateParse(data[2]) - day0)
+
+            dateDifference: int = dateParse(data[2]).day - day0.day
+
+            data.append(dateDifference)
             df.loc[len(df.index)] = data
             bar.next()
     df.T.to_json("out.json")
