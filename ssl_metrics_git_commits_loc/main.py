@@ -190,6 +190,7 @@ def main() -> bool:
             bar.next()
 
     df.T.to_json(join(pwd, args.output))
+    return True
 
 if __name__ == "__main__":
     main()
