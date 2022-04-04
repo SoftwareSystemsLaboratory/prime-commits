@@ -70,18 +70,18 @@ def commitMetadata(commit: str) -> list:
         return info.read().split(";")
 
 
-def commitLOC(commit: str) -> Any:
+def commitLOC(commit: str, options:str) -> Any:
     info: os._wrap_close
     with os.popen(
-        rf"cloc {commit} --config options.txt --json 2>/dev/null | jq .SUM"
+        rf"cloc {commit} --config {options} --json 2>/dev/null | jq .SUM"
     ) as info:
         return json.loads(info.read().strip()).values()
 
 
-def commitsDiff(newCommit: str, oldCommit: str) -> list:
+def commitsDiff(newCommit: str, oldCommit: str, options:str) -> list:
     info: os._wrap_close
     with os.popen(
-        rf"cloc --quiet --diff {newCommit} {oldCommit} --config options.txt --json 2>/dev/null | jq --raw-output .SUM"
+        rf"cloc --quiet --diff {newCommit} {oldCommit} --config {options} --json 2>/dev/null | jq --raw-output .SUM"
     ) as info:
         try:
             data: dict = json.loads(info.read().strip())
@@ -147,13 +147,13 @@ def main() -> bool:
         c: int
         for c in range(len(commits)):
             data: list = commitMetadata(commit=commits[c])
-            loc: list = commitLOC(commits[c])
+            loc: list = commitLOC(commits[c], options=args.cloc)
 
             data.extend(loc)
 
             if c == 0:
                 day0: datetime = dateParse(data[3])
-                diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c])
+                diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c], options=args.cloc)
                 diff[0] = list(loc)[0]
                 diff[1] = list(loc)[1]
                 diff[2] = list(loc)[2]
@@ -161,10 +161,10 @@ def main() -> bool:
             else:
                 try:
                     diff: list = commitsDiff(
-                        newCommit=commits[c], oldCommit=commits[c - 1]
+                        newCommit=commits[c], oldCommit=commits[c - 1], options=args.cloc
                     )
                 except IndexError:
-                    diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c])
+                    diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c], options=args.cloc)
 
             data.extend(diff)
             dateDifference: int = (dateParse(data[3]) - day0).days
