@@ -36,14 +36,6 @@ def mainArgs() -> Namespace:
         default="commits_loc.json",
     )
 
-    parser.add_argument(
-        "--cloc",
-        help="TXT file containing cloc options. DEFAULT: options.txt. NOTE: This is an internal options file used by the program and doesn't need to be specified/ created by you the user (you)",
-        type=str,
-        required=False,
-        default="options.txt",
-    )
-
     return parser.parse_args()
 
 
@@ -121,10 +113,10 @@ def graphArgs() -> Namespace:
     )
     parser.add_argument(
         "--stylesheet",
-        help="Filepath of matplotlib stylesheet to use. DEFAULT: style.mplstyle. NOTE: This is an internal stylesheet used by the program and doesn't need to be specified/ created by you the user (you)",
+        help='Filepath of matplotlib stylesheet to use. DEFAULT: ""',
         type=str,
         required=False,
-        default="style.mplstyle",
+        default=None,
     )
 
     return parser.parse_args()
