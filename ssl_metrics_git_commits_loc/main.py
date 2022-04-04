@@ -89,35 +89,6 @@ def commitsDiff(newCommit: str, oldCommit: str) -> list:
         data.extend(jsonRemoved.values())
 
         return data
-        # addedLinesOfBlanks: int = jsonAdded["blank"]
-        # addedLinesOfComments: int = jsonAdded["comment"]
-        # addedLinesOfCode: int = jsonAdded["code"]
-        # addedNumberOfFiles: int = jsonAdded["nFiles"]
-
-        # modifiedLinesOfBlanks: int = jsonModified["blank"]
-        # modifiedLinesOfComments: int = jsonModified["comment"]
-        # modifiedLinesOfCode: int = jsonModified["code"]
-        # modifiedNumberOfFiles: int = jsonModified["nFiles"]
-
-        # removedLinesOfBlanks: int = jsonRemoved["blank"]
-        # removedLinesOfComments: int = jsonRemoved["comment"]
-        # removedLinesOfCode: int = jsonRemoved["code"]
-        # removedNumberOfFiles: int = jsonRemoved["nFiles"]
-
-        # return [
-        #     addedLinesOfBlanks,
-        #     addedLinesOfComments,
-        #     addedLinesOfCode,
-        #     addedNumberOfFiles,
-        #     modifiedLinesOfBlanks,
-        #     modifiedLinesOfComments,
-        #     modifiedLinesOfCode,
-        #     modifiedNumberOfFiles,
-        #     removedLinesOfBlanks,
-        #     removedLinesOfComments,
-        #     removedLinesOfCode,
-        #     removedNumberOfFiles,
-        # ]
 
 
 def main() -> bool:
