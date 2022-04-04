@@ -9,7 +9,7 @@ from dateutil.parser import parse as dateParse
 from pandas import DataFrame
 from progress.bar import Bar
 
-from args import mainArgs
+from ssl_metrics_git_commits_loc.args import mainArgs
 
 
 def repoExists(directory: str = ".") -> bool:

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas
 from pandas import DataFrame
 
-from args import graphArgs
+from ssl_metrics_git_commits_loc.args import graphArgs
 
 
 def computeXY(
