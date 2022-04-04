@@ -1,6 +1,6 @@
 import json
 import os
-from argparse import ArgumentParser, Namespace
+from argparse import Namespace
 from datetime import datetime
 from os.path import exists, join
 from typing import Any
@@ -9,53 +9,12 @@ from dateutil.parser import parse as dateParse
 from pandas import DataFrame
 from progress.bar import Bar
 
+from args import mainArgs
 
-def getArgs() -> Namespace:
-    name: str = "CLIME"
-    authors: list = ["Nicholas M. Synovic", "Matthew Hyatt", "George K. Thiruvathukal"]
-    parser: ArgumentParser = ArgumentParser(
-        prog=f"{name} Git Commit LOC Exploder",
-        description="A tool to extract all LOC information from a single branch of a Git repository on a per commit basis",
-        epilog=f"Author(s): {', '.join(authors)}",
-    )
-
-    parser.add_argument(
-        "-d",
-        "--directory",
-        help="Directory containg the .git folder of the repository to analyze",
-        type=str,
-        required=False,
-        default="."
-    )
-    parser.add_argument(
-        "-b",
-        "--branch",
-        help="Branch of the Git repository to analyze. DEFAULT: HEAD",
-        type=str,
-        required=False,
-        default="HEAD",
-    )
-    parser.add_argument(
-        "-o",
-        "--output",
-        help="JSON file to store the data. DEFAULT: ./commits_loc.json",
-        type=str,
-        required=False,
-        default="commits_loc.json",
-    )
-
-    parser.add_argument(
-        "--cloc",
-        help="TXT file containing cloc options. DEFAULT: options.txt. NOTE: This is an internal options file used by the program and doesn't need to be specified/ created by you the user (you)",
-        type=str,
-        required=False,
-        default="options.txt",
-    )
-
-    return parser.parse_args()
 
 def repoExists(directory: str = ".") -> bool:
     return exists(join(directory, ".git"))
+
 
 def gitCommits() -> list:
     with os.popen(r'git log --reverse --pretty=format:"%H"') as commits:
@@ -70,7 +29,7 @@ def commitMetadata(commit: str) -> list:
         return info.read().split(";")
 
 
-def commitLOC(commit: str, options:str) -> Any:
+def commitLOC(commit: str, options: str) -> Any:
     info: os._wrap_close
     with os.popen(
         rf"cloc {commit} --config {options} --json 2>/dev/null | jq .SUM"
@@ -78,7 +37,7 @@ def commitLOC(commit: str, options:str) -> Any:
         return json.loads(info.read().strip()).values()
 
 
-def commitsDiff(newCommit: str, oldCommit: str, options:str) -> list:
+def commitsDiff(newCommit: str, oldCommit: str, options: str) -> list:
     info: os._wrap_close
     with os.popen(
         rf"cloc --quiet --diff {newCommit} {oldCommit} --config {options} --json 2>/dev/null | jq --raw-output .SUM"
@@ -101,7 +60,7 @@ def commitsDiff(newCommit: str, oldCommit: str, options:str) -> list:
 
 def main() -> bool:
     pwd = os.getcwd()
-    args: Namespace = getArgs()
+    args: Namespace = mainArgs()
 
     if repoExists(directory=args.directory) is False:
         print(f"Invalid Git repository directory: {args.directory}")
@@ -155,7 +114,9 @@ def main() -> bool:
             if c == 0:
                 authorDay0: datetime = dateParse(data[3])
                 committerDay0: datetime = dateParse(data[7])
-                diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c], options=args.cloc)
+                diff: list = commitsDiff(
+                    newCommit=commits[c], oldCommit=commits[c], options=args.cloc
+                )
                 diff[0] = list(loc)[0]
                 diff[1] = list(loc)[1]
                 diff[2] = list(loc)[2]
@@ -163,10 +124,14 @@ def main() -> bool:
             else:
                 try:
                     diff: list = commitsDiff(
-                        newCommit=commits[c], oldCommit=commits[c - 1], options=args.cloc
+                        newCommit=commits[c],
+                        oldCommit=commits[c - 1],
+                        options=args.cloc,
                     )
                 except IndexError:
-                    diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c], options=args.cloc)
+                    diff: list = commitsDiff(
+                        newCommit=commits[c], oldCommit=commits[c], options=args.cloc
+                    )
 
             data.extend(diff)
             authorDateDifference: int = (dateParse(data[3]) - authorDay0).days
@@ -178,6 +143,7 @@ def main() -> bool:
 
     df.T.to_json(join(pwd, args.output))
     return True
+
 
 if __name__ == "__main__":
     main()
