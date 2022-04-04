@@ -136,12 +136,11 @@ def main() -> bool:
                         newCommit=commits[c],
                         oldCommit=commits[c - 1],
                     )
-                    delta = commitsDelta(loc, previousLOC)
                 except IndexError:
                     diff: list = commitsDiff(
                         newCommit=commits[c], oldCommit=commits[c]
                     )
-                    delta = commitsDelta(loc, previousLOC)
+                delta = commitsDelta(loc, previousLOC)
 
             data.extend(loc)
             data.extend(diff)
