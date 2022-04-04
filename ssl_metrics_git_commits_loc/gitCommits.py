@@ -4,7 +4,6 @@ import os
 from pandas import DataFrame
 from progress.bar import Bar
 
-
 def gitCommits() -> list:
     with os.popen(r'git log --reverse --pretty=format:"%H"') as commits:
         return [commit.strip() for commit in commits]
@@ -24,12 +23,15 @@ def commitLOC(commit: str) -> list:
         return info.read().strip().split("\n")
 
 
-def commitsDiff(commit1: str, commit2: str) -> list:
+def commitsDiff(newCommit: str, oldCommit: str) -> list:
     info: os._wrap_close
     with os.popen(
-        rf"cloc --diff {commit1} {commit2} --config options.txt --json | jq --raw-output .SUM"
+        rf"cloc --diff {newCommit} {oldCommit} --config options.txt --json | jq --raw-output .SUM"
     ) as info:
-        data: dict = json.loads(info.read().strip())
+        try:
+            data: dict = json.loads(info.read().strip())
+        except json.decoder.JSONDecodeError as e:
+            return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         jsonAdded: dict = data["added"]
         jsonModified: dict = data["modified"]
@@ -81,6 +83,18 @@ def main() -> None:
             "lines_of_comments",
             "lines_of_code",
             "number_of_files",
+            "added_lines_of_blanks",
+            "added_lines_of_comments",
+            "added_lines_of_code",
+            "added_number_of_files",
+            "modified_lines_of_blanks",
+            "modified_lines_of_comments",
+            "modified_lines_of_code",
+            "modified_number_of_files",
+            "removed_lines_of_blanks",
+            "removed_lines_of_comments",
+            "removed_lines_of_code",
+            "removed_number_of_files",
         ]
     )
 
@@ -90,15 +104,24 @@ def main() -> None:
         "01674b1d2b5fe527d32cb7f10c6056829369a73a",
     )
 
-    # with Bar("Getting data from commits...", max=len(commits)) as bar:
-    #     commit: str
-    #     for commit in commits:
-    #         metadata: list = commitMetadata(commit=commit)
-    #         loc: list = commitLOC(commit)
-    #         data: list = metadata + loc
-    #         df.loc[len(df.index)] = data
-    #         bar.next()
-    # df.T.to_json("out.json")
+    with Bar("Getting data from commits...", max=len(commits)) as bar:
+        c: int
+        for c in range(len(commits)):
+            metadata: list = commitMetadata(commit=commits[c])
+            loc: list = commitLOC(commits[c])
+
+            try:
+                if c == 0:
+                    diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c])
+                else:
+                    diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c - 1])
+            except IndexError:
+                diff: list = commitsDiff(commit1=commits[c], commit2=commits[c])
+
+            data: list = metadata + loc + diff
+            df.loc[len(df.index)] = data
+            bar.next()
+    df.T.to_json("out.json")
 
     # print(df)
 
