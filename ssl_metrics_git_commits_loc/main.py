@@ -57,7 +57,7 @@ def gitCommits() -> list:
 def commitMetadata(commit: str) -> list:
     info: os._wrap_close
     with os.popen(
-        rf'git log {commit} -1 --pretty=format:"%an;%ae;%as;%at;%cn;%ce;%cs;%ct"'
+        rf'git log {commit} -1 --pretty=format:"%H;%an;%ae;%as;%at;%cn;%ce;%cs;%ct"'
     ) as info:
         return info.read().split(";")
 
@@ -84,35 +84,40 @@ def commitsDiff(newCommit: str, oldCommit: str) -> list:
         jsonModified: dict = data["modified"]
         jsonRemoved: dict = data["removed"]
 
-        addedLinesOfBlanks: int = jsonAdded["blank"]
-        addedLinesOfComments: int = jsonAdded["comment"]
-        addedLinesOfCode: int = jsonAdded["code"]
-        addedNumberOfFiles: int = jsonAdded["nFiles"]
+        data: list = list(jsonAdded.values())
+        data.extend(jsonModified.values())
+        data.extend(jsonRemoved.values())
 
-        modifiedLinesOfBlanks: int = jsonModified["blank"]
-        modifiedLinesOfComments: int = jsonModified["comment"]
-        modifiedLinesOfCode: int = jsonModified["code"]
-        modifiedNumberOfFiles: int = jsonModified["nFiles"]
+        return data
+        # addedLinesOfBlanks: int = jsonAdded["blank"]
+        # addedLinesOfComments: int = jsonAdded["comment"]
+        # addedLinesOfCode: int = jsonAdded["code"]
+        # addedNumberOfFiles: int = jsonAdded["nFiles"]
 
-        removedLinesOfBlanks: int = jsonRemoved["blank"]
-        removedLinesOfComments: int = jsonRemoved["comment"]
-        removedLinesOfCode: int = jsonRemoved["code"]
-        removedNumberOfFiles: int = jsonRemoved["nFiles"]
+        # modifiedLinesOfBlanks: int = jsonModified["blank"]
+        # modifiedLinesOfComments: int = jsonModified["comment"]
+        # modifiedLinesOfCode: int = jsonModified["code"]
+        # modifiedNumberOfFiles: int = jsonModified["nFiles"]
 
-        return [
-            addedLinesOfBlanks,
-            addedLinesOfComments,
-            addedLinesOfCode,
-            addedNumberOfFiles,
-            modifiedLinesOfBlanks,
-            modifiedLinesOfComments,
-            modifiedLinesOfCode,
-            modifiedNumberOfFiles,
-            removedLinesOfBlanks,
-            removedLinesOfComments,
-            removedLinesOfCode,
-            removedNumberOfFiles,
-        ]
+        # removedLinesOfBlanks: int = jsonRemoved["blank"]
+        # removedLinesOfComments: int = jsonRemoved["comment"]
+        # removedLinesOfCode: int = jsonRemoved["code"]
+        # removedNumberOfFiles: int = jsonRemoved["nFiles"]
+
+        # return [
+        #     addedLinesOfBlanks,
+        #     addedLinesOfComments,
+        #     addedLinesOfCode,
+        #     addedNumberOfFiles,
+        #     modifiedLinesOfBlanks,
+        #     modifiedLinesOfComments,
+        #     modifiedLinesOfCode,
+        #     modifiedNumberOfFiles,
+        #     removedLinesOfBlanks,
+        #     removedLinesOfComments,
+        #     removedLinesOfCode,
+        #     removedNumberOfFiles,
+        # ]
 
 
 def main() -> bool:
@@ -128,6 +133,7 @@ def main() -> bool:
 
     df: DataFrame = DataFrame(
         columns=[
+            "commit_hash",
             "author_name",
             "author_email",
             "author_date",
@@ -167,7 +173,7 @@ def main() -> bool:
             data.extend(loc)
 
             if c == 0:
-                day0: datetime = dateParse(data[2])
+                day0: datetime = dateParse(data[3])
                 diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c])
                 diff[0] = list(loc)[0]
                 diff[1] = list(loc)[1]
@@ -182,9 +188,7 @@ def main() -> bool:
                     diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c])
 
             data.extend(diff)
-
-            dateDifference: int = (dateParse(data[2]) - day0).days
-
+            dateDifference: int = (dateParse(data[3]) - day0).days
             data.append(dateDifference)
             df.loc[len(df.index)] = data
             bar.next()

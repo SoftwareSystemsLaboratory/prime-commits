@@ -1,4 +1,3 @@
-from signal import pause
 import matplotlib.pyplot as plt
 import pandas
 from pandas import DataFrame
@@ -19,10 +18,6 @@ def computeXY(
             yData.append(df.loc[df[xKey] == day, yKey].sum() / 1000)
     else:
         for day in xData:
-            print(df.loc[df[xKey] == day, yKey])
-            input()
-
-
             yData.append(df.loc[df[xKey] == day, yKey].sum())
     return (xData, yData)
 
@@ -35,7 +30,7 @@ def plot(
     yLabel: str = "",
     title: str = "",
     output: str = "commits_loc.pdf",
-    stylesheet: str = "style.mplstyle"
+    stylesheet: str = "style.mplstyle",
 ) -> None:
     "param: type can only be one of the following: line, bar"
 
@@ -52,13 +47,13 @@ def plot(
     plt.xlabel(xLabel)
     plt.ylabel(yLabel)
 
-    plt.savefig(output, bbox_inches='tight', transparent="True", pad_inches=0)
+    plt.savefig(output, bbox_inches="tight", transparent="True", pad_inches=0)
 
 
 def main() -> None:
     df: DataFrame = pandas.read_json("commits_loc.json")
     df = df.T
-    data: tuple = computeXY(df=df, yKey="added_lines_of_code", yThousandth=False)
+    data: tuple = computeXY(df=df, yKey="added_lines_of_code", yThousandth=True)
     plot(x=data[0], y=data[1], type="bar", title="TEST")
 
 
