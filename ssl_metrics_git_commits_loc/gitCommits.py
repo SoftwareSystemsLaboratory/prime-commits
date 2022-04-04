@@ -3,6 +3,9 @@ import os
 
 from pandas import DataFrame
 from progress.bar import Bar
+from dateutil.parser import parse as dateParse
+from datetime import datetime
+from typing import Iterable
 
 def gitCommits() -> list:
     with os.popen(r'git log --reverse --pretty=format:"%H"') as commits:
@@ -17,10 +20,10 @@ def commitMetadata(commit: str) -> list:
         return info.read().split(";")
 
 
-def commitLOC(commit: str) -> list:
+def commitLOC(commit: str) -> Iterable:
     info: os._wrap_close
-    with os.popen(rf"cloc {commit} --config options.txt --json | jq .SUM[]") as info:
-        return info.read().strip().split("\n")
+    with os.popen(rf"cloc {commit} --config options.txt --json | jq .SUM") as info:
+        return json.loads(info.read().strip()).values()
 
 
 def commitsDiff(newCommit: str, oldCommit: str) -> list:
@@ -95,30 +98,35 @@ def main() -> None:
             "removed_lines_of_comments",
             "removed_lines_of_code",
             "removed_number_of_files",
+            "author_day_since_0",
         ]
     )
 
     commits: list = gitCommits()
-    commitsDiff(
-        "ae295b3233343dd9a8092134f8a10b9a45f09450",
-        "01674b1d2b5fe527d32cb7f10c6056829369a73a",
-    )
 
     with Bar("Getting data from commits...", max=len(commits)) as bar:
         c: int
         for c in range(len(commits)):
-            metadata: list = commitMetadata(commit=commits[c])
+            data: list = commitMetadata(commit=commits[c])
             loc: list = commitLOC(commits[c])
 
-            try:
-                if c == 0:
-                    diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c])
-                else:
-                    diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c - 1])
-            except IndexError:
-                diff: list = commitsDiff(commit1=commits[c], commit2=commits[c])
+            data.extend(loc)
 
-            data: list = metadata + loc + diff
+            if c == 0:
+                day0: datetime = dateParse(data[2])
+                diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c])
+                diff[0] = list(loc)[0]
+                diff[1] = list(loc)[1]
+                diff[2] = list(loc)[2]
+                diff[3] = list(loc)[3]
+            else:
+                try:
+                    diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c - 1])
+                except IndexError:
+                    diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c])
+
+            data.extend(diff)
+            data.append(dateParse(data[2]) - day0)
             df.loc[len(df.index)] = data
             bar.next()
     df.T.to_json("out.json")
