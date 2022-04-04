@@ -137,8 +137,6 @@ def main() -> None:
             bar.next()
     df.T.to_json("out.json")
 
-    # print(df)
-
 
 if __name__ == "__main__":
     main()
