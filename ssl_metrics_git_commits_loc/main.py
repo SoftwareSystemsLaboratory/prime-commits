@@ -38,10 +38,10 @@ def getArgs() -> Namespace:
     parser.add_argument(
         "-o",
         "--output",
-        help="JSON file to store the data. DEFAULT: ./commit_loc.json",
+        help="JSON file to store the data. DEFAULT: ./commits_loc.json",
         type=str,
         required=False,
-        default="commit_loc.json",
+        default="commits_loc.json",
     )
 
     return parser.parse_args()
