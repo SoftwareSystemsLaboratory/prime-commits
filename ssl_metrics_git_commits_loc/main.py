@@ -44,6 +44,14 @@ def getArgs() -> Namespace:
         default="commits_loc.json",
     )
 
+    parser.add_argument(
+        "--cloc",
+        help="TXT file containing cloc options. DEFAULT: options.txt. NOTE: This is an internal options file used by the program and doesn't need to be specified/ created by you the user (you)",
+        type=str,
+        required=False,
+        default="options.txt",
+    )
+
     return parser.parse_args()
 
 def repoExists(directory: str = ".") -> bool:
