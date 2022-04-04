@@ -183,7 +183,7 @@ def main() -> bool:
 
             data.extend(diff)
 
-            dateDifference: int = dateParse(data[2]) - day0
+            dateDifference: int = (dateParse(data[2]) - day0).days
 
             data.append(dateDifference)
             df.loc[len(df.index)] = data
