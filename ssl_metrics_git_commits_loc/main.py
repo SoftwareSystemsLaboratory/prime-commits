@@ -57,7 +57,8 @@ def commitsDiff(newCommit: str, oldCommit: str, options: str) -> list:
 
         return data
 
-def commitsDelta(newLOC: Any, oldLOC: Any)  ->  list:
+
+def commitsDelta(newLOC: Any, oldLOC: Any) -> list:
     return [a - b for a, b in zip(newLOC, oldLOC)]
 
 
