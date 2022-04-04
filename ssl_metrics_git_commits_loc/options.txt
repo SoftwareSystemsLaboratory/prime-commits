@@ -1,5 +1,5 @@
 # options.txt for cloc
+hide-rate
 quiet
 sum-one
-hide-rate
 use-sloccount
