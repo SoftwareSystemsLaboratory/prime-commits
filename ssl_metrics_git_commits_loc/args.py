@@ -44,15 +44,6 @@ def mainArgs() -> Namespace:
         default="options.txt",
     )
 
-    parser.add_argument(
-        "-c",
-        "--cores",
-        help="Number of cores to use for multiprocessing the data. Default: 1",
-        type=int,
-        required=False,
-        default=1,
-    )
-
     return parser.parse_args()
 
 
