@@ -119,8 +119,8 @@ def main() -> bool:
             loc: list = commitLOC(commits[c], options=args.cloc)
 
             if c == 0:
-                authorDay0: datetime = dateParse(data[3])
-                committerDay0: datetime = dateParse(data[7])
+                authorDay0: datetime = dateParse(data[3]).replace(tzinfo=None)
+                committerDay0: datetime = dateParse(data[7]).replace(tzinfo=None)
                 diff: list = commitsDiff(
                     newCommit=commits[c],
                     oldCommit=commits[c],
@@ -151,8 +151,8 @@ def main() -> bool:
             data.extend(diff)
             data.extend(delta)
 
-            authorDateDifference: int = (dateParse(data[3]) - authorDay0).days
-            committerDateDifference: int = (dateParse(data[7]) - committerDay0).days
+            authorDateDifference: int = (dateParse(data[3]).replace(tzinfo=None) - authorDay0).days
+            committerDateDifference: int = (dateParse(data[7]).replace(tzinfo=None) - committerDay0).days
 
             data.append(authorDateDifference)
             data.append(committerDateDifference)
