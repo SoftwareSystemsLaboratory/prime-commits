@@ -29,7 +29,7 @@ def commitMetadata(commit: str) -> list:
         return info.read().split(";")
 
 
-def commitLOC(commit: str, options: str) -> Any:
+def commitLOC(commit: str) -> Any:
     info: os._wrap_close
     with os.popen(
         rf"cloc {commit} --use-sloccount --json 2>/dev/null | jq .SUM"
@@ -37,7 +37,7 @@ def commitLOC(commit: str, options: str) -> Any:
         return json.loads(info.read().strip()).values()
 
 
-def commitsDiff(newCommit: str, oldCommit: str, options: str) -> list:
+def commitsDiff(newCommit: str, oldCommit: str) -> list:
     info: os._wrap_close
     with os.popen(
         rf"cloc --quiet --diff {newCommit} {oldCommit} --json 2>/dev/null | jq --raw-output .SUM"
@@ -135,7 +135,6 @@ def main() -> bool:
                     diff: list = commitsDiff(
                         newCommit=commits[c],
                         oldCommit=commits[c - 1],
-                        options=args.cloc,
                     )
                     delta = commitsDelta(loc, previousLOC)
                 except IndexError:
