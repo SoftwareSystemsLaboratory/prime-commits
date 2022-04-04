@@ -24,7 +24,8 @@ def getArgs() -> Namespace:
         "--directory",
         help="Directory containg the .git folder of the repository to analyze",
         type=str,
-        required=True,
+        required=False,
+        default="."
     )
     parser.add_argument(
         "-b",
@@ -123,7 +124,7 @@ def main() -> bool:
         return False
 
     os.chdir(args.directory)
-    os.system(f"git checkout {args.branch}")
+    os.system(f"git checkout {args.branch} --quiet")
 
     df: DataFrame = DataFrame(
         columns=[
