@@ -1,11 +1,48 @@
 import json
 import os
+from argparse import ArgumentParser, Namespace
 from datetime import datetime
 from typing import Any
 
 from dateutil.parser import parse as dateParse
 from pandas import DataFrame
 from progress.bar import Bar
+
+
+def getArgs() -> Namespace:
+    name: str = "CLIME"
+    authors: list = ["Nicholas M. Synovic"]
+    parser: ArgumentParser = ArgumentParser(
+        prog=f"{name} Git Commit LOC Exploder",
+        description="A tool to extract all LOC information from a single branch of a Git repository on a per commit basis",
+        epilog=f"Author(s): {', '.join(authors)}",
+    )
+
+    parser.add_argument(
+        "-d",
+        "--directory",
+        help="Directory containg the .git folder of the repository to analyze",
+        type=str,
+        required=True,
+    )
+    parser.add_argument(
+        "-b",
+        "--branch",
+        help="Branch of the Git repository to analyze. DEFAULT: HEAD",
+        type=str,
+        required=False,
+        default="HEAD",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        help="JSON file to store the data. DEFAULT: ./commit_loc.json",
+        type=str,
+        required=False,
+        default="commit_loc.json",
+    )
+
+    return parser.parse_args()
 
 
 def gitCommits() -> list:
