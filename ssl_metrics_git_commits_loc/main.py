@@ -57,6 +57,9 @@ def commitsDiff(newCommit: str, oldCommit: str, options: str) -> list:
 
         return data
 
+def commitsDelta(newLOC: Any, oldLOC: Any)  ->  list:
+    return [a - b for a, b in zip(newLOC, oldLOC)]
+
 
 def main() -> bool:
     pwd = os.getcwd()
@@ -96,6 +99,12 @@ def main() -> bool:
             "removed_lines_of_comments",
             "removed_lines_of_code",
             "removed_number_of_files",
+
+            "delta_lines_of_blanks",
+            "delta_lines_of_comments",
+            "delta_lines_of_code",
+            "delta_number_of_files",
+
             "author_days_since_0",
             "committer_days_since_0",
         ]
@@ -104,12 +113,11 @@ def main() -> bool:
     commits: list = gitCommits()
 
     with Bar("Getting data from commits...", max=len(commits)) as bar:
+        previousLOC: list = []
         c: int
         for c in range(len(commits)):
             data: list = commitMetadata(commit=commits[c])
             loc: list = commitLOC(commits[c], options=args.cloc)
-
-            data.extend(loc)
 
             if c == 0:
                 authorDay0: datetime = dateParse(data[3])
@@ -121,6 +129,8 @@ def main() -> bool:
                 diff[1] = list(loc)[1]
                 diff[2] = list(loc)[2]
                 diff[3] = list(loc)[3]
+
+                delta: list = loc
             else:
                 try:
                     diff: list = commitsDiff(
@@ -128,17 +138,27 @@ def main() -> bool:
                         oldCommit=commits[c - 1],
                         options=args.cloc,
                     )
+                    delta = commitsDelta(loc, previousLOC)
                 except IndexError:
                     diff: list = commitsDiff(
                         newCommit=commits[c], oldCommit=commits[c], options=args.cloc
                     )
+                    delta = commitsDelta(loc, previousLOC)
 
+            data.extend(loc)
             data.extend(diff)
+            data.extend(delta)
+
             authorDateDifference: int = (dateParse(data[3]) - authorDay0).days
             committerDateDifference: int = (dateParse(data[7]) - committerDay0).days
+
             data.append(authorDateDifference)
             data.append(committerDateDifference)
+
             df.loc[len(df.index)] = data
+
+            previousLOC = loc
+
             bar.next()
 
     df.T.to_json(join(pwd, args.output))
