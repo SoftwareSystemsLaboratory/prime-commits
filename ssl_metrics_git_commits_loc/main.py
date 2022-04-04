@@ -152,7 +152,7 @@ def main() -> bool:
             "removed_lines_of_comments",
             "removed_lines_of_code",
             "removed_number_of_files",
-            "author_day_since_0",
+            "author_days_since_0",
         ]
     )
 
