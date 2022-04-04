@@ -38,8 +38,7 @@ def plot(
 ) -> None:
     "param: type can only be one of the following: line, bar"
 
-    if stylesheet is not None:
-        plt.style.use(stylesheet)
+    plt.style.use(stylesheet)
 
     if type == "line":
         plt.plot(x, y)
