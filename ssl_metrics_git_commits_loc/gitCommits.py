@@ -23,7 +23,9 @@ def commitMetadata(commit: str) -> list:
 
 def commitLOC(commit: str) -> Any:
     info: os._wrap_close
-    with os.popen(rf"cloc {commit} --config options.txt --json 2>/dev/null | jq .SUM") as info:
+    with os.popen(
+        rf"cloc {commit} --config options.txt --json 2>/dev/null | jq .SUM"
+    ) as info:
         return json.loads(info.read().strip()).values()
 
 
