@@ -1,10 +1,12 @@
 from argparse import ArgumentParser, Namespace
 from re import X
+
 import matplotlib.pyplot as plt
 import pandas
 from pandas import DataFrame
 
-def getArgs()   ->  Namespace:
+
+def getArgs() -> Namespace:
     name: str = "CLIME"
     authors: list = ["Nicholas M. Synovic"]
     parser: ArgumentParser = ArgumentParser(
@@ -88,6 +90,7 @@ def getArgs()   ->  Namespace:
 
     return parser.parse_args()
 
+
 def computeXY(
     df: DataFrame,
     xKey: str,
@@ -140,8 +143,19 @@ def main() -> None:
 
     df: DataFrame = pandas.read_json(args.input).T
 
-    data: tuple = computeXY(df=df, xKey=args.x, yKey=args.y, yThousandth=args.y_thousandths)
-    plot(x=data[0], y=data[1], type=args.type, title=args.title, xLabel=args.x_label, yLabel=args.y_label, output=args.output, stylesheet=args.stylesheet)
+    data: tuple = computeXY(
+        df=df, xKey=args.x, yKey=args.y, yThousandth=args.y_thousandths
+    )
+    plot(
+        x=data[0],
+        y=data[1],
+        type=args.type,
+        title=args.title,
+        xLabel=args.x_label,
+        yLabel=args.y_label,
+        output=args.output,
+        stylesheet=args.stylesheet,
+    )
 
 
 if __name__ == "__main__":
