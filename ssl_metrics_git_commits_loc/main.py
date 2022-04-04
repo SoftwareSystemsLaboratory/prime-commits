@@ -138,6 +138,7 @@ def main() -> bool:
             "removed_lines_of_code",
             "removed_number_of_files",
             "author_days_since_0",
+            "committer_days_since_0",
         ]
     )
 
@@ -152,7 +153,8 @@ def main() -> bool:
             data.extend(loc)
 
             if c == 0:
-                day0: datetime = dateParse(data[3])
+                authorDay0: datetime = dateParse(data[3])
+                committerDay0: datetime = dateParse(data[7])
                 diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c], options=args.cloc)
                 diff[0] = list(loc)[0]
                 diff[1] = list(loc)[1]
@@ -167,8 +169,10 @@ def main() -> bool:
                     diff: list = commitsDiff(newCommit=commits[c], oldCommit=commits[c], options=args.cloc)
 
             data.extend(diff)
-            dateDifference: int = (dateParse(data[3]) - day0).days
-            data.append(dateDifference)
+            authorDateDifference: int = (dateParse(data[3]) - authorDay0).days
+            committerDateDifference: int = (dateParse(data[7]) - committerDay0).days
+            data.append(authorDateDifference)
+            data.append(committerDateDifference)
             df.loc[len(df.index)] = data
             bar.next()
 
