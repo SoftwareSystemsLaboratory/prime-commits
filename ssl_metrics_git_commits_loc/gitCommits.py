@@ -1,7 +1,7 @@
 import json
 import os
 from datetime import datetime
-from typing import dict_values
+from typing import Any
 
 from dateutil.parser import parse as dateParse
 from pandas import DataFrame
@@ -21,7 +21,7 @@ def commitMetadata(commit: str) -> list:
         return info.read().split(";")
 
 
-def commitLOC(commit: str) -> dict_values:
+def commitLOC(commit: str) -> Any:
     info: os._wrap_close
     with os.popen(rf"cloc {commit} --config options.txt --json | jq .SUM") as info:
         return json.loads(info.read().strip()).values()
