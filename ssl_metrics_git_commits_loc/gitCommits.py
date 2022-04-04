@@ -2,6 +2,7 @@ import json
 import os
 from argparse import ArgumentParser, Namespace
 from datetime import datetime
+from os.path import exists, join
 from typing import Any
 
 from dateutil.parser import parse as dateParse
@@ -44,6 +45,8 @@ def getArgs() -> Namespace:
 
     return parser.parse_args()
 
+def repoExists(directory: str = ".") -> bool:
+    return exists(join(directory, ".git"))
 
 def gitCommits() -> list:
     with os.popen(r'git log --reverse --pretty=format:"%H"') as commits:
@@ -111,7 +114,17 @@ def commitsDiff(newCommit: str, oldCommit: str) -> list:
         ]
 
 
-def main() -> None:
+def main() -> bool:
+    pwd = os.getcwd()
+    args: Namespace = getArgs()
+
+    if repoExists(directory=args.directory) is False:
+        print(f"Invalid Git repository directory: {args.directory}")
+        return False
+
+    os.chdir(args.directory)
+    os.system(f"git checkout {args.branch}")
+
     df: DataFrame = DataFrame(
         columns=[
             "author_name",
@@ -174,8 +187,8 @@ def main() -> None:
             data.append(dateDifference)
             df.loc[len(df.index)] = data
             bar.next()
-    df.T.to_json("out.json")
 
+    df.T.to_json(join(pwd, args.output))
 
 if __name__ == "__main__":
     main()
