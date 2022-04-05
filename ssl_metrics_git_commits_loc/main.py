@@ -31,34 +31,15 @@ def commitMetadata(commit: str) -> list:
 
 
 def commitLOC(commit: str, options: str) -> Any:
+    if options == "":
+        command: str = rf"cloc --git {commit} --use-sloccount --json 2>/dev/null | jq .SUM"
+    else:
+        command : str = rf"cloc --git {commit} --config {options} --json 2>/dev/null | jq .SUM"
+
     info: os._wrap_close
-    with os.popen(
-        rf"cloc --git {commit} --json 2>/dev/null | jq .SUM"
-    ) as info:
+    with os.popen(command) as info:
         data: dict = json.load(info)
         return data.values()
-
-
-def commitsDiff(newCommit: str, oldCommit: str, options: str) -> list:
-    emptyData: list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    info: os._wrap_close
-    with os.popen(
-        rf"cloc --diff {newCommit} {oldCommit} --json 2>/dev/null | jq .SUM"
-    ) as info:
-        try:
-            data: dict = json.load(info)
-        except json.decoder.JSONDecodeError as e:
-            return emptyData
-
-        jsonAdded: dict = data["added"]
-        jsonModified: dict = data["modified"]
-        jsonRemoved: dict = data["removed"]
-
-        data: list = list(jsonAdded.values())
-        data.extend(jsonModified.values())
-        data.extend(jsonRemoved.values())
-
-        return data
 
 
 def commitsDelta(newLOC: Any, oldLOC: Any) -> list:
@@ -91,18 +72,6 @@ def main() -> bool:
             "lines_of_comments",
             "lines_of_code",
             "number_of_files",
-            "added_lines_of_blanks",
-            "added_lines_of_comments",
-            "added_lines_of_code",
-            "added_number_of_files",
-            "modified_lines_of_blanks",
-            "modified_lines_of_comments",
-            "modified_lines_of_code",
-            "modified_number_of_files",
-            "removed_lines_of_blanks",
-            "removed_lines_of_comments",
-            "removed_lines_of_code",
-            "removed_number_of_files",
             "delta_lines_of_blanks",
             "delta_lines_of_comments",
             "delta_lines_of_code",
@@ -124,34 +93,11 @@ def main() -> bool:
             if c == 0:
                 authorDay0: datetime = dateParse(data[3]).replace(tzinfo=None)
                 committerDay0: datetime = dateParse(data[7]).replace(tzinfo=None)
-                diff: list = commitsDiff(
-                    newCommit=commits[c],
-                    oldCommit=commits[c],
-                    options=args.cloc,
-                )
-                diff[0] = list(loc)[0]
-                diff[1] = list(loc)[1]
-                diff[2] = list(loc)[2]
-                diff[3] = list(loc)[3]
-
                 delta: list = loc
             else:
-                try:
-                    diff: list = commitsDiff(
-                        newCommit=commits[c],
-                        oldCommit=commits[c - 1],
-                        options=args.cloc,
-                    )
-                except IndexError:
-                    diff: list = commitsDiff(
-                        newCommit=commits[c],
-                        oldCommit=commits[c],
-                        options=args.cloc,
-                    )
                 delta = commitsDelta(loc, previousLOC)
 
             data.extend(loc)
-            data.extend(diff)
             data.extend(delta)
 
             authorDateDifference: int = (dateParse(data[3]).replace(tzinfo=None) - authorDay0).days
