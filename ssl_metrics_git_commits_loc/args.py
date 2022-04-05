@@ -44,7 +44,7 @@ def mainArgs() -> Namespace:
     )
     parser.add_argument(
         "--processes",
-        help='Number of processes cloc should use. DEFAULT: 0',
+        help="Number of processes cloc should use. DEFAULT: 0",
         type=int,
         required=False,
         default=0,

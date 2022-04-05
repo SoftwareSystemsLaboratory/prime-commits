@@ -5,9 +5,9 @@ from datetime import datetime
 from os.path import exists, join
 from typing import Any
 
+import pandas
 from dateutil.parser import parse as dateParse
 from pandas import DataFrame
-import pandas
 from progress.bar import Bar
 
 from ssl_metrics_git_commits_loc.args import mainArgs
@@ -34,7 +34,7 @@ def commitLOC(commit: str, options: str, processes: int = 0) -> Any:
     if options == "":
         command: str = rf"cloc --git {commit} --use-sloccount --processes={processes} --json 2>/dev/null | jq .SUM"
     else:
-        command : str = rf"cloc --git {commit} --config {options} --processes={processes} --json 2>/dev/null | jq .SUM"
+        command: str = rf"cloc --git {commit} --config {options} --processes={processes} --json 2>/dev/null | jq .SUM"
 
     info: os._wrap_close
     with os.popen(command) as info:
@@ -100,8 +100,12 @@ def main() -> bool:
             data.extend(loc)
             data.extend(delta)
 
-            authorDateDifference: int = (dateParse(data[3]).replace(tzinfo=None) - authorDay0).days
-            committerDateDifference: int = (dateParse(data[7]).replace(tzinfo=None) - committerDay0).days
+            authorDateDifference: int = (
+                dateParse(data[3]).replace(tzinfo=None) - authorDay0
+            ).days
+            committerDateDifference: int = (
+                dateParse(data[7]).replace(tzinfo=None) - committerDay0
+            ).days
 
             data.append(authorDateDifference)
             data.append(committerDateDifference)
