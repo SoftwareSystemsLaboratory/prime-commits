@@ -7,6 +7,7 @@ from typing import Any
 
 from dateutil.parser import parse as dateParse
 from pandas import DataFrame
+import pandas
 from progress.bar import Bar
 
 from ssl_metrics_git_commits_loc.args import mainArgs
@@ -32,9 +33,10 @@ def commitMetadata(commit: str) -> list:
 def commitLOC(commit: str, options: str) -> Any:
     info: os._wrap_close
     with os.popen(
-        rf"cloc {commit} --config {options} --json 2>/dev/null | jq .SUM"
+        rf"cloc --git {commit} --json 2>/dev/null | jq .SUM"
     ) as info:
-        return json.loads(info.read().strip()).values()
+        data: dict = json.load(info)
+        return data.values()
 
 
 def commitsDiff(newCommit: str, oldCommit: str, options: str) -> list:
@@ -115,51 +117,52 @@ def main() -> bool:
         previousLOC: list = []
         c: int
         for c in range(len(commits)):
-            data: list = commitMetadata(commit=commits[c])
-            loc: list = commitLOC(commits[c], options=args.cloc)
+            commitLOC(commits[c], options=args.cloc)
+            # data: list = commitMetadata(commit=commits[c])
+            # loc: list = commitLOC(commits[c], options=args.cloc)
 
-            if c == 0:
-                authorDay0: datetime = dateParse(data[3]).replace(tzinfo=None)
-                committerDay0: datetime = dateParse(data[7]).replace(tzinfo=None)
-                diff: list = commitsDiff(
-                    newCommit=commits[c],
-                    oldCommit=commits[c],
-                    options=args.cloc,
-                )
-                diff[0] = list(loc)[0]
-                diff[1] = list(loc)[1]
-                diff[2] = list(loc)[2]
-                diff[3] = list(loc)[3]
+            # if c == 0:
+            #     authorDay0: datetime = dateParse(data[3]).replace(tzinfo=None)
+            #     committerDay0: datetime = dateParse(data[7]).replace(tzinfo=None)
+            #     diff: list = commitsDiff(
+            #         newCommit=commits[c],
+            #         oldCommit=commits[c],
+            #         options=args.cloc,
+            #     )
+            #     diff[0] = list(loc)[0]
+            #     diff[1] = list(loc)[1]
+            #     diff[2] = list(loc)[2]
+            #     diff[3] = list(loc)[3]
 
-                delta: list = loc
-            else:
-                try:
-                    diff: list = commitsDiff(
-                        newCommit=commits[c],
-                        oldCommit=commits[c - 1],
-                        options=args.cloc,
-                    )
-                except IndexError:
-                    diff: list = commitsDiff(
-                        newCommit=commits[c],
-                        oldCommit=commits[c],
-                        options=args.cloc,
-                    )
-                delta = commitsDelta(loc, previousLOC)
+            #     delta: list = loc
+            # else:
+            #     try:
+            #         diff: list = commitsDiff(
+            #             newCommit=commits[c],
+            #             oldCommit=commits[c - 1],
+            #             options=args.cloc,
+            #         )
+            #     except IndexError:
+            #         diff: list = commitsDiff(
+            #             newCommit=commits[c],
+            #             oldCommit=commits[c],
+            #             options=args.cloc,
+            #         )
+            #     delta = commitsDelta(loc, previousLOC)
 
-            data.extend(loc)
-            data.extend(diff)
-            data.extend(delta)
+            # data.extend(loc)
+            # data.extend(diff)
+            # data.extend(delta)
 
-            authorDateDifference: int = (dateParse(data[3]).replace(tzinfo=None) - authorDay0).days
-            committerDateDifference: int = (dateParse(data[7]).replace(tzinfo=None) - committerDay0).days
+            # authorDateDifference: int = (dateParse(data[3]).replace(tzinfo=None) - authorDay0).days
+            # committerDateDifference: int = (dateParse(data[7]).replace(tzinfo=None) - committerDay0).days
 
-            data.append(authorDateDifference)
-            data.append(committerDateDifference)
+            # data.append(authorDateDifference)
+            # data.append(committerDateDifference)
 
-            df.loc[len(df.index)] = data
+            # df.loc[len(df.index)] = data
 
-            previousLOC = loc
+            # previousLOC = loc
 
             bar.next()
 
