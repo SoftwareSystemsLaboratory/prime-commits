@@ -35,13 +35,19 @@ def mainArgs() -> Namespace:
         required=False,
         default="commits_loc.json",
     )
-
     parser.add_argument(
         "--cloc",
         help='TXT file containing cloc options. DEFAULT: ""',
         type=str,
         required=False,
         default="",
+    )
+    parser.add_argument(
+        "--processes",
+        help='Number of processes cloc should use. DEFAULT: 0',
+        type=int,
+        required=False,
+        default=0,
     )
 
     return parser.parse_args()

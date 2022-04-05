@@ -30,11 +30,11 @@ def commitMetadata(commit: str) -> list:
         return info.read().split(";")
 
 
-def commitLOC(commit: str, options: str) -> Any:
+def commitLOC(commit: str, options: str, processes: int = 0) -> Any:
     if options == "":
-        command: str = rf"cloc --git {commit} --use-sloccount --json 2>/dev/null | jq .SUM"
+        command: str = rf"cloc --git {commit} --use-sloccount --processes={processes} --json 2>/dev/null | jq .SUM"
     else:
-        command : str = rf"cloc --git {commit} --config {options} --json 2>/dev/null | jq .SUM"
+        command : str = rf"cloc --git {commit} --config {options} --processes={processes} --json 2>/dev/null | jq .SUM"
 
     info: os._wrap_close
     with os.popen(command) as info:
