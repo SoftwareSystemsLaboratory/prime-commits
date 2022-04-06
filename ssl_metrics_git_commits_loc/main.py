@@ -32,7 +32,7 @@ def commitMetadata(commit: str) -> list:
 
 def commitLOC(commit: str, options: str, processes: int = 0) -> Any:
     if options == "":
-        command: str = rf"cloc --git {commit} --use-sloccount --processes={processes} --json 2>/dev/null | jq .SUM"
+        command: str = rf"cloc --git {commit} --use-sloccount --processes {processes} --json 2>/dev/null | jq .SUM"
     else:
         command: str = rf"cloc --git {commit} --config {options} --processes={processes} --json 2>/dev/null | jq .SUM"
 
@@ -88,7 +88,7 @@ def main() -> bool:
         c: int
         for c in range(len(commits)):
             data: list = commitMetadata(commit=commits[c])
-            loc: list = commitLOC(commits[c], options=args.cloc)
+            loc: list = commitLOC(commits[c], options=args.cloc, processes=args.processes)
 
             if c == 0:
                 authorDay0: datetime = dateParse(data[3]).replace(tzinfo=None)
