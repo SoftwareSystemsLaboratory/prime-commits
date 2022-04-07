@@ -30,16 +30,33 @@ def commitMetadata(commit: str) -> list:
         return info.read().split(";")
 
 
-def commitLOC(commit: str, options: str, processes: int = 0) -> Any:
+def commitLOC(commit: str, options: str = "", processes: int = 0) -> list:
     if options == "":
         command: str = rf"cloc --git {commit} --use-sloccount --processes {processes} --json 2>/dev/null | jq .SUM"
     else:
-        command: str = rf"cloc --git {commit} --config {options} --processes={processes} --json 2>/dev/null | jq .SUM"
+        command: str = rf"cloc --git {commit} --use-sloccount --config {options} --processes {processes} --json 2>/dev/null | jq .SUM"
 
     info: os._wrap_close
     with os.popen(command) as info:
         data: dict = json.load(info)
         return data.values()
+
+def commitsDiff(commit1: str, commit2: str, str = "", processes: int = 0)  ->  list:
+    data: list = []
+    command: str = rf"cloc --git --diff {commit1} {commit2} --processes {processes} --json 2>/dev/null | jq .SUM"
+
+    info: os._wrap_close
+    with os.popen(command) as info:
+        try:
+            output: dict = json.load(info)
+            keys: list = output.keys()
+
+            key: str
+            for key in keys:
+                data.extend(output[key].values())
+        except json.JSONDecodeError as e:
+            data: list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        return data
 
 
 def commitsDelta(newLOC: Any, oldLOC: Any) -> list:
@@ -72,6 +89,22 @@ def main() -> bool:
             "lines_of_comments",
             "lines_of_code",
             "number_of_files",
+            "added_lines_of_code",
+            "added_number_of_files",
+            "added_lines_of_blanks",
+            "added_lines_of_comments",
+            "same_lines_of_code",
+            "same_number_of_files",
+            "same_lines_of_blanks",
+            "same_lines_of_comments",
+            "modified_lines_of_code",
+            "modified_number_of_files",
+            "modified_lines_of_blanks",
+            "modified_lines_of_comments",
+            "removed_lines_of_code",
+            "removed_number_of_files",
+            "removed_lines_of_blanks",
+            "removed_lines_of_comments",
             "delta_lines_of_blanks",
             "delta_lines_of_comments",
             "delta_lines_of_code",
@@ -93,11 +126,18 @@ def main() -> bool:
             if c == 0:
                 authorDay0: datetime = dateParse(data[3]).replace(tzinfo=None)
                 committerDay0: datetime = dateParse(data[7]).replace(tzinfo=None)
+
+                diff: list = []
+                diff.extend(loc)
+                diff.extend([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+
                 delta: list = loc
             else:
+                diff: list = commitsDiff(commit1=commits[c], commit2=commits[c-1])
                 delta = commitsDelta(loc, previousLOC)
 
             data.extend(loc)
+            data.extend(diff)
             data.extend(delta)
 
             authorDateDifference: int = (
