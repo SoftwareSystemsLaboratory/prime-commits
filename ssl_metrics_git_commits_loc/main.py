@@ -3,7 +3,6 @@ import os
 from argparse import Namespace
 from datetime import datetime
 from os.path import exists, join
-from typing import Any
 
 import pandas
 from dateutil.parser import parse as dateParse
@@ -59,7 +58,7 @@ def commitsDiff(commit1: str, commit2: str, str = "", processes: int = 0)  ->  l
         return data
 
 
-def commitsDelta(newLOC: Any, oldLOC: Any) -> list:
+def commitsDelta(newLOC: list, oldLOC: list) -> list:
     return [a - b for a, b in zip(newLOC, oldLOC)]
 
 
