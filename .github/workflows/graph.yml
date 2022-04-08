@@ -8,32 +8,32 @@ on:
       - '*'
 
 jobs:
-    generate-graph:
-        runs-on: ubuntu-latest
+  generate-graph:
+    runs-on: ubuntu-latest
 
-        steps:
-            - uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
 
-            - name: Setup Python
-              uses: actions/setup-python@v2
-              with:
-                python-version: '3.9.6'
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9.6'
 
-            - name: Install requirements
-                run: |
-                    pip3 install --upgrade pip3
-                    pip3 install -r requirements.txt
+      - name: Install requirements
+        run: |
+          pip3 install --upgrade pip3
+          pip3 install -r requirements.txt
 
-            - name: Generate Graph
-                run: |
-                    python3 ./ssl_metrics_git_commits_loc/main.py -d . -b main -o loc.json
-                    python3 ./ssl_metrics_git_commits_loc/create_graph.py -i loc.json -o loc.png -r ssl_metrics_git_commits_loc --loc --dloc --kloc --data
+      - name: Generate Graph
+        run: |
+          python3 ./ssl_metrics_git_commits_loc/main.py -d . -b main -o loc.json
+          python3 ./ssl_metrics_git_commits_loc/create_graph.py -i loc.json -o loc.png -r ssl_metrics_git_commits_loc --loc --dloc --kloc --data
 
-            # - name: Push to GH
-            #     run: |
-            #         git config --global user.name "github-actions[bot]"
-            #         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-            #
-            #         git add -A
-            #         git commit -m "Generate Graphs"
-            #         git push
+# - name: Push to GH
+#     run: |
+#         git config --global user.name "github-actions[bot]"
+#         git config --global user.email "github-actions[bot]@users.noreply.github.com"
+#
+#         git add -A
+#         git commit -m "Generate Graphs"
+#         git push
