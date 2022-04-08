@@ -232,7 +232,7 @@ def main() -> bool:
             commits = list(executor.map(generate_loc_sum, commits, loc_sums))
 
     os.chdir(pwd)
-    exportJSON(args.output, commit_info)
+    exportJSON(args.output, commits)
 
     stop = time.perf_counter()
     print(f'Finished in: {round(stop-start, 2)} sec(s)')
