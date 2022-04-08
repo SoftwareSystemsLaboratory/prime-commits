@@ -1,6 +1,11 @@
 name: Graph on Push
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
 
 jobs:
   generate-graph:
