@@ -49,8 +49,6 @@ class Graph:
     def build(self, *, save=False):
         "builds an axes"
 
-        # https://towardsdatascience.com/clearing-the-confusion-once-and-for-all-fig-ax-plt-subplots-b122bb7783ca
-
         # if job == "all":
         # fig, axs = subplots(2,2)
         # axs[0].plot()
