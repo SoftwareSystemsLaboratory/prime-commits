@@ -1,239 +1,161 @@
-import itertools
 import json
 import os
-from argparse import ArgumentParser
+from argparse import Namespace
 from datetime import datetime
-from functools import reduce
 from os.path import exists, join
 
+import pandas
 from dateutil.parser import parse as dateParse
+from pandas import DataFrame
 from progress.bar import Bar
 
-
-# Command line arguement parsing
-def get_argparse() -> ArgumentParser:
-    parser: ArgumentParser = ArgumentParser(
-        prog="SSL Metrics Git Commits LOC Extraction Utility",
-        usage="Extraction utility to extract statistics from git commits",
-        description="This prgram takes in a git repository and generates a JSON file of statistics derived from git commits",
-        epilog="This utility was developed by Nicholas M. Synovic and George K. Thiruvathukal",
-    )
-    parser.add_argument(
-        "-d",
-        "--directory",
-        help="Directory containing repository root folder (.git)",
-        default=".",
-        type=str,
-        required=True,
-    )
-    parser.add_argument(
-        "-b",
-        "--branch",
-        help="Git branch for analysis to be ran on",
-        default="main",
-        type=str,
-        required=True,
-    )
-    parser.add_argument(
-        "-o",
-        "--output",
-        help="Output analysis to a JSON file",
-        type=str,
-        required=True,
-    )
-    parser.add_argument(
-        "-c",
-        "--cores",
-        help="Number of cores to use for analysis",
-        type=int,
-        required=False,
-        default=1,
-    )
-    return parser
+from ssl_metrics_git_commits_loc.args import mainArgs
 
 
 def repoExists(directory: str = ".") -> bool:
-    if exists(join(directory, ".git")) is False:
-        return False
-    return True
+    return exists(join(directory, ".git"))
 
 
-def parseCommitLineFromLog(line: str) -> dict:
-    splitLine: list = line.split(";")
-    name: str = splitLine[0]
-    email: str = splitLine[1]
-    hash: str = splitLine[2]
-    date = splitLine[-1]
-    return {
-        "author_name": name,
-        "author_email": email,
-        "hash": hash,
-        "date": dateParse(date),
-    }
+def gitCommits() -> list:
+    with os.popen(r'git log --reverse --pretty=format:"%H"') as commits:
+        return [commit.strip() for commit in commits]
 
 
-def analyzeCommits(commits: list, date0: datetime):
-    loc_sum: int = 0
-    commitCounter: int = 0
-    with Bar("Processing commits... ", max=len(commits) - 1) as ib:
-        for index in range(len(commits) - 1):
-            authorName: str = commits[index]["author_name"]
-            authorEmail: str = commits[index]["author_email"]
-            hashX: str = commits[index]["hash"]
-            hashY: str = commits[index + 1]["hash"]
-            commitDate: str = commits[index]["date"].strftime("%m/%d/%Y")
-            dateY: datetime = commits[index + 1]["date"]
-
-            gdf: dict = gitDiffTree(hashX, hashY)
-
-            loc = map(lambda info: info["loc"], gdf)
-
-            delta_sum = reduce(lambda x, y: x + y, loc, 0)
-
-            loc_sum += delta_sum
-            commit_day = (dateY - date0).days
-            result = {
-                "commit_number": commitCounter,
-                "author_name": authorName,
-                "author_email": authorEmail,
-                "hash": hashY,
-                "delta_loc": delta_sum,
-                "loc_sum": loc_sum,
-                "kloc": float(loc_sum / 1000),
-                "commit_date": commitDate,
-                "days_since_0": commit_day,
-            }
-
-            commitCounter += 1
-            ib.next()
-            yield result
+def commitMetadata(commit: str) -> list:
+    info: os._wrap_close
+    with os.popen(
+        rf'git log {commit} -1 --pretty=format:"%H;%an;%ae;%as;%at;%cn;%ce;%cs;%ct"'
+    ) as info:
+        return info.read().split(";")
 
 
-def gitDiffTree(hashX: str, hashY: str) -> dict:
-    # git diff help page: https://www.git-scm.com/docs/git-diff
-    with os.popen(f"git diff-tree -r {hashX} {hashY}") as diffTreePipe:
-        for line in diffTreePipe:
+def commitLOC(commit: str, options: str = "", processes: int = 0) -> list:
+    if options == "":
+        command: str = rf"cloc --git {commit} --use-sloccount --processes {processes} --json 2>/dev/null | jq .SUM"
+    else:
+        command: str = rf"cloc --git {commit} --use-sloccount --config {options} --processes {processes} --json 2>/dev/null | jq .SUM"
 
-            lineInfo: dict = parseDiffTreeLine(line)
+    info: os._wrap_close
+    with os.popen(command) as info:
+        data: dict = json.load(info)
+        return data.values()
 
-            lineStatus: str = lineInfo.get("status")
-            if lineStatus == "A":
-                addLines(lineInfo)
-            elif lineStatus == "D":
-                deleteLines(lineInfo)
-            elif lineStatus == "M":
-                deltaLines(lineInfo)
-            else:
-                continue
-            yield lineInfo
-
-
-def parseDiffTreeLine(line: str) -> dict:
-    tokens: list = line.split()
-    try:
-        (dstMode, sha1Src, sha1Dst, status, srcPath) = tokens[1:6]
-    except ValueError:
-        return {}
-    return {
-        "dstMode": dstMode,
-        "sha1Src": sha1Src,
-        "sha1Dst": sha1Dst,
-        "status": status,
-        "srcPath": srcPath,
-    }
-
-
-def addLines(line: dict) -> None:
-    line["loc"] = countFileLines(line["sha1Dst"])
-
-
-def deleteLines(line: dict) -> None:
-    line["loc"] = -countFileLines(line["sha1Src"])
-
-
-def deltaLines(line: dict) -> None:
-    loc_before = countFileLines(line["sha1Src"])
-    loc_after = countFileLines(line["sha1Dst"])
-    line["loc"] = loc_after - loc_before
-
-
-# TODO: Could replace this with cloc; make parametric
-def countFileLines(blobHash: str):
-    # Git show help page: https://www.git-scm.com/docs/git-show
-    # wc help page: https://linux.die.net/man/1/wc
-    with os.popen(f"git show {blobHash} | wc -l") as data:
-        return int(data.read().split()[0])
-    return -1
-
-
-def exportJSON(filename, commitInfo):
-    with open(filename, "w") as jsonf:
-        json.dump(commitInfo, jsonf, indent=4)
-
-
-def pairwise(
-    iterable,
-    coreCount: int,
-    maxValue: int,
-) -> list:
+def commitsDiff(commit1: str, commit2: str, str = "", processes: int = 0)  ->  list:
     data: list = []
-    a, b = itertools.tee(iterable)
-    next(b, None)
+    command: str = rf"cloc --git --diff {commit1} {commit2} --processes {processes} --json 2>/dev/null | jq .SUM"
 
-    x: tuple
-    for x in zip(a, b):
-        temp: list = [x[0], x[1]]
-        if temp[0] == 0:
-            pass
-        else:
-            temp[0] += 1
-        data.append(temp)
+    info: os._wrap_close
+    with os.popen(command) as info:
+        try:
+            output: dict = json.load(info)
+            keys: list = output.keys()
 
-    if len(data) < coreCount:
-        data.append([data[-1][1] + 1, maxValue])
-        print(data)
+            key: str
+            for key in keys:
+                data.extend(output[key].values())
+        except json.JSONDecodeError as e:
+            data: list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        return data
 
-    if data[-1][1] != maxValue:
-        data[-1][1] = maxValue
 
-    return data
+def commitsDelta(newLOC: list, oldLOC: list) -> list:
+    return [a - b for a, b in zip(newLOC, oldLOC)]
 
 
 def main() -> bool:
     pwd = os.getcwd()
-    args = get_argparse().parse_args()
+    args: Namespace = mainArgs()
 
     if repoExists(directory=args.directory) is False:
+        print(f"Invalid Git repository directory: {args.directory}")
         return False
 
     os.chdir(args.directory)
-    os.system(f"git checkout {args.branch}")
+    os.system(f"git checkout {args.branch} --quiet")
 
-    # Git log help page: https://www.git-scm.com/docs/git-log
-    with os.popen(r'git log --reverse --pretty=format:"%an;%ae;%H;%ci"') as gitLogPipe:
-        commits: list = [parseCommitLineFromLog(line=commit) for commit in gitLogPipe]
+    df: DataFrame = DataFrame(
+        columns=[
+            "commit_hash",
+            "author_name",
+            "author_email",
+            "author_date",
+            "author_date_unix",
+            "committer_name",
+            "committer_email",
+            "committer_date",
+            "committer_date_unix",
+            "lines_of_blanks",
+            "lines_of_comments",
+            "lines_of_code",
+            "number_of_files",
+            "added_lines_of_code",
+            "added_number_of_files",
+            "added_lines_of_blanks",
+            "added_lines_of_comments",
+            "same_lines_of_code",
+            "same_number_of_files",
+            "same_lines_of_blanks",
+            "same_lines_of_comments",
+            "modified_lines_of_code",
+            "modified_number_of_files",
+            "modified_lines_of_blanks",
+            "modified_lines_of_comments",
+            "removed_lines_of_code",
+            "removed_number_of_files",
+            "removed_lines_of_blanks",
+            "removed_lines_of_comments",
+            "delta_lines_of_blanks",
+            "delta_lines_of_comments",
+            "delta_lines_of_code",
+            "delta_number_of_files",
+            "author_days_since_0",
+            "committer_days_since_0",
+        ]
+    )
 
-        commit0AuthorName: str = commits[0]["author_name"]
-        commit0AuthorEmail: str = commits[0]["author_email"]
-        commit0Date: datetime = commits[0]["date"]
-        commits = [
-            {
-                "author_name": commit0AuthorName,
-                "author_email": commit0AuthorEmail,
-                "hash": "--root",
-                "date": commit0Date,
-            }
-        ] + commits
+    commits: list = gitCommits()
 
-        commit_info_iter = analyzeCommits(commits=commits, date0=commits[0]["date"])
-        commit_info = list(commit_info_iter)
-        delta_loc_iter = map(lambda info: info["delta_loc"], commit_info)
-        loc_sum = reduce(lambda x, y: x + y, delta_loc_iter, 0)
+    with Bar("Getting data from commits...", max=len(commits)) as bar:
+        previousLOC: list = []
+        c: int
+        for c in range(len(commits)):
+            data: list = commitMetadata(commit=commits[c])
+            loc: list = commitLOC(commits[c], options=args.cloc, processes=args.processes)
 
-    if args.output:
-        exportJSON(join(pwd, args.output), commit_info)
+            if c == 0:
+                authorDay0: datetime = dateParse(data[3]).replace(tzinfo=None)
+                committerDay0: datetime = dateParse(data[7]).replace(tzinfo=None)
 
-    os.chdir(pwd)
+                diff: list = []
+                diff.extend(loc)
+                diff.extend([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+
+                delta: list = loc
+            else:
+                diff: list = commitsDiff(commit1=commits[c], commit2=commits[c-1])
+                delta = commitsDelta(loc, previousLOC)
+
+            data.extend(loc)
+            data.extend(diff)
+            data.extend(delta)
+
+            authorDateDifference: int = (
+                dateParse(data[3]).replace(tzinfo=None) - authorDay0
+            ).days
+            committerDateDifference: int = (
+                dateParse(data[7]).replace(tzinfo=None) - committerDay0
+            ).days
+
+            data.append(authorDateDifference)
+            data.append(committerDateDifference)
+
+            df.loc[len(df.index)] = data
+
+            previousLOC = loc
+
+            bar.next()
+
+    df.T.to_json(join(pwd, args.output))
     return True
 
 

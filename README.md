@@ -5,7 +5,7 @@
 ![[https://img.shields.io/badge/python-3.9.6%20%7C%203.10-blue](https://img.shields.io/badge/python-3.9.6%20%7C%203.10-blue)](https://img.shields.io/badge/python-3.9.6%20%7C%203.10-blue)
 [![DOI](https://zenodo.org/badge/374020358.svg)](https://zenodo.org/badge/latestdoi/374020358)
 [![Release Project](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/release.yml)
-![[https://img.shields.io/badge/license-BSD--3-yellow](https://img.shields.io/badge/license-BSD--3-yellow)](https://img.shields.io/badge/license-BSD--3-yellow)
+[![https://img.shields.io/badge/license-BSD--3-yellow](https://img.shields.io/badge/license-BSD--3-yellow)](LICENSE)
 
 ## Table of Contents
 
@@ -14,6 +14,7 @@
   - [About](#about)
   - [Developer Tooling](#developer-tooling)
     - [Operating System](#operating-system)
+    - [Python Tools](#python-tools)
     - [Shell Tools](#shell-tools)
   - [How To Use](#how-to-use)
     - [Installation](#installation)
@@ -35,12 +36,23 @@ All tools developed for the greater SSL Metrics project **must target** Mac OS a
 
 It is recomendded to develop on Mac OS or Linux. However, if you are on a Windows machine, you can use WSL to develop as well.
 
+### Python Tools
+
+- `matplotlib`
+- `numpy`
+- `pandas`
+- `progress`
+- `python-dateutil`
+- `scikit-learn`
+
 ### Shell Tools
 
 You will need the following shell software to run this application:
 
 - `git`
-- `wc`
+- `cloc`
+- `SLOCCount` (optional)
+- `jq`
 
 ## How To Use
 
@@ -59,13 +71,17 @@ You can install the tool via `pip` with either of the two following one-liners:
 options:
   -h, --help            show this help message and exit
   -d DIRECTORY, --directory DIRECTORY
-                        Directory containing repository root folder (.git)
+                        Directory containg the .git folder of the repository
+                        to analyze
   -b BRANCH, --branch BRANCH
-                        Git branch for analysis to be ran on
+                        Branch of the Git repository to analyze. DEFAULT: HEAD
   -o OUTPUT, --output OUTPUT
-                        Output analysis to a JSON file
-  -c CORES, --cores CORES
-                        Number of cores to use for analysis
+                        JSON file to store the data. DEFAULT:
+                        ./commits_loc.json
+  --cloc CLOC           TXT file containing cloc options. DEFAULT:
+                        options.txt. NOTE: This is an internal options file
+                        used by the program and doesn't need to be specified/
+                        created by you the user (you)
 ```
 
 `ssl-metrics-git-commits-loc-graph -h`
@@ -74,27 +90,22 @@ options:
 options:
   -h, --help            show this help message and exit
   -i INPUT, --input INPUT
-                        The input data file that will be read to create the graphs
+                        JSON export from CLIME Git Commit Exploder. DEFAULT:
+                        ./commits_loc.json
   -o OUTPUT, --output OUTPUT
-                        The filename to output the graph to
-  -r REPOSITORY_NAME, --repository-name REPOSITORY_NAME
-                        Name of the repository that is being analyzed. Will be used in the graph title
-  --loc                 Utilize LOC data
-  --dloc                Utilize Delta LOC data
-  --kloc                Utilize KLOC data
-  --graph-data          Graph the raw data. Discrete graph of the data
-  --graph-best-fit      Graph the best fit polynomial of the data. Continous graph of the data. Polynomial degrees can be configured with
-                        `-m`
-  --graph-velocity      Graph the velocity of the data. Computes the best fit polynomial and takes the first derivitve. Polynomial degrees
-                        can be configured with `-m`
-  --graph-acceleration  Graph the acceleration of the data. Computes the best fit polynomial and takes the second derivitve. Polynomial
-                        degrees can be configured with `-m`
-  --graph-all           Graphs all possible figures of the data onto one chart. Computes the best fit polynomial and takes the first and
-                        second derivitve. Polynomial degrees can be configured with `-m`
-  --x-min X_MIN         The smallest x value that will be plotted
-  --x-max X_MAX         The largest x value that will be plotted
-  -m MAXIMUM_POLYNOMIAL_DEGREE, --maximum-polynomial-degree MAXIMUM_POLYNOMIAL_DEGREE
-                        Estimated maximum degree of the best fit polynomial
-  -s STEPPER, --stepper STEPPER
-                        Step through every nth data point
+                        Filename of the graph. DEFAULT: ./commits_loc.pdf
+  -x X                  Key of the x values to use for graphing. DEFAULT:
+                        author_days_since_0
+  -y Y                  Key of the y values to use for graphing. DEFAULT:
+                        lines_of_code
+  --y-thousandths       Flag to divide the y values by 1000
+  --type TYPE           Type of figure to plot. DEFAULT: line
+  --title TITLE         Title of the figure. DEFAULT: ""
+  --x-label X_LABEL     X axis label of the figure. DEFAULT: ""
+  --y-label Y_LABEL     Y axis label of the figure. DEFAULT: ""
+  --stylesheet STYLESHEET
+                        Filepath of matplotlib stylesheet to use. DEFAULT:
+                        style.mplstyle. NOTE: This is an internal stylesheet
+                        used by the program and doesn't need to be specified/
+                        created by you the user (you)
 ```

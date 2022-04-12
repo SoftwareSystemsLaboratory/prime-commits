@@ -135,5 +135,4 @@ dmypy.json
 
 !.zenodo.json
 
-!examples/json/*.json
-!examples/images/*.png
+*.bash

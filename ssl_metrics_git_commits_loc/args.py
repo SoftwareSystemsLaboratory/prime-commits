@@ -1,135 +1,136 @@
-"handles arguments recieved by create_graph.py"
-
 from argparse import ArgumentParser, Namespace
 
+name: str = "CLIME"
+authors: list = ["Nicholas M. Synovic", "Matthew Hyatt", "George K. Thiruvathukal"]
 
-def get_graph_args() -> Namespace:
-    """
-    returns arguments for create_graph.py
-    """
-    
-    authors = ["Nicholas M. Synovic", "Matthew Hyatt"]
+
+def mainArgs() -> Namespace:
     parser: ArgumentParser = ArgumentParser(
-        prog="SSL Metrics Git Commits LOC Graphing Utility",
-        usage="Graphing utility to visualize statistics from the SSL Metrics Git Commits LOC Extraction Utility",
-        description="This prgram takes in a JSON file of values extracted from a git repository with ssl-metrics-git-commits-loc and generates graph based off of that information",
-        epilog=f"This utility was developed by {', '.join(authors)}",
+        prog=f"{name} Git Commit LOC Exploder",
+        description="A tool to extract all LOC information from a single branch of a Git repository on a per commit basis",
+        epilog=f"Author(s): {', '.join(authors)}",
+    )
+
+    parser.add_argument(
+        "-d",
+        "--directory",
+        help="Directory containg the .git folder of the repository to analyze",
+        type=str,
+        required=False,
+        default=".",
     )
     parser.add_argument(
-        "-i",
-        "--input",
-        help="The input data file that will be read to create the graphs",
+        "-b",
+        "--branch",
+        help="Branch of the Git repository to analyze. DEFAULT: HEAD",
         type=str,
-        required=True,
+        required=False,
+        default="HEAD",
     )
     parser.add_argument(
         "-o",
         "--output",
-        help="The filename to output the graph to",
+        help="JSON file to store the data. DEFAULT: ./commits_loc.json",
         type=str,
-        required=True,
+        required=False,
+        default="commits_loc.json",
     )
     parser.add_argument(
-        "-r",
-        "--repository-name",
-        help="Name of the repository that is being analyzed. Will be used in the graph title",
+        "--cloc",
+        help='TXT file containing cloc options. DEFAULT: ""',
         type=str,
-        required=True,
-    )
-    parser.add_argument(
-        "--loc", help="Utilize LOC data", required=False, action="store_true"
-    )
-    parser.add_argument(
-        "--dloc", help="Utilize Delta LOC data", required=False, action="store_true"
-    )
-    parser.add_argument(
-        "--kloc", help="Utilize KLOC data", required=False, action="store_true"
-    )
-    parser.add_argument(
-        "--data",
-        help="Graph the raw data. Discrete graph of the data",
         required=False,
-        action="store_true",
+        default="",
     )
     parser.add_argument(
-        "--best-fit",
-        help="Graph the best fit polynomial of the data. Continous graph of the data. Polynomial degrees can be configured with `-m`",
-        required=False,
-        action="store_true",
-    )
-    parser.add_argument(
-        "--velocity",
-        help="Graph the velocity of the data. Computes the best fit polynomial and takes the first derivitve. Polynomial degrees can be configured with `-m`",
-        required=False,
-        action="store_true",
-    )
-    parser.add_argument(
-        "--acceleration",
-        help="Graph the acceleration of the data. Computes the best fit polynomial and takes the second derivitve. Polynomial degrees can be configured with `-m`",
-        required=False,
-        action="store_true",
-    )
-    parser.add_argument(
-        "--x-min",
-        help="The smallest x value that will be plotted",
+        "--processes",
+        help="Number of processes cloc should use. DEFAULT: 0",
         type=int,
         required=False,
         default=0,
     )
-    parser.add_argument(
-        "--x-max",
-        help="The largest x value that will be plotted",
-        type=int,
-        required=False,
-        default=-1,
-    )
-    parser.add_argument(
-        "-m",
-        "--maximum-polynomial-degree",
-        help="Estimated maximum degree of the best fit polynomial",
-        type=int,
-        required=False,
-        default=15,
-    )
-    parser.add_argument(
-        "-s",
-        "--stepper",
-        help="Step through every nth data point",
-        type=int,
-        required=False,
-        default=1,
-    )
+
     return parser.parse_args()
 
 
-def check_args(args):
-    """
-    ensures that arguments are formatted properly
-    else quit
-    """
+def graphArgs() -> Namespace:
+    parser: ArgumentParser = ArgumentParser(
+        prog=f"{name} Git Commit LOC Exploder Grapher",
+        description=f"A tool for graphing LOC information from the output of the {name} Commit LOC Exploder",
+        epilog=f"Author(s): {', '.join(authors)}",
+    )
 
-    if args.input[-5::] != ".json":
-        print("Invalid input file type. Input file must be JSON")
-        quit(1)
+    parser.add_argument(
+        "-i",
+        "--input",
+        help=f"JSON export from {name} Git Commit Exploder. DEFAULT: ./commits_loc.json",
+        type=str,
+        required=False,
+        default="commits_loc.json",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        help="Filename of the graph. DEFAULT: ./commits_loc.pdf",
+        type=str,
+        required=False,
+        default="commits_loc.pdf",
+    )
+    parser.add_argument(
+        "-x",
+        help="Key of the x values to use for graphing. DEFAULT: author_days_since_0",
+        type=str,
+        required=False,
+        default="author_days_since_0",
+    )
+    parser.add_argument(
+        "-y",
+        help="Key of the y values to use for graphing. DEFAULT: lines_of_code",
+        type=str,
+        required=False,
+        default="lines_of_code",
+    )
+    parser.add_argument(
+        "--y-thousandths",
+        help="Flag to divide the y values by 1000",
+        action="store_true",
+        required=False,
+        default=False,
+    )
+    parser.add_argument(
+        "--type",
+        help="Type of figure to plot. DEFAULT: line",
+        type=str,
+        required=False,
+        default="line",
+    )
+    parser.add_argument(
+        "--title",
+        help='Title of the figure. DEFAULT: ""',
+        type=str,
+        required=False,
+        default="",
+    )
+    parser.add_argument(
+        "--x-label",
+        help='X axis label of the figure. DEFAULT: ""',
+        type=str,
+        required=False,
+        default="",
+    )
+    parser.add_argument(
+        "--y-label",
+        help='Y axis label of the figure. DEFAULT: ""',
+        type=str,
+        required=False,
+        default="",
+    )
+    parser.add_argument(
+        "--stylesheet",
+        help='Filepath of matplotlib stylesheet to use. DEFAULT: ""',
+        type=str,
+        required=False,
+        default="",
+    )
 
-    if args.x_min < 0:
-        print("Invalid x window min. X window min >= 0")
-        quit(2)
-
-    if args.maximum_polynomial_degree < 1:
-        print(
-            "The maximum degree polynomial is too small. Maximum degree polynomial >= 1"
-        )
-        quit(3)
-
-    if args.stepper < 1:
-        print("The stepper is too small. Stepper >= 1")
-        quit(4)
-
-    if not any([args.loc, args.dloc, args.kloc]):
-        print("No data option choosen. Defaulting to --loc")
-        args.loc = True
-
-    if not any([args.data, args.best_fit, args.velocity, args.acceleration]):
-        print("No graph option choosen. Defaulting to --data")
-        args.data = True
+    return parser.parse_args()
