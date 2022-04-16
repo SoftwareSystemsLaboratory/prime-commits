@@ -31,9 +31,9 @@ def commitMetadata(commit: str) -> list:
 
 def commitLOC(commit: str, options: str = "", processes: int = 0) -> list:
     if options == "":
-        command: str = rf"cloc --git {commit} --use-sloccount --processes {processes} --json 2>/dev/null | jq .SUM"
+        command: str = rf"cloc --git {commit} --use-sloccount --processes {processes} --json 2>/dev/null | jq .SUM 2>/dev/null"
     else:
-        command: str = rf"cloc --git {commit} --use-sloccount --config {options} --processes {processes} --json 2>/dev/null | jq .SUM"
+        command: str = rf"cloc --git {commit} --use-sloccount --config {options} --processes {processes} --json 2>/dev/null | jq .SUM 2>/dev/null"
 
     info: os._wrap_close
     with os.popen(command) as info:
@@ -42,7 +42,7 @@ def commitLOC(commit: str, options: str = "", processes: int = 0) -> list:
 
 def commitsDiff(commit1: str, commit2: str, str = "", processes: int = 0)  ->  list:
     data: list = []
-    command: str = rf"cloc --git --diff {commit1} {commit2} --processes {processes} --json 2>/dev/null | jq .SUM"
+    command: str = rf"cloc --git --diff {commit1} {commit2} --processes {processes} --json 2>/dev/null | jq .SUM 2>/dev/null"
 
     info: os._wrap_close
     with os.popen(command) as info:
