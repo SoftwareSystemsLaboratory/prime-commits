@@ -137,3 +137,4 @@ dmypy.json
 
 *.bash
 test/
+log.txt
