@@ -31,13 +31,17 @@ def commitMetadata(commit: str) -> list:
 
 def commitLOC(commit: str, options: str = "", processes: int = 0) -> list:
     if options == "":
-        command: str = rf"cloc --git {commit} --use-sloccount --processes {processes} --json 2>/dev/null | jq .SUM 2>/dev/null"
+        command: str = rf"cloc --git {commit} --use-sloccount --processes {processes} --json 2>/dev/null"
     else:
-        command: str = rf"cloc --git {commit} --use-sloccount --config {options} --processes {processes} --json 2>/dev/null | jq .SUM 2>/dev/null"
+        command: str = rf"cloc --git {commit} --use-sloccount --config {options} --processes {processes} --json 2>/dev/null"
 
     info: os._wrap_close
     with os.popen(command) as info:
         data: dict = json.load(info)
+        # We want the SUM
+        print(data)
+        quit()
+
         return data.values()
 
 def commitsDiff(commit1: str, commit2: str, str = "", processes: int = 0)  ->  list:
