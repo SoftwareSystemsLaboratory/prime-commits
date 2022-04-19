@@ -4,7 +4,6 @@ from argparse import Namespace
 from datetime import datetime
 from os.path import exists, join
 
-import pandas
 from dateutil.parser import parse as dateParse
 from pandas import DataFrame
 from progress.bar import Bar
@@ -29,7 +28,7 @@ def commitMetadata(commit: str) -> list:
         return info.read().split(";")
 
 
-def commitLOC(commit: str, options: str = "", processes: int = 0) -> DataFrame:
+def commitLOC(commit: str, options: str = "", processes: int = 0) -> list:
     if options == "":
         command: str = rf"cloc --git {commit} --use-sloccount --processes {processes} --json 2>/dev/null"
     else:
@@ -39,25 +38,28 @@ def commitLOC(commit: str, options: str = "", processes: int = 0) -> DataFrame:
     with os.popen(command) as info:
         data: dict = json.load(info)
         df: DataFrame = DataFrame(data)
-        return df
+        return df["SUM"].dropna().sort_index().to_list()
+        # Order of output [blanks, code, comments, nfiles]
 
 def commitsDiff(commit1: str, commit2: str, str = "", processes: int = 0)  ->  list:
-    data: list = []
-    command: str = rf"cloc --git --diff {commit1} {commit2} --processes {processes} --json 2>/dev/null | jq .SUM 2>/dev/null"
+    output: list = []
+    command: str = rf"cloc --git --diff {commit1} {commit2} --processes {processes} --json 2>/dev/null"
 
     info: os._wrap_close
     with os.popen(command) as info:
         try:
-            output: dict = json.load(info)
-            keys: list = output.keys()
-
-            key: str
-            for key in keys:
-                data.extend(output[key].values())
+            data: dict = json.load(info)
         except json.JSONDecodeError as e:
-            data: list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        return data
-
+            print(f"\nERROR: Couldn't convert to JSON between commits {commit1} and {commit2}")
+            return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        df: DataFrame = DataFrame(data["SUM"])
+        output.extend(df["added"].dropna().sort_index().to_list())
+        output.extend(df["same"].dropna().sort_index().to_list())
+        output.extend(df["modified"].dropna().sort_index().to_list())
+        output.extend(df["removed"].dropna().sort_index().to_list())
+        return output
+        # Order of keys [added, same, modified, removed]
+        # Order of output [blanks, code, comments, nfiles]
 
 def commitsDelta(newLOC: list, oldLOC: list) -> list:
     return [a - b for a, b in zip(newLOC, oldLOC)]
@@ -86,29 +88,35 @@ def main() -> bool:
             "committer_date",
             "committer_date_unix",
             "lines_of_blanks",
-            "lines_of_comments",
             "lines_of_code",
+            "lines_of_comments",
             "number_of_files",
-            "added_lines_of_code",
-            "added_number_of_files",
+
             "added_lines_of_blanks",
+            "added_lines_of_code",
             "added_lines_of_comments",
-            "same_lines_of_code",
-            "same_number_of_files",
+            "added_number_of_files",
+
             "same_lines_of_blanks",
+            "same_lines_of_code",
             "same_lines_of_comments",
-            "modified_lines_of_code",
-            "modified_number_of_files",
+            "same_number_of_files",
+
             "modified_lines_of_blanks",
+            "modified_lines_of_code",
             "modified_lines_of_comments",
-            "removed_lines_of_code",
-            "removed_number_of_files",
+            "modified_number_of_files",
+
             "removed_lines_of_blanks",
+            "removed_lines_of_code",
             "removed_lines_of_comments",
+            "removed_number_of_files",
+
             "delta_lines_of_blanks",
-            "delta_lines_of_comments",
             "delta_lines_of_code",
+            "delta_lines_of_comments",
             "delta_number_of_files",
+
             "author_days_since_0",
             "committer_days_since_0",
         ]
