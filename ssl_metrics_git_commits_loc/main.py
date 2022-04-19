@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from argparse import Namespace
 from datetime import datetime
@@ -9,7 +10,6 @@ from pandas import DataFrame
 from progress.bar import Bar
 
 from ssl_metrics_git_commits_loc.args import mainArgs
-
 
 def repoExists(directory: str = ".") -> bool:
     return exists(join(directory, ".git"))
@@ -72,6 +72,8 @@ def commitsDelta(newLOC: list, oldLOC: list) -> list:
 def main() -> bool:
     pwd = os.getcwd()
     args: Namespace = mainArgs()
+
+    logging.basicConfig(level=logging.DEBUG, filename=args.log, filemode="a", format='%(process)d-%(asctime)s-%(levelname)s: %(message)s')
 
     if repoExists(directory=args.directory) is False:
         print(f"Invalid Git repository directory: {args.directory}")
