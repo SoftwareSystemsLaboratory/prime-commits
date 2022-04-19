@@ -41,7 +41,8 @@ def commitLOC(commit: str, options: str = "", processes: int = 0) -> list:
         return df["SUM"].dropna().sort_index().to_list()
         # Order of output [blanks, code, comments, nfiles]
 
-def commitsDiff(commit1: str, commit2: str, str = "", processes: int = 0)  ->  list:
+
+def commitsDiff(commit1: str, commit2: str, str="", processes: int = 0) -> list:
     output: list = []
     command: str = rf"cloc --git --diff {commit1} {commit2} --processes {processes} --json 2>/dev/null"
 
@@ -50,7 +51,9 @@ def commitsDiff(commit1: str, commit2: str, str = "", processes: int = 0)  ->  l
         try:
             data: dict = json.load(info)
         except json.JSONDecodeError as e:
-            print(f"\nERROR: Couldn't convert to JSON between commits {commit1} and {commit2}")
+            print(
+                f"\nERROR: Couldn't convert to JSON between commits {commit1} and {commit2}"
+            )
             return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         df: DataFrame = DataFrame(data["SUM"])
         output.extend(df["added"].dropna().sort_index().to_list())
@@ -60,6 +63,7 @@ def commitsDiff(commit1: str, commit2: str, str = "", processes: int = 0)  ->  l
         return output
         # Order of keys [added, same, modified, removed]
         # Order of output [blanks, code, comments, nfiles]
+
 
 def commitsDelta(newLOC: list, oldLOC: list) -> list:
     return [a - b for a, b in zip(newLOC, oldLOC)]
@@ -91,32 +95,26 @@ def main() -> bool:
             "lines_of_code",
             "lines_of_comments",
             "number_of_files",
-
             "added_lines_of_blanks",
             "added_lines_of_code",
             "added_lines_of_comments",
             "added_number_of_files",
-
             "same_lines_of_blanks",
             "same_lines_of_code",
             "same_lines_of_comments",
             "same_number_of_files",
-
             "modified_lines_of_blanks",
             "modified_lines_of_code",
             "modified_lines_of_comments",
             "modified_number_of_files",
-
             "removed_lines_of_blanks",
             "removed_lines_of_code",
             "removed_lines_of_comments",
             "removed_number_of_files",
-
             "delta_lines_of_blanks",
             "delta_lines_of_code",
             "delta_lines_of_comments",
             "delta_number_of_files",
-
             "author_days_since_0",
             "committer_days_since_0",
         ]
@@ -129,7 +127,9 @@ def main() -> bool:
         c: int
         for c in range(len(commits)):
             data: list = commitMetadata(commit=commits[c])
-            loc: list = commitLOC(commits[c], options=args.cloc, processes=args.processes)
+            loc: list = commitLOC(
+                commits[c], options=args.cloc, processes=args.processes
+            )
 
             if c == 0:
                 authorDay0: datetime = dateParse(data[3]).replace(tzinfo=None)
@@ -141,7 +141,7 @@ def main() -> bool:
 
                 delta: list = loc
             else:
-                diff: list = commitsDiff(commit1=commits[c], commit2=commits[c-1])
+                diff: list = commitsDiff(commit1=commits[c], commit2=commits[c - 1])
                 delta = commitsDelta(loc, previousLOC)
 
             data.extend(loc)
