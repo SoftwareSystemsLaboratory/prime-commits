@@ -54,7 +54,7 @@ def mainArgs() -> Namespace:
         help="Log file to store logging information to. DEFAULT: log.txt",
         type=str,
         required=False,
-        default="log.txt",
+        default="log.log",
     )
 
     return parser.parse_args()
