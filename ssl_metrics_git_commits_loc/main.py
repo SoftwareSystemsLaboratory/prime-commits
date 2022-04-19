@@ -29,7 +29,7 @@ def commitMetadata(commit: str) -> list:
         return info.read().split(";")
 
 
-def commitLOC(commit: str, options: str = "", processes: int = 0) -> list:
+def commitLOC(commit: str, options: str = "", processes: int = 0) -> DataFrame:
     if options == "":
         command: str = rf"cloc --git {commit} --use-sloccount --processes {processes} --json 2>/dev/null"
     else:
@@ -38,11 +38,8 @@ def commitLOC(commit: str, options: str = "", processes: int = 0) -> list:
     info: os._wrap_close
     with os.popen(command) as info:
         data: dict = json.load(info)
-        # We want the SUM
-        print(data)
-        quit()
-
-        return data.values()
+        df: DataFrame = DataFrame(data)
+        return df
 
 def commitsDiff(commit1: str, commit2: str, str = "", processes: int = 0)  ->  list:
     data: list = []
