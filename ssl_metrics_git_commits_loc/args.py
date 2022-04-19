@@ -49,6 +49,13 @@ def mainArgs() -> Namespace:
         required=False,
         default=0,
     )
+    parser.add_argument(
+        "--log",
+        help="Log file to store logging information to. DEFAULT: log.txt",
+        type=str,
+        required=False,
+        default="log.log",
+    )
 
     return parser.parse_args()
 

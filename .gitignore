@@ -136,3 +136,5 @@ dmypy.json
 !.zenodo.json
 
 *.bash
+test/
+log.txt
