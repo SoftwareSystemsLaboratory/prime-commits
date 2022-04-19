@@ -1,0 +1,565 @@
+8845-2022-04-19 12:23:18,650-INFO: Started logging...
+8845-2022-04-19 12:23:18,650-DEBUG: test/ has a .git folder
+8845-2022-04-19 12:23:18,652-INFO: Checked out Git branch HEAD
+8845-2022-04-19 12:23:18,654-DEBUG: List of commits from Git repository: ['8f8ebd069e6fa641451a015cc9b8ddf85d3403d0', 'f523b8ccf825e6f83a91a4e4c516fee532f72fd1', '4506a4702ae34f60440ae3746a31e449c89184b5', '64a4cce985a739b5a47512a276ad2bb7fe7a2c1e', 'f60d79a9a4275c98e8e586d0fc91176aa4c50034', 'aa14e10a94d0a7c3f79d6b29b9687e889c49327e', '8b94011f0bfa1da35f6833d65c2b060e49b11ce2', 'f02338d277c1646767377b3428d363385ea7c17b', '50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263', '41d14cd9648a4975f1a0bc1bf981080887be14ab', '14480ce17b3284c3a80ed9efdbbdb5412d183e43', '5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48', 'ca4899cdbec7f825be269d9ff9fb8f8d61144431', '89ab86e67f8df440d614d1da66b5feba9ad2c793', 'f413c1cd6e4fd34a9c371d947b431d3e5212832e']
+8845-2022-04-19 12:23:18,654-INFO: Started iterating through commits
+
+8845-2022-04-19 12:23:18,654-INFO: On commit 0: (8f8ebd069e6fa641451a015cc9b8ddf85d3403d0)
+8845-2022-04-19 12:23:18,656-INFO: 8f8ebd069e6fa641451a015cc9b8ddf85d3403d0 information:
+8f8ebd069e6fa641451a015cc9b8ddf85d3403d0;Nicholas Synovic;26028870+NicholasSynovic@users.noreply.github.com;2021-09-28;1632870275;Nicholas Synovic;26028870+NicholasSynovic@users.noreply.github.com;2021-09-28;1632870275
+8845-2022-04-19 12:23:18,784-INFO: Commit 8f8ebd069e6fa641451a015cc9b8ddf85d3403d0 cloc information:
+blank       38.0
+code       161.0
+comment      1.0
+nFiles       6.0
+Name: SUM, dtype: float64
+8845-2022-04-19 12:23:18,784-DEBUG: Series to list conversion for commit 8f8ebd069e6fa641451a015cc9b8ddf85d3403d0: [38.0, 161.0, 1.0, 6.0]
+8845-2022-04-19 12:23:18,784-INFO: Output should be in order: [blanks, code, comments, nfiles]
+8845-2022-04-19 12:23:18,785-INFO: End of commit 0: 8f8ebd069e6fa641451a015cc9b8ddf85d3403d0
+
+8845-2022-04-19 12:23:18,785-INFO: On commit 1: (f523b8ccf825e6f83a91a4e4c516fee532f72fd1)
+8845-2022-04-19 12:23:18,787-INFO: f523b8ccf825e6f83a91a4e4c516fee532f72fd1 information:
+f523b8ccf825e6f83a91a4e4c516fee532f72fd1;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632870371;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632870371
+8845-2022-04-19 12:23:18,916-INFO: Commit f523b8ccf825e6f83a91a4e4c516fee532f72fd1 cloc information:
+blank       38.0
+code       161.0
+comment      1.0
+nFiles       6.0
+Name: SUM, dtype: float64
+8845-2022-04-19 12:23:18,916-DEBUG: Series to list conversion for commit f523b8ccf825e6f83a91a4e4c516fee532f72fd1: [38.0, 161.0, 1.0, 6.0]
+8845-2022-04-19 12:23:18,916-INFO: Output should be in order: [blanks, code, comments, nfiles]
+8845-2022-04-19 12:23:19,047-DEBUG: Added diff between commits f523b8ccf825e6f83a91a4e4c516fee532f72fd1 and 8f8ebd069e6fa641451a015cc9b8ddf85d3403d0:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: added, dtype: int64
+8845-2022-04-19 12:23:19,047-DEBUG: Same diff between commits f523b8ccf825e6f83a91a4e4c516fee532f72fd1 and 8f8ebd069e6fa641451a015cc9b8ddf85d3403d0:
+blank       7
+code       24
+comment     0
+nFiles      3
+Name: same, dtype: int64
+8845-2022-04-19 12:23:19,047-DEBUG: Modified diff between commits f523b8ccf825e6f83a91a4e4c516fee532f72fd1 and 8f8ebd069e6fa641451a015cc9b8ddf85d3403d0:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: modified, dtype: int64
+8845-2022-04-19 12:23:19,047-DEBUG: Removed diff between commits f523b8ccf825e6f83a91a4e4c516fee532f72fd1 and 8f8ebd069e6fa641451a015cc9b8ddf85d3403d0:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: removed, dtype: int64
+8845-2022-04-19 12:23:19,047-DEBUG: Series to list conversion for the diff of commits f523b8ccf825e6f83a91a4e4c516fee532f72fd1 and 8f8ebd069e6fa641451a015cc9b8ddf85d3403d0: [0, 0, 0, 0, 7, 24, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0]
+8845-2022-04-19 12:23:19,047-INFO: Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]
+8845-2022-04-19 12:23:19,049-INFO: End of commit 1: f523b8ccf825e6f83a91a4e4c516fee532f72fd1
+
+8845-2022-04-19 12:23:19,049-INFO: On commit 2: (4506a4702ae34f60440ae3746a31e449c89184b5)
+8845-2022-04-19 12:23:19,051-INFO: 4506a4702ae34f60440ae3746a31e449c89184b5 information:
+4506a4702ae34f60440ae3746a31e449c89184b5;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632870396;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632870396
+8845-2022-04-19 12:23:19,190-INFO: Commit 4506a4702ae34f60440ae3746a31e449c89184b5 cloc information:
+blank       33.0
+code       140.0
+comment      1.0
+nFiles       5.0
+Name: SUM, dtype: float64
+8845-2022-04-19 12:23:19,190-DEBUG: Series to list conversion for commit 4506a4702ae34f60440ae3746a31e449c89184b5: [33.0, 140.0, 1.0, 5.0]
+8845-2022-04-19 12:23:19,190-INFO: Output should be in order: [blanks, code, comments, nfiles]
+8845-2022-04-19 12:23:19,318-DEBUG: Added diff between commits 4506a4702ae34f60440ae3746a31e449c89184b5 and f523b8ccf825e6f83a91a4e4c516fee532f72fd1:
+blank       5
+code       21
+comment     0
+nFiles      1
+Name: added, dtype: int64
+8845-2022-04-19 12:23:19,319-DEBUG: Same diff between commits 4506a4702ae34f60440ae3746a31e449c89184b5 and f523b8ccf825e6f83a91a4e4c516fee532f72fd1:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: same, dtype: int64
+8845-2022-04-19 12:23:19,319-DEBUG: Modified diff between commits 4506a4702ae34f60440ae3746a31e449c89184b5 and f523b8ccf825e6f83a91a4e4c516fee532f72fd1:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: modified, dtype: int64
+8845-2022-04-19 12:23:19,319-DEBUG: Removed diff between commits 4506a4702ae34f60440ae3746a31e449c89184b5 and f523b8ccf825e6f83a91a4e4c516fee532f72fd1:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: removed, dtype: int64
+8845-2022-04-19 12:23:19,319-DEBUG: Series to list conversion for the diff of commits 4506a4702ae34f60440ae3746a31e449c89184b5 and f523b8ccf825e6f83a91a4e4c516fee532f72fd1: [5, 21, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+8845-2022-04-19 12:23:19,319-INFO: Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]
+8845-2022-04-19 12:23:19,321-INFO: End of commit 2: 4506a4702ae34f60440ae3746a31e449c89184b5
+
+8845-2022-04-19 12:23:19,321-INFO: On commit 3: (64a4cce985a739b5a47512a276ad2bb7fe7a2c1e)
+8845-2022-04-19 12:23:19,322-INFO: 64a4cce985a739b5a47512a276ad2bb7fe7a2c1e information:
+64a4cce985a739b5a47512a276ad2bb7fe7a2c1e;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632870921;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632870921
+8845-2022-04-19 12:23:19,450-INFO: Commit 64a4cce985a739b5a47512a276ad2bb7fe7a2c1e cloc information:
+blank       33.0
+code       125.0
+comment      0.0
+nFiles       5.0
+Name: SUM, dtype: float64
+8845-2022-04-19 12:23:19,450-DEBUG: Series to list conversion for commit 64a4cce985a739b5a47512a276ad2bb7fe7a2c1e: [33.0, 125.0, 0.0, 5.0]
+8845-2022-04-19 12:23:19,450-INFO: Output should be in order: [blanks, code, comments, nfiles]
+8845-2022-04-19 12:23:19,580-DEBUG: Added diff between commits 64a4cce985a739b5a47512a276ad2bb7fe7a2c1e and 4506a4702ae34f60440ae3746a31e449c89184b5:
+blank       0
+code       15
+comment     1
+nFiles      0
+Name: added, dtype: int64
+8845-2022-04-19 12:23:19,581-DEBUG: Same diff between commits 64a4cce985a739b5a47512a276ad2bb7fe7a2c1e and 4506a4702ae34f60440ae3746a31e449c89184b5:
+blank       0
+code       29
+comment     0
+nFiles      0
+Name: same, dtype: int64
+8845-2022-04-19 12:23:19,581-DEBUG: Modified diff between commits 64a4cce985a739b5a47512a276ad2bb7fe7a2c1e and 4506a4702ae34f60440ae3746a31e449c89184b5:
+blank       0
+code       12
+comment     0
+nFiles      1
+Name: modified, dtype: int64
+8845-2022-04-19 12:23:19,581-DEBUG: Removed diff between commits 64a4cce985a739b5a47512a276ad2bb7fe7a2c1e and 4506a4702ae34f60440ae3746a31e449c89184b5:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: removed, dtype: int64
+8845-2022-04-19 12:23:19,581-DEBUG: Series to list conversion for the diff of commits 64a4cce985a739b5a47512a276ad2bb7fe7a2c1e and 4506a4702ae34f60440ae3746a31e449c89184b5: [0, 15, 1, 0, 0, 29, 0, 0, 0, 12, 0, 1, 0, 0, 0, 0]
+8845-2022-04-19 12:23:19,581-INFO: Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]
+8845-2022-04-19 12:23:19,583-INFO: End of commit 3: 64a4cce985a739b5a47512a276ad2bb7fe7a2c1e
+
+8845-2022-04-19 12:23:19,583-INFO: On commit 4: (f60d79a9a4275c98e8e586d0fc91176aa4c50034)
+8845-2022-04-19 12:23:19,584-INFO: f60d79a9a4275c98e8e586d0fc91176aa4c50034 information:
+f60d79a9a4275c98e8e586d0fc91176aa4c50034;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632873052;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632873052
+8845-2022-04-19 12:23:19,711-INFO: Commit f60d79a9a4275c98e8e586d0fc91176aa4c50034 cloc information:
+blank       44.0
+code       156.0
+comment      0.0
+nFiles       6.0
+Name: SUM, dtype: float64
+8845-2022-04-19 12:23:19,712-DEBUG: Series to list conversion for commit f60d79a9a4275c98e8e586d0fc91176aa4c50034: [44.0, 156.0, 0.0, 6.0]
+8845-2022-04-19 12:23:19,712-INFO: Output should be in order: [blanks, code, comments, nfiles]
+8845-2022-04-19 12:23:19,846-DEBUG: Added diff between commits f60d79a9a4275c98e8e586d0fc91176aa4c50034 and 64a4cce985a739b5a47512a276ad2bb7fe7a2c1e:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: added, dtype: int64
+8845-2022-04-19 12:23:19,846-DEBUG: Same diff between commits f60d79a9a4275c98e8e586d0fc91176aa4c50034 and 64a4cce985a739b5a47512a276ad2bb7fe7a2c1e:
+blank      0
+code       3
+comment    0
+nFiles     0
+Name: same, dtype: int64
+8845-2022-04-19 12:23:19,847-DEBUG: Modified diff between commits f60d79a9a4275c98e8e586d0fc91176aa4c50034 and 64a4cce985a739b5a47512a276ad2bb7fe7a2c1e:
+blank      0
+code       0
+comment    0
+nFiles     2
+Name: modified, dtype: int64
+8845-2022-04-19 12:23:19,847-DEBUG: Removed diff between commits f60d79a9a4275c98e8e586d0fc91176aa4c50034 and 64a4cce985a739b5a47512a276ad2bb7fe7a2c1e:
+blank      10
+code       31
+comment     0
+nFiles      0
+Name: removed, dtype: int64
+8845-2022-04-19 12:23:19,847-DEBUG: Series to list conversion for the diff of commits f60d79a9a4275c98e8e586d0fc91176aa4c50034 and 64a4cce985a739b5a47512a276ad2bb7fe7a2c1e: [0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 2, 10, 31, 0, 0]
+8845-2022-04-19 12:23:19,847-INFO: Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]
+8845-2022-04-19 12:23:19,849-INFO: End of commit 4: f60d79a9a4275c98e8e586d0fc91176aa4c50034
+
+8845-2022-04-19 12:23:19,849-INFO: On commit 5: (aa14e10a94d0a7c3f79d6b29b9687e889c49327e)
+8845-2022-04-19 12:23:19,850-INFO: aa14e10a94d0a7c3f79d6b29b9687e889c49327e information:
+aa14e10a94d0a7c3f79d6b29b9687e889c49327e;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632873114;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632873114
+8845-2022-04-19 12:23:19,980-INFO: Commit aa14e10a94d0a7c3f79d6b29b9687e889c49327e cloc information:
+blank       45.0
+code       156.0
+comment      0.0
+nFiles       6.0
+Name: SUM, dtype: float64
+8845-2022-04-19 12:23:19,980-DEBUG: Series to list conversion for commit aa14e10a94d0a7c3f79d6b29b9687e889c49327e: [45.0, 156.0, 0.0, 6.0]
+8845-2022-04-19 12:23:19,980-INFO: Output should be in order: [blanks, code, comments, nfiles]
+8845-2022-04-19 12:23:20,109-DEBUG: Added diff between commits aa14e10a94d0a7c3f79d6b29b9687e889c49327e and f60d79a9a4275c98e8e586d0fc91176aa4c50034:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: added, dtype: int64
+8845-2022-04-19 12:23:20,109-DEBUG: Same diff between commits aa14e10a94d0a7c3f79d6b29b9687e889c49327e and f60d79a9a4275c98e8e586d0fc91176aa4c50034:
+blank       0
+code       30
+comment     0
+nFiles      0
+Name: same, dtype: int64
+8845-2022-04-19 12:23:20,110-DEBUG: Modified diff between commits aa14e10a94d0a7c3f79d6b29b9687e889c49327e and f60d79a9a4275c98e8e586d0fc91176aa4c50034:
+blank      0
+code       1
+comment    0
+nFiles     1
+Name: modified, dtype: int64
+8845-2022-04-19 12:23:20,110-DEBUG: Removed diff between commits aa14e10a94d0a7c3f79d6b29b9687e889c49327e and f60d79a9a4275c98e8e586d0fc91176aa4c50034:
+blank      1
+code       0
+comment    0
+nFiles     0
+Name: removed, dtype: int64
+8845-2022-04-19 12:23:20,110-DEBUG: Series to list conversion for the diff of commits aa14e10a94d0a7c3f79d6b29b9687e889c49327e and f60d79a9a4275c98e8e586d0fc91176aa4c50034: [0, 0, 0, 0, 0, 30, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0]
+8845-2022-04-19 12:23:20,110-INFO: Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]
+8845-2022-04-19 12:23:20,112-INFO: End of commit 5: aa14e10a94d0a7c3f79d6b29b9687e889c49327e
+
+8845-2022-04-19 12:23:20,112-INFO: On commit 6: (8b94011f0bfa1da35f6833d65c2b060e49b11ce2)
+8845-2022-04-19 12:23:20,113-INFO: 8b94011f0bfa1da35f6833d65c2b060e49b11ce2 information:
+8b94011f0bfa1da35f6833d65c2b060e49b11ce2;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632873146;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632873146
+8845-2022-04-19 12:23:20,242-INFO: Commit 8b94011f0bfa1da35f6833d65c2b060e49b11ce2 cloc information:
+blank       44.0
+code       156.0
+comment      0.0
+nFiles       6.0
+Name: SUM, dtype: float64
+8845-2022-04-19 12:23:20,242-DEBUG: Series to list conversion for commit 8b94011f0bfa1da35f6833d65c2b060e49b11ce2: [44.0, 156.0, 0.0, 6.0]
+8845-2022-04-19 12:23:20,242-INFO: Output should be in order: [blanks, code, comments, nfiles]
+8845-2022-04-19 12:23:20,389-DEBUG: Added diff between commits 8b94011f0bfa1da35f6833d65c2b060e49b11ce2 and aa14e10a94d0a7c3f79d6b29b9687e889c49327e:
+blank      1
+code       0
+comment    0
+nFiles     0
+Name: added, dtype: int64
+8845-2022-04-19 12:23:20,389-DEBUG: Same diff between commits 8b94011f0bfa1da35f6833d65c2b060e49b11ce2 and aa14e10a94d0a7c3f79d6b29b9687e889c49327e:
+blank       0
+code       30
+comment     0
+nFiles      0
+Name: same, dtype: int64
+8845-2022-04-19 12:23:20,389-DEBUG: Modified diff between commits 8b94011f0bfa1da35f6833d65c2b060e49b11ce2 and aa14e10a94d0a7c3f79d6b29b9687e889c49327e:
+blank      0
+code       1
+comment    0
+nFiles     1
+Name: modified, dtype: int64
+8845-2022-04-19 12:23:20,389-DEBUG: Removed diff between commits 8b94011f0bfa1da35f6833d65c2b060e49b11ce2 and aa14e10a94d0a7c3f79d6b29b9687e889c49327e:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: removed, dtype: int64
+8845-2022-04-19 12:23:20,389-DEBUG: Series to list conversion for the diff of commits 8b94011f0bfa1da35f6833d65c2b060e49b11ce2 and aa14e10a94d0a7c3f79d6b29b9687e889c49327e: [1, 0, 0, 0, 0, 30, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0]
+8845-2022-04-19 12:23:20,389-INFO: Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]
+8845-2022-04-19 12:23:20,391-INFO: End of commit 6: 8b94011f0bfa1da35f6833d65c2b060e49b11ce2
+
+8845-2022-04-19 12:23:20,391-INFO: On commit 7: (f02338d277c1646767377b3428d363385ea7c17b)
+8845-2022-04-19 12:23:20,392-INFO: f02338d277c1646767377b3428d363385ea7c17b information:
+f02338d277c1646767377b3428d363385ea7c17b;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632873502;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632873502
+8845-2022-04-19 12:23:20,519-INFO: Commit f02338d277c1646767377b3428d363385ea7c17b cloc information:
+blank       45.0
+code       156.0
+comment      0.0
+nFiles       6.0
+Name: SUM, dtype: float64
+8845-2022-04-19 12:23:20,519-DEBUG: Series to list conversion for commit f02338d277c1646767377b3428d363385ea7c17b: [45.0, 156.0, 0.0, 6.0]
+8845-2022-04-19 12:23:20,519-INFO: Output should be in order: [blanks, code, comments, nfiles]
+8845-2022-04-19 12:23:20,649-DEBUG: Added diff between commits f02338d277c1646767377b3428d363385ea7c17b and 8b94011f0bfa1da35f6833d65c2b060e49b11ce2:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: added, dtype: int64
+8845-2022-04-19 12:23:20,649-DEBUG: Same diff between commits f02338d277c1646767377b3428d363385ea7c17b and 8b94011f0bfa1da35f6833d65c2b060e49b11ce2:
+blank       0
+code       30
+comment     0
+nFiles      0
+Name: same, dtype: int64
+8845-2022-04-19 12:23:20,650-DEBUG: Modified diff between commits f02338d277c1646767377b3428d363385ea7c17b and 8b94011f0bfa1da35f6833d65c2b060e49b11ce2:
+blank      0
+code       1
+comment    0
+nFiles     1
+Name: modified, dtype: int64
+8845-2022-04-19 12:23:20,650-DEBUG: Removed diff between commits f02338d277c1646767377b3428d363385ea7c17b and 8b94011f0bfa1da35f6833d65c2b060e49b11ce2:
+blank      1
+code       0
+comment    0
+nFiles     0
+Name: removed, dtype: int64
+8845-2022-04-19 12:23:20,650-DEBUG: Series to list conversion for the diff of commits f02338d277c1646767377b3428d363385ea7c17b and 8b94011f0bfa1da35f6833d65c2b060e49b11ce2: [0, 0, 0, 0, 0, 30, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0]
+8845-2022-04-19 12:23:20,650-INFO: Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]
+8845-2022-04-19 12:23:20,652-INFO: End of commit 7: f02338d277c1646767377b3428d363385ea7c17b
+
+8845-2022-04-19 12:23:20,652-INFO: On commit 8: (50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263)
+8845-2022-04-19 12:23:20,653-INFO: 50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263 information:
+50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632873991;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632873991
+8845-2022-04-19 12:23:20,780-INFO: Commit 50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263 cloc information:
+blank       36.0
+code       124.0
+comment      0.0
+nFiles       6.0
+Name: SUM, dtype: float64
+8845-2022-04-19 12:23:20,780-DEBUG: Series to list conversion for commit 50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263: [36.0, 124.0, 0.0, 6.0]
+8845-2022-04-19 12:23:20,780-INFO: Output should be in order: [blanks, code, comments, nfiles]
+8845-2022-04-19 12:23:20,909-DEBUG: Added diff between commits 50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263 and f02338d277c1646767377b3428d363385ea7c17b:
+blank       9
+code       32
+comment     0
+nFiles      0
+Name: added, dtype: int64
+8845-2022-04-19 12:23:20,909-DEBUG: Same diff between commits 50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263 and f02338d277c1646767377b3428d363385ea7c17b:
+blank      0
+code       4
+comment    0
+nFiles     0
+Name: same, dtype: int64
+8845-2022-04-19 12:23:20,910-DEBUG: Modified diff between commits 50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263 and f02338d277c1646767377b3428d363385ea7c17b:
+blank       0
+code       16
+comment     0
+nFiles      1
+Name: modified, dtype: int64
+8845-2022-04-19 12:23:20,910-DEBUG: Removed diff between commits 50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263 and f02338d277c1646767377b3428d363385ea7c17b:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: removed, dtype: int64
+8845-2022-04-19 12:23:20,910-DEBUG: Series to list conversion for the diff of commits 50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263 and f02338d277c1646767377b3428d363385ea7c17b: [9, 32, 0, 0, 0, 4, 0, 0, 0, 16, 0, 1, 0, 0, 0, 0]
+8845-2022-04-19 12:23:20,910-INFO: Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]
+8845-2022-04-19 12:23:20,912-INFO: End of commit 8: 50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263
+
+8845-2022-04-19 12:23:20,912-INFO: On commit 9: (41d14cd9648a4975f1a0bc1bf981080887be14ab)
+8845-2022-04-19 12:23:20,913-INFO: 41d14cd9648a4975f1a0bc1bf981080887be14ab information:
+41d14cd9648a4975f1a0bc1bf981080887be14ab;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632874740;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632874740
+8845-2022-04-19 12:23:21,039-INFO: Commit 41d14cd9648a4975f1a0bc1bf981080887be14ab cloc information:
+blank       36.0
+code       124.0
+comment      0.0
+nFiles       6.0
+Name: SUM, dtype: float64
+8845-2022-04-19 12:23:21,040-DEBUG: Series to list conversion for commit 41d14cd9648a4975f1a0bc1bf981080887be14ab: [36.0, 124.0, 0.0, 6.0]
+8845-2022-04-19 12:23:21,040-INFO: Output should be in order: [blanks, code, comments, nfiles]
+8845-2022-04-19 12:23:21,170-DEBUG: Added diff between commits 41d14cd9648a4975f1a0bc1bf981080887be14ab and 50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: added, dtype: int64
+8845-2022-04-19 12:23:21,170-DEBUG: Same diff between commits 41d14cd9648a4975f1a0bc1bf981080887be14ab and 50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263:
+blank       0
+code       40
+comment     0
+nFiles      0
+Name: same, dtype: int64
+8845-2022-04-19 12:23:21,170-DEBUG: Modified diff between commits 41d14cd9648a4975f1a0bc1bf981080887be14ab and 50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263:
+blank      0
+code       1
+comment    0
+nFiles     1
+Name: modified, dtype: int64
+8845-2022-04-19 12:23:21,170-DEBUG: Removed diff between commits 41d14cd9648a4975f1a0bc1bf981080887be14ab and 50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: removed, dtype: int64
+8845-2022-04-19 12:23:21,170-DEBUG: Series to list conversion for the diff of commits 41d14cd9648a4975f1a0bc1bf981080887be14ab and 50da09f5ddb8c76a6a0b4b8c4c914a1355c7f263: [0, 0, 0, 0, 0, 40, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0]
+8845-2022-04-19 12:23:21,170-INFO: Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]
+8845-2022-04-19 12:23:21,172-INFO: End of commit 9: 41d14cd9648a4975f1a0bc1bf981080887be14ab
+
+8845-2022-04-19 12:23:21,172-INFO: On commit 10: (14480ce17b3284c3a80ed9efdbbdb5412d183e43)
+8845-2022-04-19 12:23:21,173-INFO: 14480ce17b3284c3a80ed9efdbbdb5412d183e43 information:
+14480ce17b3284c3a80ed9efdbbdb5412d183e43;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632875499;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632875499
+8845-2022-04-19 12:23:21,301-INFO: Commit 14480ce17b3284c3a80ed9efdbbdb5412d183e43 cloc information:
+blank       36.0
+code       125.0
+comment      0.0
+nFiles       6.0
+Name: SUM, dtype: float64
+8845-2022-04-19 12:23:21,301-DEBUG: Series to list conversion for commit 14480ce17b3284c3a80ed9efdbbdb5412d183e43: [36.0, 125.0, 0.0, 6.0]
+8845-2022-04-19 12:23:21,301-INFO: Output should be in order: [blanks, code, comments, nfiles]
+8845-2022-04-19 12:23:21,433-DEBUG: Added diff between commits 14480ce17b3284c3a80ed9efdbbdb5412d183e43 and 41d14cd9648a4975f1a0bc1bf981080887be14ab:
+blank      0
+code       2
+comment    0
+nFiles     0
+Name: added, dtype: int64
+8845-2022-04-19 12:23:21,433-DEBUG: Same diff between commits 14480ce17b3284c3a80ed9efdbbdb5412d183e43 and 41d14cd9648a4975f1a0bc1bf981080887be14ab:
+blank       0
+code       24
+comment     0
+nFiles      0
+Name: same, dtype: int64
+8845-2022-04-19 12:23:21,433-DEBUG: Modified diff between commits 14480ce17b3284c3a80ed9efdbbdb5412d183e43 and 41d14cd9648a4975f1a0bc1bf981080887be14ab:
+blank      0
+code       5
+comment    0
+nFiles     1
+Name: modified, dtype: int64
+8845-2022-04-19 12:23:21,433-DEBUG: Removed diff between commits 14480ce17b3284c3a80ed9efdbbdb5412d183e43 and 41d14cd9648a4975f1a0bc1bf981080887be14ab:
+blank      0
+code       3
+comment    0
+nFiles     0
+Name: removed, dtype: int64
+8845-2022-04-19 12:23:21,434-DEBUG: Series to list conversion for the diff of commits 14480ce17b3284c3a80ed9efdbbdb5412d183e43 and 41d14cd9648a4975f1a0bc1bf981080887be14ab: [0, 2, 0, 0, 0, 24, 0, 0, 0, 5, 0, 1, 0, 3, 0, 0]
+8845-2022-04-19 12:23:21,434-INFO: Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]
+8845-2022-04-19 12:23:21,436-INFO: End of commit 10: 14480ce17b3284c3a80ed9efdbbdb5412d183e43
+
+8845-2022-04-19 12:23:21,436-INFO: On commit 11: (5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48)
+8845-2022-04-19 12:23:21,437-INFO: 5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48 information:
+5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632875674;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632875674
+8845-2022-04-19 12:23:21,566-INFO: Commit 5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48 cloc information:
+blank       36.0
+code       129.0
+comment      0.0
+nFiles       6.0
+Name: SUM, dtype: float64
+8845-2022-04-19 12:23:21,566-DEBUG: Series to list conversion for commit 5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48: [36.0, 129.0, 0.0, 6.0]
+8845-2022-04-19 12:23:21,566-INFO: Output should be in order: [blanks, code, comments, nfiles]
+8845-2022-04-19 12:23:21,696-DEBUG: Added diff between commits 5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48 and 14480ce17b3284c3a80ed9efdbbdb5412d183e43:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: added, dtype: int64
+8845-2022-04-19 12:23:21,696-DEBUG: Same diff between commits 5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48 and 14480ce17b3284c3a80ed9efdbbdb5412d183e43:
+blank       0
+code       27
+comment     0
+nFiles      0
+Name: same, dtype: int64
+8845-2022-04-19 12:23:21,697-DEBUG: Modified diff between commits 5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48 and 14480ce17b3284c3a80ed9efdbbdb5412d183e43:
+blank      0
+code       8
+comment    0
+nFiles     2
+Name: modified, dtype: int64
+8845-2022-04-19 12:23:21,697-DEBUG: Removed diff between commits 5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48 and 14480ce17b3284c3a80ed9efdbbdb5412d183e43:
+blank      0
+code       4
+comment    0
+nFiles     0
+Name: removed, dtype: int64
+8845-2022-04-19 12:23:21,697-DEBUG: Series to list conversion for the diff of commits 5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48 and 14480ce17b3284c3a80ed9efdbbdb5412d183e43: [0, 0, 0, 0, 0, 27, 0, 0, 0, 8, 0, 2, 0, 4, 0, 0]
+8845-2022-04-19 12:23:21,697-INFO: Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]
+8845-2022-04-19 12:23:21,699-INFO: End of commit 11: 5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48
+
+8845-2022-04-19 12:23:21,699-INFO: On commit 12: (ca4899cdbec7f825be269d9ff9fb8f8d61144431)
+8845-2022-04-19 12:23:21,700-INFO: ca4899cdbec7f825be269d9ff9fb8f8d61144431 information:
+ca4899cdbec7f825be269d9ff9fb8f8d61144431;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632875856;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-28;1632875856
+8845-2022-04-19 12:23:21,831-INFO: Commit ca4899cdbec7f825be269d9ff9fb8f8d61144431 cloc information:
+blank       36.0
+code       134.0
+comment      0.0
+nFiles       6.0
+Name: SUM, dtype: float64
+8845-2022-04-19 12:23:21,831-DEBUG: Series to list conversion for commit ca4899cdbec7f825be269d9ff9fb8f8d61144431: [36.0, 134.0, 0.0, 6.0]
+8845-2022-04-19 12:23:21,831-INFO: Output should be in order: [blanks, code, comments, nfiles]
+8845-2022-04-19 12:23:21,961-DEBUG: Added diff between commits ca4899cdbec7f825be269d9ff9fb8f8d61144431 and 5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: added, dtype: int64
+8845-2022-04-19 12:23:21,961-DEBUG: Same diff between commits ca4899cdbec7f825be269d9ff9fb8f8d61144431 and 5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48:
+blank       0
+code       32
+comment     0
+nFiles      0
+Name: same, dtype: int64
+8845-2022-04-19 12:23:21,962-DEBUG: Modified diff between commits ca4899cdbec7f825be269d9ff9fb8f8d61144431 and 5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48:
+blank      0
+code       7
+comment    0
+nFiles     2
+Name: modified, dtype: int64
+8845-2022-04-19 12:23:21,962-DEBUG: Removed diff between commits ca4899cdbec7f825be269d9ff9fb8f8d61144431 and 5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48:
+blank      0
+code       5
+comment    0
+nFiles     0
+Name: removed, dtype: int64
+8845-2022-04-19 12:23:21,962-DEBUG: Series to list conversion for the diff of commits ca4899cdbec7f825be269d9ff9fb8f8d61144431 and 5d83c3c80ab684d3b84a7ae48aee7dd28d2c0e48: [0, 0, 0, 0, 0, 32, 0, 0, 0, 7, 0, 2, 0, 5, 0, 0]
+8845-2022-04-19 12:23:21,962-INFO: Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]
+8845-2022-04-19 12:23:21,964-INFO: End of commit 12: ca4899cdbec7f825be269d9ff9fb8f8d61144431
+
+8845-2022-04-19 12:23:21,964-INFO: On commit 13: (89ab86e67f8df440d614d1da66b5feba9ad2c793)
+8845-2022-04-19 12:23:21,965-INFO: 89ab86e67f8df440d614d1da66b5feba9ad2c793 information:
+89ab86e67f8df440d614d1da66b5feba9ad2c793;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-29;1632942663;Nicholas M. Synovic;nicholas.synovic@gmail.com;2021-09-29;1632942663
+8845-2022-04-19 12:23:22,097-INFO: Commit 89ab86e67f8df440d614d1da66b5feba9ad2c793 cloc information:
+blank       36.0
+code       133.0
+comment      0.0
+nFiles       6.0
+Name: SUM, dtype: float64
+8845-2022-04-19 12:23:22,097-DEBUG: Series to list conversion for commit 89ab86e67f8df440d614d1da66b5feba9ad2c793: [36.0, 133.0, 0.0, 6.0]
+8845-2022-04-19 12:23:22,097-INFO: Output should be in order: [blanks, code, comments, nfiles]
+8845-2022-04-19 12:23:22,230-DEBUG: Added diff between commits 89ab86e67f8df440d614d1da66b5feba9ad2c793 and ca4899cdbec7f825be269d9ff9fb8f8d61144431:
+blank      0
+code       1
+comment    0
+nFiles     0
+Name: added, dtype: int64
+8845-2022-04-19 12:23:22,230-DEBUG: Same diff between commits 89ab86e67f8df440d614d1da66b5feba9ad2c793 and ca4899cdbec7f825be269d9ff9fb8f8d61144431:
+blank       0
+code       41
+comment     0
+nFiles      0
+Name: same, dtype: int64
+8845-2022-04-19 12:23:22,230-DEBUG: Modified diff between commits 89ab86e67f8df440d614d1da66b5feba9ad2c793 and ca4899cdbec7f825be269d9ff9fb8f8d61144431:
+blank      0
+code       2
+comment    0
+nFiles     2
+Name: modified, dtype: int64
+8845-2022-04-19 12:23:22,230-DEBUG: Removed diff between commits 89ab86e67f8df440d614d1da66b5feba9ad2c793 and ca4899cdbec7f825be269d9ff9fb8f8d61144431:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: removed, dtype: int64
+8845-2022-04-19 12:23:22,230-DEBUG: Series to list conversion for the diff of commits 89ab86e67f8df440d614d1da66b5feba9ad2c793 and ca4899cdbec7f825be269d9ff9fb8f8d61144431: [0, 1, 0, 0, 0, 41, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0]
+8845-2022-04-19 12:23:22,230-INFO: Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]
+8845-2022-04-19 12:23:22,232-INFO: End of commit 13: 89ab86e67f8df440d614d1da66b5feba9ad2c793
+
+8845-2022-04-19 12:23:22,232-INFO: On commit 14: (f413c1cd6e4fd34a9c371d947b431d3e5212832e)
+8845-2022-04-19 12:23:22,234-INFO: f413c1cd6e4fd34a9c371d947b431d3e5212832e information:
+f413c1cd6e4fd34a9c371d947b431d3e5212832e;DeepSource Bot;bot@deepsource.io;2022-02-04;1643945306;DeepSource Bot;bot@deepsource.io;2022-02-04;1643945306
+8845-2022-04-19 12:23:22,364-INFO: Commit f413c1cd6e4fd34a9c371d947b431d3e5212832e cloc information:
+blank       41.0
+code       148.0
+comment      0.0
+nFiles       7.0
+Name: SUM, dtype: float64
+8845-2022-04-19 12:23:22,364-DEBUG: Series to list conversion for commit f413c1cd6e4fd34a9c371d947b431d3e5212832e: [41.0, 148.0, 0.0, 7.0]
+8845-2022-04-19 12:23:22,364-INFO: Output should be in order: [blanks, code, comments, nfiles]
+8845-2022-04-19 12:23:22,501-DEBUG: Added diff between commits f413c1cd6e4fd34a9c371d947b431d3e5212832e and 89ab86e67f8df440d614d1da66b5feba9ad2c793:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: added, dtype: int64
+8845-2022-04-19 12:23:22,501-DEBUG: Same diff between commits f413c1cd6e4fd34a9c371d947b431d3e5212832e and 89ab86e67f8df440d614d1da66b5feba9ad2c793:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: same, dtype: int64
+8845-2022-04-19 12:23:22,502-DEBUG: Modified diff between commits f413c1cd6e4fd34a9c371d947b431d3e5212832e and 89ab86e67f8df440d614d1da66b5feba9ad2c793:
+blank      0
+code       0
+comment    0
+nFiles     0
+Name: modified, dtype: int64
+8845-2022-04-19 12:23:22,502-DEBUG: Removed diff between commits f413c1cd6e4fd34a9c371d947b431d3e5212832e and 89ab86e67f8df440d614d1da66b5feba9ad2c793:
+blank       5
+code       15
+comment     0
+nFiles      1
+Name: removed, dtype: int64
+8845-2022-04-19 12:23:22,502-DEBUG: Series to list conversion for the diff of commits f413c1cd6e4fd34a9c371d947b431d3e5212832e and 89ab86e67f8df440d614d1da66b5feba9ad2c793: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 15, 0, 1]
+8845-2022-04-19 12:23:22,502-INFO: Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]
+8845-2022-04-19 12:23:22,504-INFO: End of commit 14: f413c1cd6e4fd34a9c371d947b431d3e5212832e
+
