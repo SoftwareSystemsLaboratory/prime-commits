@@ -45,7 +45,7 @@ def commitLOC(commit: str, options: str = "", processes: int = 0) -> list:
 
     info: os._wrap_close
     with os.popen(command) as info:
-        data: dict = json.load(info)
+        data: dict = json.load(info.read())
         df: DataFrame = DataFrame(data)
         output: Series = df["SUM"].dropna().sort_index()
         logging.info(f"Commit {commit} cloc information:\n{output}")
@@ -61,7 +61,7 @@ def commitsDiff(commit1: str, commit2: str, str="", processes: int = 0) -> list:
     info: os._wrap_close
     with os.popen(command) as info:
         try:
-            data: dict = json.load(info)
+            data: dict = json.load(info.read())
         except json.JSONDecodeError as e:
             logging.warning(
                 f"\nERROR: Couldn't convert to JSON between commits {commit1} and {commit2}"
