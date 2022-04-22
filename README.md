@@ -1,5 +1,8 @@
 # CLIME Commits
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6478197.svg)](https://doi.org/10.5281/zenodo.6478197)
+[![Release Project](https://github.com/SoftwareSystemsLaboratory/clime-commits/actions/workflows/release.yml/badge.svg)](https://github.com/SoftwareSystemsLaboratory/clime-commits/actions/workflows/release.yml)
+
 > A tool to extract and compute the lines of code (LOC), thousands of lines of code (KLOC), delta lines of code (DLOC), and delta thousands of lines of code (DKLOC) of a Git repository per commit
 
 ## Table of Contents
