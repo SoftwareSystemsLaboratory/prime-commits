@@ -90,7 +90,7 @@ setup(
     entry_points={
         "console_scripts": [
             "clime-git-commits-extract = clime_commits.main:main",
-            "clime-git-commits-extract-graph = clime_commits.graph:main",
+            "clime-git-commits-graph = clime_commits.graph:main",
         ]
     },
 )
