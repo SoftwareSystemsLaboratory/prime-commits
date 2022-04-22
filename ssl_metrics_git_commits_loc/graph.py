@@ -5,7 +5,7 @@ import pandas
 from pandas import DataFrame
 
 from ssl_metrics_git_commits_loc.args import graphArgs
-
+from ssl_metrics_git_commits_loc.version import version
 
 def computeXY(
     df: DataFrame,
@@ -57,6 +57,10 @@ def plot(
 
 def main() -> None:
     args: Namespace = graphArgs()
+
+    if args.version:
+        print(f"clime-git-commits-graph version {version()}")
+        quit(0)
 
     df: DataFrame = pandas.read_json(args.input).T
 
