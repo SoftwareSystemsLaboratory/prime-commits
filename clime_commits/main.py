@@ -50,23 +50,19 @@ def commitLOC(commit: str, options: str = "", processes: int = 0) -> list:
         try:
             data: dict = json.load(info)
         except json.JSONDecodeError:
-            logging.debug([0, 0, 0, 0, 0, 0, 0])
+            logging.debug([0, 0, 0, 0])
             logging.info(
-                "Output should be in order: [blanks, code, comments, nfiles, kloc]"
+                "Output should be in order: [blanks, code, comments, nfiles]"
             )
-            return [0, 0, 0, 0, 0]
+            return [0, 0, 0, 0]
         df: DataFrame = DataFrame(data)
         output: Series = df["SUM"].dropna().sort_index()
         logging.info(f"Commit {commit} cloc information:\n{output}")
         logging.debug(
             f"Series to list conversion for commit {commit}: {output.to_list()}"
         )
-        logging.info("Output should be in order: [blanks, code, comments, nfiles]")
-
-        kloc: float = output[1] / 1000
-        output.append(kloc)
         logging.info(
-            "Output should be in order: [blanks, code, comments, nfiles, kloc]"
+            "Output should be in order: [blanks, code, comments, nfiles]"
         )
         return output.to_list()
 
@@ -115,10 +111,7 @@ def commitsDiff(commit1: str, commit2: str, str="", processes: int = 0) -> list:
 
 
 def commitsDelta(newLOC: list, oldLOC: list) -> list:
-    output: list = [a - b for a, b in zip(newLOC, oldLOC)]
-    dkloc: float = output[1] / 1000
-    output.append(dkloc)
-    return output
+    return [a - b for a, b in zip(newLOC, oldLOC)]
 
 
 def main() -> bool:
@@ -161,7 +154,6 @@ def main() -> bool:
             "lines_of_code",
             "lines_of_comments",
             "number_of_files",
-            "kloc",
             "added_lines_of_blanks",
             "added_lines_of_code",
             "added_lines_of_comments",
@@ -182,7 +174,6 @@ def main() -> bool:
             "delta_lines_of_code",
             "delta_lines_of_comments",
             "delta_number_of_files",
-            "dkloc",
             "author_days_since_0",
             "committer_days_since_0",
             "kloc",
@@ -208,7 +199,7 @@ def main() -> bool:
 
                 diff: list = []
                 diff.extend(loc)
-                diff.extend([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+                diff.extend([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
                 delta: list = loc
                 logging.info(
@@ -235,6 +226,10 @@ def main() -> bool:
             data.append(committerDateDifference)
             data.append(kloc)
             data.append(dkloc)
+
+            print()
+            print(len(data))
+            print(df.shape)
 
             df.loc[len(df.index)] = data
 
