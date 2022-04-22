@@ -1,15 +1,10 @@
-# Software Systems Laboratory Metrics Git Commits Extractor
+# CLIME Commits
 
-> A `python` tool to extract commit information from a `git` repository
-
-![[https://img.shields.io/badge/python-3.9.6%20%7C%203.10-blue](https://img.shields.io/badge/python-3.9.6%20%7C%203.10-blue)](https://img.shields.io/badge/python-3.9.6%20%7C%203.10-blue)
-[![DOI](https://zenodo.org/badge/374020358.svg)](https://zenodo.org/badge/latestdoi/374020358)
-[![Release Project](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/actions/workflows/release.yml)
-[![https://img.shields.io/badge/license-BSD--3-yellow](https://img.shields.io/badge/license-BSD--3-yellow)](LICENSE)
+> A tool to extract and compute the lines of code (LOC), thousands of lines of code (KLOC), delta lines of code (DLOC), and delta thousands of lines of code (DKLOC) of a Git repository per commit
 
 ## Table of Contents
 
-- [Software Systems Laboratory Metrics Git Commits Extractor](#software-systems-laboratory-metrics-git-commits-extractor)
+- [CLIME Commits](#clime-commits)
   - [Table of Contents](#table-of-contents)
   - [About](#about)
   - [Developer Tooling](#developer-tooling)

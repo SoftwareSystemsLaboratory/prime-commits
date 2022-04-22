@@ -1,15 +1,15 @@
 from setuptools import setup
 
-from ssl_metrics_git_commits_loc import version
+from clime_commits import version
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="ssl-metrics-git-commits-loc",
-    packages=["ssl_metrics_git_commits_loc"],
+    name="clime-commits",
+    packages=["clime_commits"],
     version=version.version(),
-    description="SSL Metrics - Git Commits LOC Exploder",
+    description="CLIME - Commits Extractor",
     author="Software and Systems Laboratory - Loyola University Chicago",
     author_email="ssl-metrics@ssl.luc.edu",
     license="BSD",
@@ -17,31 +17,52 @@ setup(
     long_description_content_type="text/markdown",
     url="https://ssl.cs.luc.edu/projects/metricsDashboard",
     project_urls={
-        "Bug Tracker": "https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc/issues",
-        "GitHub Repository": "https://github.com/SoftwareSystemsLaboratory/ssl-metrics-git-commits-loc",
+        "Bug Tracker": "https://github.com/SoftwareSystemsLaboratory/clime-commits/issues",
+        "GitHub Repository": "https://github.com/SoftwareSystemsLaboratory/clime-commits",
     },
     keywords=[
+        "bugzilla",
         "bus factor",
+        "bus factor",
+        "cloc",
         "commits",
+        "commits",
+        "delta lines of code",
         "engineering",
         "git",
+        "git",
         "github",
+        "github",
+        "gitlab",
+        "installable",
         "issue density",
+        "issue density",
+        "issue spoilage",
+        "issues",
         "issues",
         "kloc",
-        "loyola",
+        "lines of code",
+        "longitudinal graphs",
         "loyola university chicago",
+        "loyola",
         "luc",
-        "mining",
         "metrics",
-        "repository",
+        "metrics",
+        "mining",
+        "productivity",
+        "python",
         "repository mining",
+        "repository",
         "simple",
-        "software",
+        "sloccount",
         "software engineering",
         "software metrics",
         "software systems laboratory",
+        "software",
         "ssl",
+        "thousands of lines of code",
+        "tool",
+        "vcs"
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -65,12 +86,11 @@ setup(
         "pandas",
         "progress",
         "python-dateutil",
-        "scikit-learn",
     ],
     entry_points={
         "console_scripts": [
-            "ssl-metrics-git-commits-loc-extract = ssl_metrics_git_commits_loc.main:main",
-            "ssl-metrics-git-commits-loc-graph = ssl_metrics_git_commits_loc.graph:main",
+            "clime-git-commits-extract = clime_commits.main:main",
+            "clime-git-commits-extract-graph = clime_commits.graph:main",
         ]
     },
 )

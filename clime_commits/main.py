@@ -9,7 +9,9 @@ from dateutil.parser import parse as dateParse
 from pandas import DataFrame, Series
 from progress.bar import Bar
 
-from ssl_metrics_git_commits_loc.args import mainArgs
+from clime_commits.args import mainArgs
+from clime_commits.version import version
+
 
 def repoExists(directory: str = ".") -> bool:
     isGitRepository: bool = exists(join(directory, ".git"))
@@ -48,14 +50,24 @@ def commitLOC(commit: str, options: str = "", processes: int = 0) -> list:
         try:
             data: dict = json.load(info)
         except json.JSONDecodeError:
-            logging.debug([0, 0, 0, 0])
-            logging.info("Output should be in order: [blanks, code, comments, nfiles]")
-            return [0, 0, 0, 0]
+            logging.debug([0, 0, 0, 0, 0, 0, 0])
+            logging.info(
+                "Output should be in order: [blanks, code, comments, nfiles, kloc]"
+            )
+            return [0, 0, 0, 0, 0]
         df: DataFrame = DataFrame(data)
         output: Series = df["SUM"].dropna().sort_index()
         logging.info(f"Commit {commit} cloc information:\n{output}")
-        logging.debug(f"Series to list conversion for commit {commit}: {output.to_list()}")
+        logging.debug(
+            f"Series to list conversion for commit {commit}: {output.to_list()}"
+        )
         logging.info("Output should be in order: [blanks, code, comments, nfiles]")
+
+        kloc: float = output[1] / 1000
+        output.append(kloc)
+        logging.info(
+            "Output should be in order: [blanks, code, comments, nfiles, kloc]"
+        )
         return output.to_list()
 
 
@@ -81,27 +93,49 @@ def commitsDiff(commit1: str, commit2: str, str="", processes: int = 0) -> list:
 
         logging.debug(f"Added diff between commits {commit1} and {commit2}:\n{added}")
         logging.debug(f"Same diff between commits {commit1} and {commit2}:\n{same}")
-        logging.debug(f"Modified diff between commits {commit1} and {commit2}:\n{modified}")
-        logging.debug(f"Removed diff between commits {commit1} and {commit2}:\n{removed}")
+        logging.debug(
+            f"Modified diff between commits {commit1} and {commit2}:\n{modified}"
+        )
+        logging.debug(
+            f"Removed diff between commits {commit1} and {commit2}:\n{removed}"
+        )
 
         output.extend(added.to_list())
         output.extend(same.to_list())
         output.extend(modified.to_list())
         output.extend(removed.to_list())
 
-        logging.debug(f"Series to list conversion for the diff of commits {commit1} and {commit2}: {output}")
-        logging.info("Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]")
+        logging.debug(
+            f"Series to list conversion for the diff of commits {commit1} and {commit2}: {output}"
+        )
+        logging.info(
+            "Output should be in order: [blanks, code, comments, nfiles] in key order: [added, same, modified, removed]"
+        )
         return output
 
+
 def commitsDelta(newLOC: list, oldLOC: list) -> list:
-    return [a - b for a, b in zip(newLOC, oldLOC)]
+    output: list = [a - b for a, b in zip(newLOC, oldLOC)]
+    dkloc: float = output[1] / 1000
+    output.append(dkloc)
+    return output
 
 
 def main() -> bool:
-    pwd = os.getcwd()
     args: Namespace = mainArgs()
 
-    logging.basicConfig(level=logging.DEBUG, filename=args.log, filemode="a", format='%(process)d-%(asctime)s-%(levelname)s: %(message)s')
+    if args.version:
+        print(f"clime-git-commits-extract version {version()}")
+        quit(0)
+
+    pwd = os.getcwd()
+
+    logging.basicConfig(
+        level=logging.DEBUG,
+        filename=args.log,
+        filemode="a",
+        format="%(process)d-%(asctime)s-%(levelname)s: %(message)s",
+    )
     logging.info("Started logging...")
 
     if repoExists(directory=args.directory) is False:
@@ -127,6 +161,7 @@ def main() -> bool:
             "lines_of_code",
             "lines_of_comments",
             "number_of_files",
+            "kloc",
             "added_lines_of_blanks",
             "added_lines_of_code",
             "added_lines_of_comments",
@@ -147,6 +182,7 @@ def main() -> bool:
             "delta_lines_of_code",
             "delta_lines_of_comments",
             "delta_number_of_files",
+            "dkloc",
             "author_days_since_0",
             "committer_days_since_0",
         ]
@@ -170,10 +206,12 @@ def main() -> bool:
 
                 diff: list = []
                 diff.extend(loc)
-                diff.extend([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+                diff.extend([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
                 delta: list = loc
-                logging.info("Diff isn't calculated because there was no previous commit")
+                logging.info(
+                    "Diff isn't calculated because there was no previous commit"
+                )
             else:
                 diff: list = commitsDiff(commit1=commits[c], commit2=commits[c - 1])
                 delta = commitsDelta(loc, previousLOC)
