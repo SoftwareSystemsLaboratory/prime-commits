@@ -10,6 +10,7 @@ from pandas import DataFrame, Series
 from progress.bar import Bar
 
 from ssl_metrics_git_commits_loc.args import mainArgs
+from ssl_metrics_git_commits_loc.version import version
 
 def repoExists(directory: str = ".") -> bool:
     isGitRepository: bool = exists(join(directory, ".git"))
@@ -98,8 +99,13 @@ def commitsDelta(newLOC: list, oldLOC: list) -> list:
 
 
 def main() -> bool:
-    pwd = os.getcwd()
     args: Namespace = mainArgs()
+
+    if args.version:
+        print(f"clime-git-commits-extract version {version()}")
+        quit(0)
+
+    pwd = os.getcwd()
 
     logging.basicConfig(level=logging.DEBUG, filename=args.log, filemode="a", format='%(process)d-%(asctime)s-%(levelname)s: %(message)s')
     logging.info("Started logging...")
