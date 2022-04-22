@@ -155,6 +155,8 @@ def main() -> bool:
             "delta_number_of_files",
             "author_days_since_0",
             "committer_days_since_0",
+            "kloc",
+            "dkloc",
         ]
     )
 
@@ -194,9 +196,13 @@ def main() -> bool:
             committerDateDifference: int = (
                 dateParse(data[7]).replace(tzinfo=None) - committerDay0
             ).days
+            kloc: float = data[10] / 1000
+            dkloc: float = data[30] / 1000
 
             data.append(authorDateDifference)
             data.append(committerDateDifference)
+            data.append(kloc)
+            data.append(dkloc)
 
             df.loc[len(df.index)] = data
 
