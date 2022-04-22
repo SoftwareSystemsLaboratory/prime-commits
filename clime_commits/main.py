@@ -227,10 +227,6 @@ def main() -> bool:
             data.append(kloc)
             data.append(dkloc)
 
-            print()
-            print(len(data))
-            print(df.shape)
-
             df.loc[len(df.index)] = data
 
             previousLOC = loc
