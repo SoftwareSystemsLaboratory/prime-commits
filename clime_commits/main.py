@@ -230,7 +230,7 @@ def main() -> bool:
 
             bar.next()
 
-    df.T.to_json(join(pwd, args.output))
+    df.T.to_json(join(pwd, args.output), indent=4)
     return True
 
 
