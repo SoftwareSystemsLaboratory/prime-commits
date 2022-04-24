@@ -62,7 +62,7 @@ setup(
         "ssl",
         "thousands of lines of code",
         "tool",
-        "vcs"
+        "vcs",
     ],
     classifiers=[
         "Development Status :: 4 - Beta",

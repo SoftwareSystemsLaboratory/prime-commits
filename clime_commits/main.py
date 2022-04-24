@@ -51,9 +51,7 @@ def commitLOC(commit: str, options: str = "", processes: int = 0) -> list:
             data: dict = json.load(info)
         except json.JSONDecodeError:
             logging.debug([0, 0, 0, 0])
-            logging.info(
-                "Output should be in order: [blanks, code, comments, nfiles]"
-            )
+            logging.info("Output should be in order: [blanks, code, comments, nfiles]")
             return [0, 0, 0, 0]
         df: DataFrame = DataFrame(data)
         output: Series = df["SUM"].dropna().sort_index()
@@ -61,9 +59,7 @@ def commitLOC(commit: str, options: str = "", processes: int = 0) -> list:
         logging.debug(
             f"Series to list conversion for commit {commit}: {output.to_list()}"
         )
-        logging.info(
-            "Output should be in order: [blanks, code, comments, nfiles]"
-        )
+        logging.info("Output should be in order: [blanks, code, comments, nfiles]")
         return output.to_list()
 
 
