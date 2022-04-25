@@ -96,7 +96,6 @@ options:
                         author_days_since_0
   -y Y                  Key of the y values to use for graphing. DEFAULT:
                         lines_of_code
-  --y-thousandths       Flag to divide the y values by 1000
   --type TYPE           Type of figure to plot. DEFAULT: line
   --title TITLE         Title of the figure. DEFAULT: ""
   --x-label X_LABEL     X axis label of the figure. DEFAULT: ""
