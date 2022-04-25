@@ -12,18 +12,13 @@ def computeXY(
     df: DataFrame,
     xKey: str,
     yKey: str,
-    yThousandth: bool,
 ) -> tuple:
     xData: set = df[xKey].unique().tolist()
     yData: list = []
     day: int
 
-    if yThousandth:
-        for day in xData:
-            yData.append(df.loc[df[xKey] == day, yKey].sum() / 1000)
-    else:
-        for day in xData:
-            yData.append(df.loc[df[xKey] == day, yKey].sum())
+    for day in xData:
+        yData.append(df.loc[df[xKey] == day, yKey].sum())
     return (xData, yData)
 
 
@@ -66,8 +61,7 @@ def main() -> None:
     df: DataFrame = pandas.read_json(args.input).T
 
     data: tuple = computeXY(
-        df=df, xKey=args.x, yKey=args.y, yThousandth=args.y_thousandths
-    )
+        df=df, xKey=args.x, yKey=args.y)
     plot(
         x=data[0],
         y=data[1],
