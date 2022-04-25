@@ -104,13 +104,6 @@ def graphArgs() -> Namespace:
         default="lines_of_code",
     )
     parser.add_argument(
-        "--y-thousandths",
-        help="Flag to divide the y values by 1000",
-        action="store_true",
-        required=False,
-        default=False,
-    )
-    parser.add_argument(
         "--type",
         help="Type of figure to plot. DEFAULT: line",
         type=str,
