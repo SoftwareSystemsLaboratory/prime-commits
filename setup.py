@@ -1,24 +1,24 @@
 from setuptools import setup
 
-from clime_commits import version
+from prime_commits import version
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="clime-commits",
-    packages=["clime_commits"],
+    name="prime-commits",
+    packages=["prime_commits"],
     version=version.version(),
-    description="CLIME - Commits Extractor",
+    description="PRIME - Commits Extractor",
     author="Software and Systems Laboratory - Loyola University Chicago",
-    author_email="ssl-metrics@ssl.luc.edu",
+    # author_email="ssl-metrics@ssl.luc.edu",
     license="BSD",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://ssl.cs.luc.edu/projects/metricsDashboard",
+    # url="https://ssl.cs.luc.edu/projects/metricsDashboard",
     project_urls={
-        "Bug Tracker": "https://github.com/SoftwareSystemsLaboratory/clime-commits/issues",
-        "GitHub Repository": "https://github.com/SoftwareSystemsLaboratory/clime-commits",
+        "Bug Tracker": "https://github.com/SoftwareSystemsLaboratory/prime-commits/issues",
+        "GitHub Repository": "https://github.com/SoftwareSystemsLaboratory/prime-commits",
     },
     keywords=[
         "bugzilla",
@@ -89,8 +89,8 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "clime-git-commits-extract = clime_commits.main:main",
-            "clime-git-commits-graph = clime_commits.graph:main",
+            "prime-git-commits-extract = prime_commits.main:main",
+            "prime-git-commits-graph = prime_commits.graph:main",
         ]
     },
 )

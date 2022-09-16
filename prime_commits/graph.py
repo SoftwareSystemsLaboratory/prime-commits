@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 import pandas
 from pandas import DataFrame
 
-from clime_commits.args import graphArgs
-from clime_commits.version import version
+from prime_commits.args import graphArgs
+from prime_commits.version import version
 
 
 def computeXY(
@@ -55,7 +55,7 @@ def main() -> None:
     args: Namespace = graphArgs()
 
     if args.version:
-        print(f"clime-git-commits-graph version {version()}")
+        print(f"prime-git-commits-graph version {version()}")
         quit(0)
 
     df: DataFrame = pandas.read_json(args.input).T
