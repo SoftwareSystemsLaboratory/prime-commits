@@ -9,8 +9,8 @@ from dateutil.parser import parse as dateParse
 from pandas import DataFrame, Series
 from progress.bar import Bar
 
-from clime_commits.args import mainArgs
-from clime_commits.version import version
+from prime_commits.args import mainArgs
+from prime_commits.version import version
 
 
 def repoExists(directory: str = ".") -> bool:
@@ -114,7 +114,7 @@ def main() -> bool:
     args: Namespace = mainArgs()
 
     if args.version:
-        print(f"clime-git-commits-extract version {version()}")
+        print(f"prime-git-commits-extract version {version()}")
         quit(0)
 
     pwd = os.getcwd()
